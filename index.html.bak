@@ -26,7 +26,7 @@
       <a href="#expertise">Expertise</a>
       <a href="#work">Selected work</a>
       <a href="#resume">Résumé</a>
-      <a class="nav-contact" href="https://mail.google.com/mail/?view=cm&amp;fs=1&amp;to=mgbemenamakuochukwu%40gmail.com">Contact</a>
+      <a class="nav-contact" href="mailto:mgbemenamakuochukwu@gmail.com">Contact</a>
     </nav>
   </header>
 
@@ -42,7 +42,7 @@
 
       <div class="actions">
         <a class="button primary" href="#work">View selected work <span>↗</span></a>
-        <a class="button secondary" href="https://mail.google.com/mail/?view=cm&amp;fs=1&amp;to=mgbemenamakuochukwu%40gmail.com">Email me</a>
+        <a class="button secondary" href="mailto:mgbemenamakuochukwu@gmail.com">Email me</a>
       </div>
 
       <div class="proof" aria-label="Core capabilities">
@@ -144,7 +144,7 @@
   <footer>
     <span>Makky Mgbemena</span>
     <a href="https://github.com/MakkyMgbemena" target="_blank" rel="noreferrer">GitHub ↗</a>
-    <a href="https://mail.google.com/mail/?view=cm&amp;fs=1&amp;to=mgbemenamakuochukwu%40gmail.com">mgbemenamakuochukwu@gmail.com</a>
+    <a href="mailto:mgbemenamakuochukwu@gmail.com">mgbemenamakuochukwu@gmail.com</a>
   </footer>
 
   <script src="main.js"></script>
