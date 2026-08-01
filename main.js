@@ -1,14 +1,19 @@
-const menuButton = document.querySelector(".menu-toggle");
-const navigation = document.querySelector(".nav");
+'use strict';
 
-menuButton?.addEventListener("click", () => {
-  const isOpen = navigation.classList.toggle("open");
-  menuButton.setAttribute("aria-expanded", String(isOpen));
+const searchButton = document.querySelector('.search-button');
+const searchPanel = document.querySelector('.search-panel');
+const searchInput = document.querySelector('#site-search');
+const searchForm = document.querySelector('.search-form');
+
+searchButton.setAttribute('aria-controls', 'search-panel');
+searchButton.setAttribute('aria-expanded', 'false');
+
+searchButton.addEventListener('click', () => {
+  const opening = searchPanel.hidden;
+  searchPanel.hidden = !opening;
+  searchButton.setAttribute('aria-expanded', String(opening));
+  searchButton.setAttribute('aria-label', opening ? 'Close search' : 'Search');
+  if (opening) searchInput.focus();
 });
 
-navigation?.querySelectorAll("a").forEach((link) => {
-  link.addEventListener("click", () => {
-    navigation.classList.remove("open");
-    menuButton?.setAttribute("aria-expanded", "false");
-  });
-});
+searchForm.addEventListener('submit', (event) => event.preventDefault());
