@@ -18,26 +18,52 @@ searchButton.addEventListener('click', () => {
 
 searchForm.addEventListener('submit', (event) => event.preventDefault());
 
-const servicesToggle = document.querySelector('.nav-dropdown-toggle');
-const servicesMenu = document.querySelector('.nav-dropdown-menu');
+const dropdowns = Array.from(document.querySelectorAll('.nav-dropdown'));
 
-const closeServicesMenu = () => {
-  servicesMenu.hidden = true;
-  servicesToggle.setAttribute('aria-expanded', 'false');
+const closeAllDropdowns = () => {
+  dropdowns.forEach((dropdown) => {
+    const toggle = dropdown.querySelector('.nav-dropdown-toggle');
+    const menu = dropdown.querySelector('.nav-dropdown-menu');
+
+    if (!toggle || !menu) return;
+
+    menu.hidden = true;
+    toggle.setAttribute('aria-expanded', 'false');
+  });
 };
 
-servicesToggle.addEventListener('click', () => {
-  const opening = servicesMenu.hidden;
-  servicesMenu.hidden = !opening;
-  servicesToggle.setAttribute('aria-expanded', String(opening));
+const toggleDropdown = (dropdown) => {
+  const toggle = dropdown.querySelector('.nav-dropdown-toggle');
+  const menu = dropdown.querySelector('.nav-dropdown-menu');
+
+  if (!toggle || !menu) return;
+
+  const opening = menu.hidden;
+  closeAllDropdowns();
+
+  if (opening) {
+    menu.hidden = false;
+    toggle.setAttribute('aria-expanded', 'true');
+  }
+};
+
+dropdowns.forEach((dropdown) => {
+  const toggle = dropdown.querySelector('.nav-dropdown-toggle');
+
+  if (!toggle) return;
+
+  toggle.addEventListener('click', (event) => {
+    event.stopPropagation();
+    toggleDropdown(dropdown);
+  });
 });
 
 document.addEventListener('click', (event) => {
-  if (!event.target.closest('.nav-dropdown')) closeServicesMenu();
+  if (!event.target.closest('.nav-dropdown')) closeAllDropdowns();
 });
 
 document.addEventListener('keydown', (event) => {
-  if (event.key === 'Escape') closeServicesMenu();
+  if (event.key === 'Escape') closeAllDropdowns();
 });
 
 const clearVisibleHash = () => {
@@ -60,7 +86,7 @@ document.addEventListener('click', (event) => {
 
   event.preventDefault();
   target.scrollIntoView({ behavior: 'smooth', block: 'start' });
-  closeServicesMenu();
+  closeAllDropdowns();
   clearVisibleHash();
 });
 

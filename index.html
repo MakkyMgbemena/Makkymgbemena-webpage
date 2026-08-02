@@ -3,9 +3,12 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate">
+  <meta http-equiv="Pragma" content="no-cache">
+  <meta http-equiv="Expires" content="0">
   <title>Travel Bunny</title>
   <meta name="description" content="Travel Bunny business services.">
-  <link rel="stylesheet" href="style.css?v=homepage-1">
+  <link rel="stylesheet" href="style.css?v=homepage-2">
 </head>
 <body>
   <header class="site-header">
@@ -38,9 +41,36 @@
         </div>
         <a href="#solutions">Solutions <span class="chevron" aria-hidden="true"></span></a>
         <a href="#industries">Industries <span class="chevron" aria-hidden="true"></span></a>
-        <a href="#work">Work</a>
-        <a href="#about">About</a>
-        <a href="#contact">Contact</a>
+        <div class="nav-dropdown">
+          <button class="nav-dropdown-toggle" type="button" aria-expanded="false" aria-controls="work-menu">
+            Work <span class="chevron" aria-hidden="true"></span>
+          </button>
+          <div class="nav-dropdown-menu" id="work-menu" hidden>
+            <a href="#work">Featured work</a>
+            <a href="#tools">Tools and platforms</a>
+            <a href="#selected-work">Project examples</a>
+          </div>
+        </div>
+        <div class="nav-dropdown">
+          <button class="nav-dropdown-toggle" type="button" aria-expanded="false" aria-controls="about-menu">
+            About <span class="chevron" aria-hidden="true"></span>
+          </button>
+          <div class="nav-dropdown-menu" id="about-menu" hidden>
+            <a href="#overview">Our approach</a>
+            <a href="#faq">FAQ</a>
+            <a href="#consultation">Consultation</a>
+          </div>
+        </div>
+        <div class="nav-dropdown">
+          <button class="nav-dropdown-toggle" type="button" aria-expanded="false" aria-controls="contact-menu">
+            Contact <span class="chevron" aria-hidden="true"></span>
+          </button>
+          <div class="nav-dropdown-menu" id="contact-menu" hidden>
+            <a href="#contact">Request a consultation</a>
+            <a href="mailto:mgbemenamakuochukwu@gmail.com">Email Makky</a>
+            <a href="tel:+16478083432">Call +1 647 808 3432</a>
+          </div>
+        </div>
       </nav>
 
       <button class="search-button" type="button" aria-label="Search">
@@ -74,7 +104,6 @@
   </header>
 
   <main id="app" aria-label="Travel Bunny website">
-<section id="about" class="about-tb"></section>
     <section class="hero" id="home">
       <div class="hero-content" aria-label="Hero content placeholders">
         <p class="placeholder-kicker">Business systems, websites, reporting &amp; visibility</p>
@@ -111,6 +140,7 @@
       <a href="#consultation">Book a Consultation</a>
     </nav>
 
+    <div id="about"></div>
     <section class="overview-section" id="overview" aria-labelledby="overview-heading">
       <div class="overview-inner">
         <h2 id="overview-heading">
@@ -146,32 +176,27 @@
       </div>
     </section>
 
-    <section class="selected-work-section" id="selected-work" aria-labelledby="selected-work-heading">
+    <section class="selected-work-section" id="work" aria-labelledby="selected-work-heading">
       <div class="selected-work-intro">
         <p class="section-kicker">Featured Work</p>
         <h2 id="selected-work-heading">Practical examples of websites, dashboards, automation, reporting, and business setup support.</h2>
+        <p class="selected-work-summary">Clients rely on our work to improve revenue visibility, automate manual workflows, and create better digital and reporting systems for their business.</p>
       </div>
 
-  <div class="work-projector" data-video-projector>
-    <div class="projector-screen">
-      <video class="projector-video" controls preload="metadata" playsinline hidden aria-label="Featured work video with audio overview"></video>
-      <div class="video-placeholder" data-video-placeholder role="img" aria-live="polite">
-        <span class="video-placeholder-number" data-video-number>Video 01</span>
-        <p data-video-title>Website build overview</p>
-        <span>Video and audio overview placeholder</span>
+      <div class="work-grid">
+        <article class="work-card">
+          <h3>Revenue intelligence and geographic analysis</h3>
+          <p>Built data-driven dashboards and regional performance reporting that helped a retail business identify growth opportunities and act on them faster.</p>
+        </article>
+        <article class="work-card">
+          <h3>Executive reporting with Excel & Power Query</h3>
+          <p>Delivered finance-ready dashboards and automated data refreshes that reduced manual consolidation and surfaced clearer executive insights.</p>
+        </article>
+        <article class="work-card">
+          <h3>Cloud transformation and automation</h3>
+          <p>Designed BigQuery data workflows, SQL transformation pipelines, and automation that keep reporting current and systems aligned with business operations.</p>
       </div>
-    </div>
-    <div class="projector-controls">
-      <p class="projector-progress" aria-live="polite">
-        <span data-current-video>1</span><span aria-hidden="true">/</span><span>5</span>
-        <span class="visually-hidden"> videos</span>
-      </p>
-      <button type="button" class="projector-next" data-next-video>
-        <span>Next video</span><span aria-hidden="true">→</span>
-      </button>
-    </div>
-  </div>
-</section>
+    </section>
 
 <section class="tools-section" id="tools" aria-labelledby="tools-heading">
   <h2 id="tools-heading">Tools I work with</h2>
@@ -282,45 +307,45 @@
 
     <section class="contact-section" id="contact" aria-labelledby="contact-heading">
       <div class="contact-form-panel">
-        <p class="section-kicker">Book a consultation</p>
-        <h2 id="contact-heading">Tell me what you need help with.</h2>
-        <p class="contact-intro">Complete the form and the final intake process will be connected before launch.</p>
+        <p class="section-kicker">Get in touch</p>
+        <h2 id="contact-heading">Tell me about the project you want to move forward.</h2>
+        <p class="contact-intro">Share your goals, current tools, and the challenges you want to solve, and I’ll respond with the best next step.</p>
 
         <form id="contact-form" class="contact-form">
           <label>
             Name
-            <input type="text" name="name" autocomplete="name" placeholder="[Your name]">
+            <input type="text" name="name" autocomplete="name" placeholder="Your name">
           </label>
           <label>
             Email
-            <input type="email" name="email" autocomplete="email" placeholder="[Your email]">
+            <input type="email" name="email" autocomplete="email" placeholder="Your email">
           </label>
           <label>
             Business name
-            <input type="text" name="business" autocomplete="organization" placeholder="[Business name]">
+            <input type="text" name="business" autocomplete="organization" placeholder="Your business name">
           </label>
           <label>
-            Website, if available
-            <input type="url" name="website" placeholder="[Website URL]">
+            Website or system URL
+            <input type="url" name="website" placeholder="Example: https://yourbusiness.com">
           </label>
           <label class="full-field">
             Service of interest
             <select name="service">
-              <option value="">[Choose a service]</option>
+              <option value="">Choose a service</option>
               <option>Business systems and automation</option>
               <option>Dashboards and reporting</option>
               <option>Websites and search visibility</option>
-              <option>Not sure yet</option>
+              <option>Data workflows and cloud automation</option>
             </select>
           </label>
           <label class="full-field">
             Brief description
-            <textarea name="description" rows="5" placeholder="[Tell me about the business problem or project]"></textarea>
+            <textarea name="description" rows="5" placeholder="Describe the business problem, the tools you use, and your desired outcome."></textarea>
           </label>
           <label class="full-field">
             Preferred contact method
             <select name="contact-method">
-              <option value="">[Choose a contact method]</option>
+              <option value="">Choose a contact method</option>
               <option>Email</option>
               <option>Phone</option>
               <option>Video call</option>
@@ -330,17 +355,17 @@
             <input type="checkbox" name="consent">
             <span>I agree to be contacted about this request.</span>
           </label>
-          <button type="button">Request a Consultation</button>
+          <button type="button">Send request</button>
         </form>
       </div>
 
-      <aside class="contact-aside" aria-label="Consultation process placeholder">
+      <aside class="contact-aside" aria-label="Consultation process steps">
         <p class="section-kicker">What happens next</p>
-        <h2>A clear first conversation, followed by practical next steps.</h2>
+        <h2>A fast, practical response to your request.</h2>
         <ol>
-          <li><span>01</span>[Review your request]</li>
-          <li><span>02</span>[Discuss priorities]</li>
-          <li><span>03</span>[Recommend the next step]</li>
+          <li><span>01</span>Review your goals and current workflow.</li>
+          <li><span>02</span>Identify the best improvement path.</li>
+          <li><span>03</span>Recommend clear next steps and timing.</li>
         </ol>
       </aside>
     </section>
@@ -391,6 +416,6 @@
       <p>Copyright © 2026 Travel Bunny. All rights reserved.</p>
     </div>
   </footer>
-  <script src="main.js?v=search-1"></script>
+  <script src="main.js?v=search-2"></script>
 </body>
 </html>
