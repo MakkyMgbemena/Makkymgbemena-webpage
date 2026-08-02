@@ -1373,3 +1373,28 @@ button {
     gap: 14px;
   }
 }
+
+/* Align and size the Featured Work section label */
+.selected-work-intro {
+  row-gap: 18px;
+}
+
+.selected-work-intro > .section-kicker {
+  grid-column: 2;
+  margin: 0;
+  font-size: clamp(18px, 1.4vw, 24px);
+  font-weight: 600;
+  line-height: 1.2;
+  letter-spacing: 0.06em;
+}
+
+.selected-work-intro > h2 {
+  grid-column: 2;
+}
+
+@media (max-width: 900px) {
+  .selected-work-intro > .section-kicker,
+  .selected-work-intro > h2 {
+    grid-column: 1;
+  }
+}

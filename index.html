@@ -46,7 +46,7 @@
             Work <span class="chevron" aria-hidden="true"></span>
           </button>
           <div class="nav-dropdown-menu" id="work-menu" hidden>
-            <a href="#work">Featured work</a>
+            <a href="#selected-work">Featured work</a>
             <a href="#tools">Tools and platforms</a>
             <a href="#selected-work">Project examples</a>
           </div>
@@ -95,7 +95,7 @@
           <div class="suggestion-grid">
             <a href="#services"><strong>Website development</strong><span>Professional websites designed around your business goals</span></a>
             <a href="#solutions"><strong>Business automation</strong><span>Practical systems that reduce repetitive work</span></a>
-            <a href="#work"><strong>Data analytics</strong><span>Clear reporting and decision-ready business insights</span></a>
+            <a href="#selected-work"><strong>Data analytics</strong><span>Clear reporting and decision-ready business insights</span></a>
             <a href="#services"><strong>Digital visibility</strong><span>Search, content, and marketing support for growing businesses</span></a>
           </div>
         </div>
@@ -132,10 +132,8 @@
 
     <nav class="section-navigation" aria-label="Page sections">
       <a href="#overview">Overview</a>
-      <a href="#how-i-work">How I Work</a>
-      <a href="#services">Services</a>
-      <a href="#solutions">Solutions</a>
-      <a href="#selected-work">Selected Work</a>
+      <a href="#selected-work">Featured Work</a>
+      <a href="#tools">Tools</a>
       <a href="#faq">FAQ</a>
       <a href="#consultation">Book a Consultation</a>
     </nav>
@@ -176,27 +174,32 @@
       </div>
     </section>
 
-    <section class="selected-work-section" id="work" aria-labelledby="selected-work-heading">
+    <section class="selected-work-section" id="selected-work" aria-labelledby="selected-work-heading">
       <div class="selected-work-intro">
         <p class="section-kicker">Featured Work</p>
         <h2 id="selected-work-heading">Practical examples of websites, dashboards, automation, reporting, and business setup support.</h2>
-        <p class="selected-work-summary">Clients rely on our work to improve revenue visibility, automate manual workflows, and create better digital and reporting systems for their business.</p>
       </div>
 
-      <div class="work-grid">
-        <article class="work-card">
-          <h3>Revenue intelligence and geographic analysis</h3>
-          <p>Built data-driven dashboards and regional performance reporting that helped a retail business identify growth opportunities and act on them faster.</p>
-        </article>
-        <article class="work-card">
-          <h3>Executive reporting with Excel & Power Query</h3>
-          <p>Delivered finance-ready dashboards and automated data refreshes that reduced manual consolidation and surfaced clearer executive insights.</p>
-        </article>
-        <article class="work-card">
-          <h3>Cloud transformation and automation</h3>
-          <p>Designed BigQuery data workflows, SQL transformation pipelines, and automation that keep reporting current and systems aligned with business operations.</p>
+  <div class="work-projector" data-video-projector>
+    <div class="projector-screen">
+      <video class="projector-video" controls preload="metadata" playsinline hidden aria-label="Featured work video with audio overview"></video>
+      <div class="video-placeholder" data-video-placeholder role="img" aria-live="polite">
+        <span class="video-placeholder-number" data-video-number>Video 01</span>
+        <p data-video-title>Website build overview</p>
+        <span>Video and audio overview placeholder</span>
       </div>
-    </section>
+    </div>
+    <div class="projector-controls">
+      <p class="projector-progress" aria-live="polite">
+        <span data-current-video>1</span><span aria-hidden="true">/</span><span>5</span>
+        <span class="visually-hidden"> videos</span>
+      </p>
+      <button type="button" class="projector-next" data-next-video>
+        <span>Next video</span><span aria-hidden="true">→</span>
+      </button>
+    </div>
+  </div>
+</section>
 
 <section class="tools-section" id="tools" aria-labelledby="tools-heading">
   <h2 id="tools-heading">Tools I work with</h2>

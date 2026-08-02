@@ -1,0 +1,26 @@
+{
+  "name": "makkymgbemena-webpage",
+  "version": "1.0.0",
+  "description": "Email: mgbemenamakuochukwu@gmail.com",
+  "main": "main.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "dev": "vite --host 0.0.0.0 --port 4174",
+    "build": "vite build",
+    "preview": "vite preview --host 0.0.0.0 --port 4174"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/MakkyMgbemena/Makkymgbemena-webpage.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/MakkyMgbemena/Makkymgbemena-webpage/issues"
+  },
+  "homepage": "https://github.com/MakkyMgbemena/Makkymgbemena-webpage#readme",
+  "devDependencies": {
+    "vite": "^8.2.0"
+  }
+}
