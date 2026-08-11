@@ -1,0 +1,11 @@
+name: Ollama Local
+version: 1.0.0
+schema: v1
+models:
+  - name: qwen-2.5-coder
+    provider: ollama
+    model: qwen2.5-coder
+    apiBase: http://localhost:11434
+    roles:
+      - chat
+      - autocomplete
