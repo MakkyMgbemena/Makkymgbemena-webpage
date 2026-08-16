@@ -101,44 +101,101 @@
   color: #ffffff;
 }
 
-/* 5 Capabilities Cards responsive design grid overrides */
-.abs-capabilities {
-  display: grid;
-  grid-template-columns: repeat(5, minmax(0, 1fr));
-  gap: 22px;
-  background: transparent;
-}
+/* ==========================================================================
+   ARROW WORKFLOW TIMELINE TRACK & 3-CARD GRID
+   ========================================================================== */
 
-.abs-capabilities > a {
-  min-height: 180px;
+/* Timeline Step Connector Track Row Layout */
+.arrow-step-timeline-wrapper {
   display: flex;
-  flex-direction: column;
-  justify-content: space-between;
-  padding: 26px;
-  background: #ffffff;
-  border: 1px solid rgba(20, 20, 20, 0.08) !important;
-  color: #152019;
-  text-decoration: none;
-  box-shadow: 0 18px 38px rgba(20, 35, 26, 0.08);
-  transition: all 0.3s ease;
+  align-items: center;
+  justify-content: center;
+  width: 100%;
+  max-width: 480px;
+  margin: 0 auto 40px auto;
 }
 
-.abs-capabilities > a:hover {
-  background: #edf6ef;
-  transform: translateY(-5px);
-  box-shadow: 0 22px 48px rgba(86, 140, 104, 0.15);
-}
-
-.abs-capabilities span {
-  color: #568c68;
+.arrow-step-node {
+  width: 36px;
+  height: 36px;
+  border-radius: 50%;
+  border: 1px solid rgba(0, 0, 0, 0.2);
+  background-color: #ffffff;
+  display: flex;
+  align-items: center;
+  justify-content: center;
   font-size: 13px;
   font-weight: 700;
-  letter-spacing: 0.12em;
+  color: #718096;
 }
 
-.abs-capabilities strong {
-  font-size: 17px;
-  line-height: 1.35;
+.arrow-step-card:hover ~ .arrow-step-timeline-wrapper .arrow-step-node, .arrow-step-node.active {
+  border-color: #0b1710;
+  background-color: #ffffff;
+  color: #0b1710;
+  box-shadow: 0 0 0 1px #0b1710;
+}
+
+.arrow-step-line-bar {
+  flex: 1;
+  height: 1px;
+  background-color: rgba(0, 0, 0, 0.15);
+  margin: 0 8px;
+}
+
+/* 3-Column Marketing Layout Structural Matrix Grid */
+.arrow-capabilities-matrix {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 24px;
+}
+
+.arrow-step-card {
+  background-color: #f4f6f4;
+  border: 1px solid transparent;
+  border-radius: 12px;
+  padding: 32px 28px;
+  text-align: left;
+}
+
+/* Middle Active Card Accent Block (Matches Plooto Step 2 Theme Look) */
+.arrow-step-card:hover {
+  background-color: #0b1710;
+  color: #ffffff;
+  box-shadow: 0 10px 15px -3px rgba(0,0,0,0.1);
+}
+
+.arrow-card-icon-box {
+  margin-bottom: 20px;
+}
+
+.arrow-card-title {
+  font-size: 19px;
+  font-weight: 700;
+  margin-bottom: 12px;
+  color: inherit;
+}
+
+.arrow-step-card:not(.featured-active-state) .arrow-card-title {
+  color: #0b1710;
+}
+
+.arrow-card-description {
+  font-size: 14px;
+  line-height: 1.5;
+  margin: 0;
+}
+
+.arrow-step-card:not(.featured-active-state) .arrow-card-description {
+  color: #4a5568;
+}
+
+/* Responsive Adaptive Fluid Layout Breakpoint Drops */
+@media (max-width: 991px) {
+  .arrow-capabilities-matrix {
+    grid-template-columns: 1fr;
+    gap: 16px;
+  }
 }
 
 /* Indicators styling */

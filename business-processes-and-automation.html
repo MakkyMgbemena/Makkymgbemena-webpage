@@ -50,34 +50,48 @@
         <div class="container h-100 d-flex flex-column justify-content-center align-items-center">
           <div class="text-center mb-5">
             <span class="preview-invoice-kicker">Core Deliverables</span>
-            <h2 class="text-dark">Our Technical Capabilities</h2>
+            <h2 class="text-dark">How Arrow Captures & Manages Invoices</h2>
           </div>
           
-          <!-- Your original 5 custom capabilities cards layout -->
-          <div class="abs-capabilities w-100">
-            <a href="/automation.html#excel">
-              <span>01</span>
-              <strong>Excel & Sheets Automation</strong>
-            </a>
-            <a href="/automation.html#python">
-              <span>02</span>
-              <strong>Python Custom Scripting</strong>
-            </a>
-            <a href="/automation.html#integrations">
-              <span>03</span>
-              <strong>QuickBooks & API Integrations</strong>
-            </a>
-            <a href="/automation.html#reporting">
-              <span>04</span>
-              <strong>Data Pipelines & KPI Tracking</strong>
-            </a>
-            <a href="/automation.html#workflow">
-              <span>05</span>
-              <strong>Operations SOPs Setup</strong>
-            </a>
+          <!-- 1-2-3 Connected Step Timeline Track Bar -->
+          <div class="arrow-step-timeline-wrapper">
+            <div class="arrow-step-node"><span>1</span></div>
+            <div class="arrow-step-line-bar"></div>
+            <div class="arrow-step-node active"><span>2</span></div>
+            <div class="arrow-step-line-bar"></div>
+            <div class="arrow-step-node"><span>3</span></div>
           </div>
-        </div>
-      </div>
+
+          <!-- 3-Column Marketing Content Grid Box -->
+          <div class="arrow-capabilities-matrix w-100">
+            
+            <!-- Card 1: Import Invoices -->
+            <div class="arrow-step-card">
+              <div class="arrow-card-icon-box">
+                <svg xmlns="http://w3.org" width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="#2e7d32" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="17 8 12 3 7 8"/><line x1="12" y1="3" x2="12" y2="15"/></svg>
+              </div>
+              <h3 class="arrow-card-title">Import Invoices</h3>
+              <p class="arrow-card-description">Import invoices via email or upload them directly through Arrow Capture.</p>
+            </div>
+
+            <!-- Card 2: Automatic Processing (Active Dark State) -->
+            <div class="arrow-step-card">
+              <div class="arrow-card-icon-box">
+              </div>
+              <h3 class="arrow-card-title">Automatic processing & sync</h3>
+              <p class="arrow-card-description">Arrow automatically processes invoice data and syncs it with your accounting software.</p>
+            </div>
+
+            <!-- Card 3: Pay and Reconcile -->
+            <div class="arrow-step-card">
+              <div class="arrow-card-icon-box">
+                <svg xmlns="http://w3.org" width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="#2e7d32" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="11" width="18" height="11" rx="2" ry="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg>
+              </div>
+              <h3 class="arrow-card-title">Pay and reconcile</h3>
+              <p class="arrow-card-description">Arrow creates payments from approved invoices and syncs payment statuses back to your accounting software automatically.</p>
+            </div>
+
+          </div>
 
       <!-- SLIDE 3: Empty Background Cover Placeholder (Hue-rotated) -->
       <div class="carousel-item h-100 abs-custom-placeholder-slide">
@@ -107,5 +121,14 @@
   
   <!-- Connections: Linked to your exact JS preview file -->
   <script src="business-processes-and-automation.js"></script>
+<script>
+document.querySelectorAll(".arrow-step-card").forEach((card, i) => {
+  card.addEventListener("mouseenter", () => {
+    document.querySelectorAll(".arrow-step-node").forEach((node, nIdx) => {
+      node.classList.toggle("active", i === nIdx);
+    });
+  });
+});
+</script>
 </body>
 </html>
