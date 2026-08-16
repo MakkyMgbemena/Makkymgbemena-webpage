@@ -77,8 +77,9 @@
             <!-- Card 2: Automatic Processing (Active Dark State) -->
             <div class="arrow-step-card">
               <div class="arrow-card-icon-box">
+                <img src="assets/sync.png" alt="Sync Icon" class="arrow-card-icon">
               </div>
-              <h3 class="arrow-card-title">Automatic processing & sync</h3>
+              <h3 class="arrow-card-title">Automatic processing &amp; sync</h3>
               <p class="arrow-card-description">Arrow automatically processes invoice data and syncs it with your accounting software.</p>
             </div>
 
@@ -121,14 +122,5 @@
   
   <!-- Connections: Linked to your exact JS preview file -->
   <script src="business-processes-and-automation.js"></script>
-<script>
-document.querySelectorAll(".arrow-step-card").forEach((card, i) => {
-  card.addEventListener("mouseenter", () => {
-    document.querySelectorAll(".arrow-step-node").forEach((node, nIdx) => {
-      node.classList.toggle("active", i === nIdx);
-    });
-  });
-});
-</script>
 </body>
 </html>

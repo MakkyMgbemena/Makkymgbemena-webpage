@@ -166,7 +166,19 @@
 }
 
 .arrow-card-icon-box {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 70px;
+  height: 70px;
   margin-bottom: 20px;
+}
+
+.arrow-card-icon {
+  display: block;
+  width: 70px;
+  height: 70px;
+  object-fit: contain;
 }
 
 .arrow-card-title {

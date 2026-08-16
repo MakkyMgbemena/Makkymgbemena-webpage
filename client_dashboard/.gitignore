@@ -1,0 +1,7 @@
+# Ignore all uploaded client files so they stay out of Git history
+*
+
+# Keep the folder structure and metadata files
+!.gitignore
+!.gitkeep
+!README.md
