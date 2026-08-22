@@ -1453,3 +1453,26 @@ button {
   }
 }
 
+
+/* =========================================================
+   Feature cards: horizontal swipe (mobile), block arrows removed
+   ========================================================= */
+@media (max-width: 900px) {
+  .feature-strip {
+    display: flex;
+    flex-direction: row;
+    overflow-x: auto;
+    -webkit-overflow-scrolling: touch;
+    scroll-snap-type: x mandatory;
+    margin: 0;                /* undo the full-bleed negative margins */
+    gap: 16px;
+    scroll-padding-left: 32px;
+  }
+  .feature-strip .feature-item {
+    flex: 0 0 min(82vw, 300px);
+    scroll-snap-align: start;
+    min-height: 240px;
+    border-bottom: 0;         /* remove the stacked bottom border */
+    border-right: 1px solid rgba(255, 255, 255, 0.55);
+  }
+}
