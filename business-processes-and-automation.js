@@ -167,6 +167,10 @@
         }
       );
       const data = await response.json();
+      if (data.exists) {
+        window.location.href = data.redirect || ("/client-dashboard.html?email=" + encodeURIComponent(email));
+        return;
+      }
       if (!response.ok || !data.url) {
         throw new Error(data.error || "We couldn't start your checkout. Please try again.");
       }
