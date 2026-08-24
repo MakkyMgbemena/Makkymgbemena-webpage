@@ -106,22 +106,40 @@
               <p class="mb-5 opacity-90" style="font-size: clamp(18px, 2.5vw, 26px); line-height: 1.4; max-width: 600px;">
                 AP and AR automation made easy, <span class="text-success fw-bold" style="color:#568c68 !important;">no tech expertise needed.</span>
               </p>
-              <form class="bg-white p-5 rounded-4 shadow-lg text-dark border border-4 border-success border-opacity-25">
-                <div class="row g-4">
-                  <div class="col-md-6 text-start"><label class="form-label fw-bold mb-2" style="font-size: 18px;">First Name</label><input type="text" class="form-control form-control-lg bg-light py-3 border-2" placeholder="Jane" style="font-size: 18px;"></div>
-                  <div class="col-md-6 text-start"><label class="form-label fw-bold mb-2" style="font-size: 18px;">Last Name</label><input type="text" class="form-control form-control-lg bg-light py-3 border-2" placeholder="Doe" style="font-size: 18px;"></div>
-                  <div class="col-12 text-start"><label class="form-label fw-bold mb-2" style="font-size: 18px;">Work Email</label><input type="email" class="form-control form-control-lg bg-light py-3 border-2" placeholder="jane@company.com" style="font-size: 18px;"></div>
-                  <div class="col-12 text-start"><label class="form-label fw-bold mb-2" style="font-size: 18px;">Phone number</label><input type="tel" class="form-control form-control-lg bg-light py-3 border-2" placeholder="+1 (555) 000-0000" style="font-size: 18px;"></div>
-                  <div class="col-12 text-start">
-                    <label class="form-label fw-bold mb-3" style="font-size: 18px;">Do you handle invoicing or payments?</label>
-                    <div class="d-flex gap-5 mt-1">
-                      <div class="form-check"><input class="form-check-input border-2" type="radio" name="handle" id="yes_lg" checked style="width: 24px; height: 24px;"><label class="form-check-label ms-2" for="yes_lg" style="font-size: 20px;">Yes</label></div>
-                      <div class="form-check"><input class="form-check-input border-2" type="radio" name="handle" id="no_lg" style="width: 24px; height: 24px;"><label class="form-check-label ms-2" for="no_lg" style="font-size: 20px;">No</label></div>
-                    </div>
-                  </div>
-                </div>
-                <button type="button" class="btn w-100 mt-5 py-4 fw-bold shadow" style="background: #568c68; color: white; font-size: 22px; border-radius: 12px;">Start free trial</button>
-              </form>
+              <form class="bg-white p-5 rounded-4 shadow-lg text-dark border border-4 border-success border-opacity-25" id="trial-signup-form" novalidate>
+  <div class="row g-4">
+    <div class="col-md-6 text-start"><label class="form-label fw-bold mb-2" style="font-size: 18px;" for="first-name">First Name</label><input type="text" id="first-name" class="form-control form-control-lg bg-light py-3 border-2" placeholder="Jane" style="font-size: 18px;" autocomplete="given-name" required></div>
+    <div class="col-md-6 text-start"><label class="form-label fw-bold mb-2" style="font-size: 18px;" for="last-name">Last Name</label><input type="text" id="last-name" class="form-control form-control-lg bg-light py-3 border-2" placeholder="Doe" style="font-size: 18px;" autocomplete="family-name" required></div>
+    <div class="col-12 text-start"><label class="form-label fw-bold mb-2" style="font-size: 18px;" for="work-email">Work Email</label><input type="email" id="work-email" class="form-control form-control-lg bg-light py-3 border-2" placeholder="jane@company.com" style="font-size: 18px;" autocomplete="email" required></div>
+    <div class="col-12 text-start">
+      <label class="form-label fw-bold mb-2" style="font-size: 18px;" for="password">Create a password</label>
+      <div class="input-group">
+        <input type="password" id="password" class="form-control form-control-lg bg-light py-3 border-2" placeholder="At least 8 characters" style="font-size: 18px;" minlength="8" autocomplete="new-password" required>
+        <button type="button" class="btn btn-outline-secondary" id="toggle-password" tabindex="-1" aria-label="Show or hide password" style="font-size: 18px;">Show</button>
+      </div>
+      <div class="form-text text-muted" style="font-size: 14px;">You'll use this to log in and manage your project.</div>
+    </div>
+    <div class="col-12 text-start">
+      <label class="form-label fw-bold mb-2" style="font-size: 18px;" for="service">Which service would you like to start?</label>
+      <select id="service" class="form-select form-select-lg bg-light py-3 border-2" style="font-size: 18px;" required>
+        <option value="" selected disabled>Select a service</option>
+        <option value="website">Website Build — $450 CAD deposit</option>
+        <option value="automation">Automation Setup — $350 CAD deposit</option>
+        <option value="marketing">Marketing / SEO Setup — $400 CAD deposit</option>
+        <option value="dashboards">Dashboards &amp; Reporting — $300 CAD deposit</option>
+        <option value="brand">Brand &amp; Marketing Design — $250 CAD deposit</option>
+        <option value="product">Product Presentation — $200 CAD deposit</option>
+        <option value="operations">Operations Setup &amp; Consultation — $300 CAD deposit</option>
+      </select>
+      <div class="form-text text-muted" style="font-size: 14px;">This is a 50% deposit. We invoice the remaining balance on delivery.</div>
+    </div>
+  </div>
+  <div class="mt-4 p-3 rounded-3 bg-light text-muted" style="font-size: 14px;">
+    By continuing you agree to our <a href="#terms" target="_blank" rel="noopener">Terms</a> and <a href="#privacy" target="_blank" rel="noopener">Privacy Policy</a>. You'll be redirected to Stripe to pay your deposit securely.
+  </div>
+  <button type="submit" id="signup-submit" class="btn w-100 mt-4 py-4 fw-bold shadow" style="background: #568c68; color: white; font-size: 22px; border-radius: 12px;">Start Free Trial</button>
+  <div id="signup-status" class="text-center mt-3" style="font-size: 15px; min-height: 22px;" role="status" aria-live="polite"></div>
+</form>
             </div>
 
             <div class="col-lg-6 text-center">
@@ -155,9 +173,9 @@
                 </div>
               </div>
               <div class="text-center text-white mt-5">
-                <div class="fw-bold tracking-widest mb-2" style="font-size: 20px; letter-spacing: 0.2em;">GOOGLE REVIEWS</div>
-                <div class="text-warning my-2" style="font-size: 32px;">★★★★★</div>
-                <div class="opacity-90" style="font-size: 20px;">4.8 / 5.0 (500+ reviews)</div>
+                <div class="fw-bold tracking-widest mb-3" style="font-size: 20px; letter-spacing: 0.2em;">WORKED WITH US BEFORE?</div>
+                <p class="opacity-90 mb-4" style="font-size: 18px; max-width: 340px; margin: 0 auto;">Your feedback helps other small businesses find us. If we've helped you, we'd love a quick review.</p>
+                <a href="https://g.page/r/YOUR-REVIEW-LINK/review" target="_blank" rel="noopener" class="btn btn-light fw-bold shadow-sm" style="font-size: 18px; color: #0b1710; border-radius: 10px;">Leave a Review ↗</a>
               </div>
             </div>
           </div>

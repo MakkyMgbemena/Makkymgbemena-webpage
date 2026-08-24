@@ -292,6 +292,50 @@
 .carousel-control-next-icon::after {
   content: none !important;
 }
+
+/* =========================================================
+   SLIDE 3 REGISTRATION SIZING FIX
+   - stop clipping the top: center when it fits, scroll from the top when it's taller
+   - shrink the headline + form on short viewports so it fits without scrolling
+   ========================================================= */
+
+.abs-custom-placeholder-slide .container {
+  height: auto !important;
+  min-height: 100%;
+  display: flex !important;
+  flex-direction: column;
+  justify-content: flex-start;
+  padding-top: 2rem;
+  padding-bottom: 2rem;
+}
+.abs-custom-placeholder-slide .container > .row {
+  width: 100%;
+  margin-top: auto;
+  margin-bottom: auto;
+}
+
+/* responsive headline + tighter form so the slide needs less height */
+.abs-custom-placeholder-slide h2 {
+  font-size: clamp(26px, 4.4vw, 60px) !important;
+  line-height: 1.05 !important;
+}
+.abs-custom-placeholder-slide form { padding: 1.5rem !important; }
+.abs-custom-placeholder-slide .dashboard-mockup { margin-bottom: 1.5rem !important; }
+
+/* short viewports: scale everything down so it fits without scrolling */
+@media (max-height: 760px) {
+  .abs-custom-placeholder-slide .container { padding-top: 1.25rem; padding-bottom: 1.25rem; }
+  .abs-custom-placeholder-slide h2 { font-size: clamp(22px, 3.6vw, 44px) !important; }
+  .abs-custom-placeholder-slide p { font-size: clamp(14px, 1.5vw, 18px) !important; margin-bottom: 1rem !important; }
+  .abs-custom-placeholder-slide form { padding: 1.25rem !important; border-radius: .75rem !important; }
+  .abs-custom-placeholder-slide .form-label,
+  .abs-custom-placeholder-slide .form-control-lg,
+  .abs-custom-placeholder-slide .form-select-lg { font-size: 15px !important; }
+  .abs-custom-placeholder-slide #signup-submit { font-size: 18px !important; padding-top: .75rem !important; padding-bottom: .75rem !important; }
+  .abs-custom-placeholder-slide .mockup-body { min-height: 200px !important; }
+  .abs-custom-placeholder-slide .badge-ribbon { width: 120px !important; }
+}
+
 /* =========================================================
    MOBILE / RESPONSIVE FIX  (appended overrides)
    - dynamic viewport height, internal slide scroll, responsive text

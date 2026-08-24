@@ -116,3 +116,64 @@
   // Initialize
   show(0);
 })();
+
+/* Trial signup -> Stripe checkout */
+(() => {
+  const form = document.getElementById("trial-signup-form");
+  if (!form) return;
+
+  const status = document.getElementById("signup-status");
+  const submitBtn = document.getElementById("signup-submit");
+  const toggle = document.getElementById("toggle-password");
+  const passwordInput = document.getElementById("password");
+
+  if (toggle && passwordInput) {
+    toggle.addEventListener("click", () => {
+      const showing = passwordInput.type === "text";
+      passwordInput.type = showing ? "password" : "text";
+      toggle.textContent = showing ? "Show" : "Hide";
+    });
+  }
+
+  const setStatus = (message, isError) => {
+    if (!status) return;
+    status.textContent = message || "";
+    status.style.color = isError ? "#b00020" : "#2e7d32";
+  };
+
+  form.addEventListener("submit", async (event) => {
+    event.preventDefault();
+    if (!form.checkValidity()) {
+      form.reportValidity();
+      return;
+    }
+
+    const firstName = document.getElementById("first-name").value.trim();
+    const lastName = document.getElementById("last-name").value.trim();
+    const email = document.getElementById("work-email").value.trim();
+    const password = document.getElementById("password").value;
+    const service = document.getElementById("service").value;
+
+    submitBtn.disabled = true;
+    setStatus("Creating your account…", false);
+
+    try {
+      const response = await fetch(
+        "https://us-central1-makkymgbemena-webpage.cloudfunctions.net/createCheckoutSession",
+        {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ firstName, lastName, email, customerEmail: email, password, service }),
+        }
+      );
+      const data = await response.json();
+      if (!response.ok || !data.url) {
+        throw new Error(data.error || "We couldn't start your checkout. Please try again.");
+      }
+      window.location.href = data.url;
+    } catch (err) {
+      setStatus(err.message || "Something went wrong. Please try again.", true);
+      submitBtn.disabled = false;
+    }
+  });
+})();
