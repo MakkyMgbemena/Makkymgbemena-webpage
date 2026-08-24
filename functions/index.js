@@ -36,15 +36,20 @@ exports.createCheckoutSession = onRequest(
         return res.status(400).json({error: "Unknown service selected."});
       }
 
+      // Registration is best-effort: NEVER block checkout if it fails.
       if (email && password) {
-        await admin.firestore().collection("users").doc(String(email).toLowerCase()).set({
-          firstName: firstName || "",
-          lastName: lastName || "",
-          email: String(email).toLowerCase(),
-          passwordHash: hashPassword(password),
-          service: service || "",
-          createdAt: admin.firestore.FieldValue.serverTimestamp(),
-        }, {merge: true});
+        try {
+          await admin.firestore().collection("users").doc(String(email).toLowerCase()).set({
+            firstName: firstName || "",
+            lastName: lastName || "",
+            email: String(email).toLowerCase(),
+            passwordHash: hashPassword(password),
+            service: service || "",
+            createdAt: admin.firestore.FieldValue.serverTimestamp(),
+          }, {merge: true});
+        } catch (regErr) {
+          logger.warn("Could not store user registration", {error: regErr.message});
+        }
       }
 
       const prices = await stripe.prices.list({lookup_keys: [lookupKey]});
