@@ -108,8 +108,10 @@
               </p>
               <form class="bg-white p-5 rounded-4 shadow-lg text-dark border border-4 border-success border-opacity-25" id="trial-signup-form" novalidate>
   <div class="row g-4">
-    <div class="col-md-6 text-start"><label class="form-label fw-bold mb-2" style="font-size: 18px;" for="first-name">First Name</label><input type="text" id="first-name" class="form-control form-control-lg bg-light py-3 border-2" placeholder="Jane" style="font-size: 18px;" autocomplete="given-name" required></div>
-    <div class="col-md-6 text-start"><label class="form-label fw-bold mb-2" style="font-size: 18px;" for="last-name">Last Name</label><input type="text" id="last-name" class="form-control form-control-lg bg-light py-3 border-2" placeholder="Doe" style="font-size: 18px;" autocomplete="family-name" required></div>
+    <div style="display:flex; gap:1rem;">
+      <div class="text-start" style="flex:1;"><label class="form-label fw-bold mb-2" style="font-size: 18px;" for="first-name">First Name</label><input type="text" id="first-name" class="form-control form-control-lg bg-light py-3 border-2" placeholder="Jane" style="font-size: 18px;" autocomplete="given-name" required></div>
+      <div class="text-start" style="flex:1;"><label class="form-label fw-bold mb-2" style="font-size: 18px;" for="last-name">Last Name</label><input type="text" id="last-name" class="form-control form-control-lg bg-light py-3 border-2" placeholder="Doe" style="font-size: 18px;" autocomplete="family-name" required></div>
+    </div>
     <div class="col-12 text-start"><label class="form-label fw-bold mb-2" style="font-size: 18px;" for="work-email">Work Email</label><input type="email" id="work-email" class="form-control form-control-lg bg-light py-3 border-2" placeholder="jane@company.com" style="font-size: 18px;" autocomplete="email" required></div>
     <div class="col-12 text-start">
       <label class="form-label fw-bold mb-2" style="font-size: 18px;" for="password">Create a password</label>
@@ -145,21 +147,22 @@
             <div class="col-lg-6 text-center">
               <div class="dashboard-mockup rounded-4 shadow-lg p-3 mb-5 border border-4" style="background: #0b1710; border-color: rgba(86, 140, 104, 0.5);">
                 <div class="mockup-body border border-success border-opacity-25 rounded-3 p-4 text-white shadow-sm" style="background: #000; min-height: 300px;">
-                  <h4 class="fw-bold mb-4 text-center" style="font-size: 24px; color: #568c68;">Payables</h4>
+                  <h4 class="fw-bold mb-4 text-center" style="font-size: 24px; color: #568c68;">Project deposits</h4>
                   <div class="table-responsive">
-                    <table class="table table-dark table-borderless align-middle mb-0" style="font-size: 16px; --bs-table-bg: transparent;">
-                      <thead><tr style="color: rgba(86, 140, 104, 0.8); font-size: 12px; text-transform: uppercase;"><th>Pay To</th><th>Amount</th><th>Debit Date</th><th>Pay From</th></tr></thead>
+                    <table class="table table-dark table-borderless align-middle mb-0" style="font-size: 14px; --bs-table-bg: transparent;">
+                      <thead><tr style="color: rgba(86, 140, 104, 0.8); font-size: 12px; text-transform: uppercase;"><th>Service</th><th>Deposit</th></tr></thead>
                       <tbody>
-                        <tr>
-                          <td><div class="border border-success border-opacity-25 rounded p-2 bg-dark text-white d-flex justify-content-between">Big Supply <small style="color: #568c68;">▼</small></div></td>
-                          <td><div class="border border-success border-opacity-25 rounded p-2 bg-dark text-white">$750 CAD</div></td>
-                          <td><div class="border border-success border-opacity-25 rounded p-2 bg-dark text-white">📅 2/16/24</div></td>
-                          <td><div class="border border-success border-opacity-25 rounded p-2 bg-dark text-white d-flex justify-content-between">Arrow Instant <small style="color: #568c68;">▼</small></div></td>
-                        </tr>
+                        <tr><td><div class="border border-success border-opacity-25 rounded p-2 bg-dark text-white">Website Build</div></td><td><div class="border border-success border-opacity-25 rounded p-2 bg-dark text-white">$450 CAD</div></td></tr>
+                        <tr><td><div class="border border-success border-opacity-25 rounded p-2 bg-dark text-white">Automation Setup</div></td><td><div class="border border-success border-opacity-25 rounded p-2 bg-dark text-white">$350 CAD</div></td></tr>
+                        <tr><td><div class="border border-success border-opacity-25 rounded p-2 bg-dark text-white">Marketing / SEO</div></td><td><div class="border border-success border-opacity-25 rounded p-2 bg-dark text-white">$400 CAD</div></td></tr>
+                        <tr><td><div class="border border-success border-opacity-25 rounded p-2 bg-dark text-white">Dashboards &amp; Reporting</div></td><td><div class="border border-success border-opacity-25 rounded p-2 bg-dark text-white">$300 CAD</div></td></tr>
+                        <tr><td><div class="border border-success border-opacity-25 rounded p-2 bg-dark text-white">Brand &amp; Marketing Design</div></td><td><div class="border border-success border-opacity-25 rounded p-2 bg-dark text-white">$250 CAD</div></td></tr>
+                        <tr><td><div class="border border-success border-opacity-25 rounded p-2 bg-dark text-white">Product Presentation</div></td><td><div class="border border-success border-opacity-25 rounded p-2 bg-dark text-white">$200 CAD</div></td></tr>
+                        <tr><td><div class="border border-success border-opacity-25 rounded p-2 bg-dark text-white">Operations Setup</div></td><td><div class="border border-success border-opacity-25 rounded p-2 bg-dark text-white">$300 CAD</div></td></tr>
                       </tbody>
                     </table>
                   </div>
-                  <button class="btn w-50 mx-auto d-block mt-4 py-2 text-dark fw-bold shadow-sm" style="background: #568c68; border-radius: 8px; font-size: 18px;">Schedule Payables</button>
+                  <a href="#trial-signup-form" class="btn w-50 mx-auto d-block mt-4 py-2 text-dark fw-bold shadow-sm" style="background: #568c68; border-radius: 8px; font-size: 18px; text-decoration: none;">Continue to Payment</a>
                 </div>
               </div>
               <div class="d-flex justify-content-center gap-4 mb-5">

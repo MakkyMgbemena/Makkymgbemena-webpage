@@ -371,3 +371,48 @@ html, body { overflow-x: hidden; }
     padding-bottom: 3rem;
   }
 }
+
+/* Slide 3: top-align + scroll instead of clipping */
+.abs-custom-placeholder-slide .container {
+  height: auto !important;
+  min-height: 100%;
+  display: flex !important;
+  flex-direction: column;
+  justify-content: flex-start;
+  padding-top: 2rem;
+  padding-bottom: 2rem;
+}
+.abs-custom-placeholder-slide .container > .row { flex: 0 0 auto; margin-top: auto; margin-bottom: auto; }
+
+/* keep the deposit card + badges compact so they don't spill */
+.abs-custom-placeholder-slide .dashboard-mockup { max-height: 48vh; overflow-y: auto; }
+.abs-custom-placeholder-slide .d-flex.justify-content-center.gap-4 { margin-bottom: 1rem !important; }
+.abs-custom-placeholder-slide .text-center.text-white.mt-5 { margin-top: 1.25rem !important; }
+
+/* Compact the signup form so it fits the slide */
+#trial-signup-form { padding: 1.5rem !important; }
+#trial-signup-form .row { gap: 1rem !important; }
+#trial-signup-form .form-label { font-size: 15px !important; margin-bottom: .25rem !important; }
+#trial-signup-form .form-control-lg,
+#trial-signup-form .form-select-lg,
+#trial-signup-form .input-group,
+#trial-signup-form .btn { font-size: 15px !important; }
+#trial-signup-form .form-control-lg,
+#trial-signup-form .form-select-lg { padding-top: .6rem !important; padding-bottom: .6rem !important; }
+#trial-signup-form .form-text { font-size: 12px !important; }
+#trial-signup-form #signup-submit { font-size: 18px !important; padding-top: .85rem !important; padding-bottom: .85rem !important; margin-top: 1.25rem !important; }
+
+/* SLIDE 3: contain content inside the slide (no page overflow, no clipping) */
+.abs-custom-placeholder-slide .container {
+  height: 100% !important;
+  min-height: 0 !important;
+  overflow-y: auto !important;
+  align-items: flex-start !important;
+  justify-content: flex-start !important;
+  padding-top: 1.5rem;
+  padding-bottom: 1.5rem;
+}
+.abs-custom-placeholder-slide .container > .row {
+  margin-top: 0 !important;
+  margin-bottom: 0 !important;
+}
