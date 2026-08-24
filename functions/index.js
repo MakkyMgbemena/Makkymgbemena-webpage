@@ -9,13 +9,13 @@ admin.initializeApp();
 const stripeSecretKey = defineSecret("STRIPE_SECRET_KEY");
 
 const PRICE_LOOKUP_KEYS = {
-  website: "website_starter_deposit",
-  automation: "automation_starter_deposit",
-  marketing: "marketing_seo_starter_deposit",
-  dashboards: "dashboards_starter_deposit",
-  brand: "brand_design_starter_deposit",
-  product: "product_presentation_starter_deposit",
-  operations: "operations_setup_starter_deposit",
+  website: "website-starter-deposit",
+  automation: "automation-starter-deposit",
+  marketing: "marketing-SEO-starter-deposit",
+  dashboards: "dashboards-starter-deposit",
+  brand: "brand-design-starter-deposit",
+  product: "product-presentation-starter-deposit",
+  operations: "operations-setup-starter-deposit",
 };
 
 const hashPassword = (password) => {
