@@ -14,7 +14,7 @@
   <link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png">
 
   <meta name="description" content="Travel Bunny business services.">
-  <link rel="stylesheet" href="style.css?v=footer-v2">
+  <link rel="stylesheet" href="style.css?v=footer-v4">
 </head>
 <body>
   <header class="site-header">
@@ -277,7 +277,7 @@
         <p class="section-kicker">Start with clarity</p>
         <h2 id="consultation-heading">Not sure what your business needs first?</h2>
         <p>Start with a focused consultation to identify the clearest next step.</p>
-        <a href="#contact-form">Book a Consultation</a>
+        <a href="#contact">Book a Consultation</a>
       </div>
     </section>
 
@@ -315,54 +315,28 @@
       <div class="contact-form-panel">
         <p class="section-kicker">Get in touch</p>
         <h2 id="contact-heading">Tell me about the project you want to move forward.</h2>
-        <p class="contact-intro">Share your goals, current tools, and the challenges you want to solve, and I’ll respond with the best next step.</p>
+        <p class="contact-intro">Pick a time that works for you. Tell me a little about your project and I’ll prepare before we meet.</p>
 
-        <form id="contact-form" class="contact-form">
-          <label>
-            Name
-            <input type="text" name="name" autocomplete="name" placeholder="Your name">
-          </label>
-          <label>
-            Email
-            <input type="email" name="email" autocomplete="email" placeholder="Your email">
-          </label>
-          <label>
-            Business name
-            <input type="text" name="business" autocomplete="organization" placeholder="Your business name">
-          </label>
-          <label>
-            Website or system URL
-            <input type="url" name="website" placeholder="Example: https://yourbusiness.com">
-          </label>
-          <label class="full-field">
-            Service of interest
-            <select name="service">
-              <option value="">Choose a service</option>
-              <option>Business processes and automation</option>
-              <option>Dashboards and reporting</option>
-              <option>Websites and search visibility</option>
-              <option>Data workflows and cloud automation</option>
-            </select>
-          </label>
-          <label class="full-field">
-            Brief description
-            <textarea name="description" rows="5" placeholder="Describe the business problem, the tools you use, and your desired outcome."></textarea>
-          </label>
-          <label class="full-field">
-            Preferred contact method
-            <select name="contact-method">
-              <option value="">Choose a contact method</option>
-              <option>Email</option>
-              <option>Phone</option>
-              <option>Video call</option>
-            </select>
-          </label>
-          <label class="consent-field full-field">
-            <input type="checkbox" name="consent">
-            <span>I agree to be contacted about this request.</span>
-          </label>
-          <button type="button">Send request</button>
-        </form>
+                        <!-- Live booking (Cal.com) -->
+        <div id="cal-inline"></div>
+        <script>
+          (function (C, A, L) {
+            let p = function (a, ar) { a.q.push(ar); };
+            let d = C.document;
+            C.Cal = C.Cal || function () {
+              let cal = C.Cal, ar = arguments;
+              if (!cal.loaded) {
+                cal.ns = {}; cal.q = cal.q || [];
+                d.head.appendChild(d.createElement("script")).src = A;
+                cal.loaded = true;
+              }
+              if (ar[0] !== "init") { cal.ns[ar[0]] = cal.ns[ar[0]] || {}; for (let i = 0; i < ar.length; i++) { if (typeof ar[i] === "function") { cal.ns[ar[0]][Object.keys(cal.ns[ar[0]])[0]] = ar[i]; break; } } }
+              p(cal, ar);
+            };
+          })(window, "https://app.cal.com/embed/embed.js");
+          Cal("init", { origin: "https://cal.com" });
+          Cal("inline", { elementOrSelector: "#cal-inline", calLink: "makky-travelbunny/consultation", layout: "month_view" });
+        </script>
       </div>
 
       <aside class="contact-aside" aria-label="Consultation process steps">

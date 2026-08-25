@@ -1529,3 +1529,14 @@ button {
 .footer-contact-item { display: inline-flex; align-items: center; gap: 10px; font-size: 16px; color: #292b29; text-decoration: none; line-height: 1.4; }
 .footer-contact-item img, .footer-contact-item svg { width: 20px; height: 20px; flex: 0 0 auto; object-fit: contain; color: #568c68; }
 a.footer-contact-item:hover { text-decoration: underline; }
+
+
+/* Footer CTA — more breathing room */
+.footer-cta { padding: 96px 24px; }
+.footer-cta-kicker { font-size: 14px; letter-spacing: .12em; margin: 0 0 20px; }
+.footer-cta h2 { font-size: clamp(30px, 5vw, 54px); font-weight: 600; line-height: 1.28; max-width: 900px; margin: 0 auto 32px; letter-spacing: -.01em; }
+.footer-cta-btn { padding: 18px 40px; font-size: 18px; }
+
+
+/* Cal.com booking embed */
+#cal-inline { width: 100%; min-height: 640px; }
