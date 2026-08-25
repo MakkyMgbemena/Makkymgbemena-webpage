@@ -4,13 +4,12 @@
 <meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Your TravelBunny account</title>
 <style>
-  :root{ --green:#568c68; --dark:#0b1710; }
+  :root{--green:#568c68;--dark:#0b1710}
   *{box-sizing:border-box}
   body{margin:0;font-family:system-ui,-apple-system,Segoe UI,Roboto,Arial,sans-serif;background:var(--dark);color:#fff;min-height:100vh}
-  .wrap{max-width:720px;margin:0 auto;padding:40px 20px}
+  .wrap{max-width:760px;margin:0 auto;padding:40px 20px}
   .brand{font-weight:800;letter-spacing:-.02em;margin-bottom:24px;font-size:20px}
   .brand strong{color:var(--green)}
-  .brand span{color:#fff}
   .card{background:#fff;color:var(--dark);border-radius:16px;padding:32px;box-shadow:0 20px 60px rgba(0,0,0,.4)}
   h1{font-size:26px;margin:0 0 16px}
   h2{font-size:18px;margin:24px 0 10px}
@@ -26,29 +25,23 @@
   .status{display:inline-block;background:#eef4ef;color:#2e7d32;padding:4px 12px;border-radius:20px;font-size:14px;font-weight:700}
   .update,.comment{background:#f4f6f4;border-radius:8px;padding:12px;margin:8px 0}
   .when{font-size:12px;color:#888;margin-top:4px}
+  /* modal */
+  .modal{position:fixed;inset:0;background:rgba(0,0,0,.6);display:flex;align-items:center;justify-content:center;z-index:50;padding:20px}
+  .modal .box{background:#fff;color:#0b1710;border-radius:16px;padding:32px;max-width:420px;width:100%;box-shadow:0 20px 60px rgba(0,0,0,.5)}
+  .modal a{color:var(--green)}
 </style>
 </head>
 <body>
 <div class="wrap">
   <div class="brand">travel<strong>Bunny</strong><span>.</span></div>
+  <button class="logout" id="logout" style="float:right;background:transparent;color:#888;margin-top:-6px;">Log out</button>
 
-  <div class="card" id="login-card">
-    <h1>Welcome back</h1>
-    <p class="muted">Log in to view your project progress, updates, and messages with your TravelBunny specialist.</p>
-    <form id="login-form">
-      <label for="login-email">Email</label><input id="login-email" type="email" autocomplete="email" required>
-      <label for="login-pass">Password</label><input id="login-pass" type="password" autocomplete="current-password" required>
-      <button type="submit">Log in</button>
-      <div class="msg" id="login-status"></div>
-    </form>
-  </div>
-
-  <div class="card hidden" id="dash">
-    <button class="logout" id="logout">Log out</button>
+  <!-- DASHBOARD (behind modal) -->
+  <div class="card">
     <h1 id="hello">Hi</h1>
     <p class="muted">Here's the current state of your project. Message your specialist below.</p>
     <h2>Your project</h2>
-    <p><span class="status" id="status"></span> &nbsp; <span id="service"></span></p>
+    <p><span class="status" id="status">Loading…</span> &nbsp; <span id="service"></span></p>
     <h2>Updates</h2><div id="updates"><p class="muted">No updates yet.</p></div>
     <h2>Comments &amp; requests</h2><div id="comments"><p class="muted">No comments yet.</p></div>
     <form id="comment-form">
@@ -58,79 +51,112 @@
     </form>
   </div>
 </div>
+
+<!-- LOGIN MODAL -->
+<div class="modal" id="login-modal">
+  <div class="box">
+    <h1>Welcome back</h1>
+    <p class="muted">Log in to view your project updates and messages.</p>
+    <form id="login-form">
+      <label for="login-email">Email</label><input id="login-email" type="email" autocomplete="email" required>
+      <label for="login-pass">Password</label><input id="login-pass" type="password" autocomplete="current-password" required>
+      <button type="submit" style="width:100%">Log in</button>
+      <div class="msg" id="login-status"></div>
+      <p class="muted" style="margin-top:14px"><a href="#" id="forgot">Forgot password?</a></p>
+    </form>
+  </div>
+</div>
+
 <script>
 (function(){
+  const API_KEY = "AIzaSyAqbMu6_vNoZIGrU7Unl3wAYtDYDZ7CFAk";
+  const AUTH = "https://identitytoolkit.googleapis.com/v1/accounts";
   const BASE = "https://us-central1-makkymgbemena-webpage.cloudfunctions.net";
-  const params = new URLSearchParams(window.location.search);
-  const emailInput = document.getElementById("login-email");
-  if (params.get("email")) emailInput.value = params.get("email");
 
-  const loginCard = document.getElementById("login-card");
-  const dash = document.getElementById("dash");
+  const modal = document.getElementById("login-modal");
+  const emailInput = document.getElementById("login-email");
   const loginStatus = document.getElementById("login-status");
   const commentStatus = document.getElementById("comment-status");
-  const form = document.getElementById("login-form");
-  const commentForm = document.getElementById("comment-form");
+
+  const params = new URLSearchParams(window.location.search);
+  if (params.get("email")) emailInput.value = params.get("email");
 
   let token = sessionStorage.getItem("tb_token") || "";
   let userEmail = sessionStorage.getItem("tb_email") || "";
 
-  const showMsg = (el, m, isErr) => { el.textContent = m || ""; el.className = "msg" + (isErr ? " err" : " ok"); };
-  const strip = (s) => { try { const d = document.createElement("div"); d.textContent = s || ""; return d.innerHTML; } catch(e){ return ""; } };
+  const showMsg = (el,m,isErr)=>{el.textContent=m||"";el.className="msg"+(isErr?" err":" ok");};
+  const esc = s => {const d=document.createElement("div");d.textContent=s||"";return d.innerHTML;};
 
   function render(u){
-    document.getElementById("hello").textContent = "Hi " + ((u.firstName || u.lastName || u.email) || "there") + " 👋";
+    document.getElementById("hello").textContent = "Hi " + ((u.firstName||u.lastName||u.email)||"there") + " 👋";
     document.getElementById("status").textContent = u.status || "In progress";
     document.getElementById("service").textContent = u.service || "";
-    const ups = (u.updates || []);
-    document.getElementById("updates").innerHTML = ups.length ? ups.map(x=>`<div class="update">${strip(x.text)}<div class="when">${new Date(x.at).toLocaleString()}</div></div>`).join("") : '<p class="muted">No updates yet.</p>';
-    const cms = (u.comments || []);
-    document.getElementById("comments").innerHTML = cms.length ? cms.map(x=>`<div class="comment">${strip(x.text)}<div class="when">${new Date(x.at).toLocaleString()}</div></div>`).join("") : '<p class="muted">No comments yet.</p>';
+    const ups=(u.updates||[]);
+    document.getElementById("updates").innerHTML = ups.length?ups.map(x=>`<div class="update">${esc(x.text)}<div class="when">${new Date(x.at).toLocaleString()}</div></div>`).join(""):'<p class="muted">No updates yet.</p>';
+    const cms=(u.comments||[]);
+    document.getElementById("comments").innerHTML = cms.length?cms.map(x=>`<div class="comment">${esc(x.text)}<div class="when">${new Date(x.at).toLocaleString()}</div></div>`).join(""):'<p class="muted">No comments yet.</p>';
   }
+
   async function post(path, body){
-    const r = await fetch(BASE + path, {method:"POST", headers:{"Content-Type":"application/json"}, body:JSON.stringify(body)});
-    return {status:r.status, data: await r.json().catch(()=>({}))};
+    const r = await fetch(BASE+path,{method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify(body)});
+    return {status:r.status,data: await r.json().catch(()=>({}))};
   }
+
   async function loadProject(){
-    if (!token) return;
-    try{
-      const {data} = await post("/getProject", {email:userEmail, token});
-      if (data.user){ render(data.user); loginCard.classList.add("hidden"); dash.classList.remove("hidden"); }
-      else { sessionStorage.removeItem("tb_token"); sessionStorage.removeItem("tb_email"); token=""; userEmail=""; }
-    }catch(e){ console.error(e); }
+    if(!token) return;
+    const {data}=await post("/getProject",{token});
+    if(data.user){render(data.user);modal.style.display="none";}
+    else {token="";userEmail="";sessionStorage.removeItem("tb_token");sessionStorage.removeItem("tb_email");}
   }
 
-  form.addEventListener("submit", async (e)=>{
+  document.getElementById("login-form").addEventListener("submit", async e=>{
     e.preventDefault();
-    const email = emailInput.value.trim().toLowerCase();
-    const password = document.getElementById("login-pass").value;
-    showMsg(loginStatus, "Logging in…", false);
+    const email=emailInput.value.trim().toLowerCase();
+    const password=document.getElementById("login-pass").value;
+    showMsg(loginStatus,"Logging in…",false);
     try{
-      const {status, data} = await post("/loginUser", {email, password});
-      if (status !== 200 || !data.token) throw new Error(data.error || "Login failed.");
-      token = data.token; userEmail = data.user.email;
-      sessionStorage.setItem("tb_token", token); sessionStorage.setItem("tb_email", userEmail);
-      render(data.user); loginCard.classList.add("hidden"); dash.classList.remove("hidden");
-    }catch(err){ showMsg(loginStatus, err.message, true); }
+      const r=await fetch(`${AUTH}:signInWithPassword?key=${API_KEY}`,{method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify({email,password,returnSecureToken:true})});
+      const d=await r.json();
+      if(!r.ok || !d.idToken) throw new Error(d.error?.message || "Incorrect email or password.");
+      token=d.idToken; userEmail=d.email;
+      sessionStorage.setItem("tb_token",token);sessionStorage.setItem("tb_email",userEmail);
+      const gp=await post("/getProject",{token});
+      if(gp.data.user){render(gp.data.user);modal.style.display="none";}
+      else throw new Error("No project found.");
+    }catch(err){showMsg(loginStatus,err.message,true);}
   });
 
-  commentForm.addEventListener("submit", async (e)=>{
+  document.getElementById("forgot").addEventListener("click", async e=>{
     e.preventDefault();
-    const text = document.getElementById("comment-text").value.trim();
-    if (!text) return;
-    showMsg(commentStatus, "Sending…", false);
+    const email=emailInput.value.trim().toLowerCase();
+    if(!email){showMsg(loginStatus,"Enter your email above.",true);return;}
+    showMsg(loginStatus,"Sending reset link…",false);
     try{
-      const {status, data} = await post("/addProjectComment", {email:userEmail, token, comment:text});
-      if (status !== 200) throw new Error(data.error || "Could not send.");
-      document.getElementById("comment-text").value = "";
-      showMsg(commentStatus, "Sent!", false);
-      render({email:userEmail, status:"", updates:[], comments:data.comments});
-    }catch(err){ showMsg(commentStatus, err.message, true); }
+      const r=await fetch(`${AUTH}:sendOobCode?key=${API_KEY}`,{method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify({requestType:"PASSWORD_RESET",email})});
+      const d=await r.json();
+      if(!r.ok) throw new Error(d.error?.message||"Could not send reset link.");
+      showMsg(loginStatus,"Reset link sent — check your email.",false);
+    }catch(err){showMsg(loginStatus,err.message,true);}
   });
 
-  document.getElementById("logout").addEventListener("click", ()=>{
-    sessionStorage.removeItem("tb_token"); sessionStorage.removeItem("tb_email");
-    token=""; userEmail=""; location.href = "/client-dashboard.html";
+  document.getElementById("comment-form").addEventListener("submit", async e=>{
+    e.preventDefault();
+    const text=document.getElementById("comment-text").value.trim();
+    if(!text) return;
+    showMsg(commentStatus,"Sending…",false);
+    try{
+      const {status,data}=await post("/addProjectComment",{token,comment:text});
+      if(status!==200) throw new Error(data.error||"Could not send.");
+      document.getElementById("comment-text").value="";
+      showMsg(commentStatus,"Sent!",false);
+      const gp=await post("/getProject",{token});
+      if(gp.data.user) render(gp.data.user);
+    }catch(err){showMsg(commentStatus,err.message,true);}
+  });
+
+  document.getElementById("logout").addEventListener("click",()=>{
+    sessionStorage.removeItem("tb_token");sessionStorage.removeItem("tb_email");
+    token="";userEmail="";location.href="/client-dashboard.html";
   });
 
   loadProject();
