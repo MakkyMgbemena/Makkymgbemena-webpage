@@ -1476,3 +1476,56 @@ button {
     border-right: 1px solid rgba(255, 255, 255, 0.55);
   }
 }
+
+/* Footer social icons: LinkedIn logo + name */
+.footer-socials { align-items: center; }
+.footer-socials a {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  border-bottom: none;
+  font-weight: 700;
+  color: inherit;
+  opacity: .95;
+  transition: opacity .12s ease;
+}
+.footer-socials a:hover { opacity: 1; }
+.footer-socials a img {
+  height: 20px;
+  width: 22px;
+  max-width: none;
+  flex: 0 0 auto;
+  object-fit: contain;
+  display: inline-block;
+}
+
+
+
+/* Footer redesign */
+.site-footer { padding: 0 0 40px; }
+.footer-cta { background: #0b1710; color: #fff; text-align: center; padding: 64px 44px; }
+.footer-cta-kicker { color: #a9b3ab; text-transform: uppercase; letter-spacing: .08em; font-weight: 600; font-size: 13px; margin: 0 0 14px; }
+.footer-cta h2 { font-size: clamp(26px, 4vw, 44px); font-weight: 500; line-height: 1.15; max-width: 780px; margin: 0 auto 28px; }
+.footer-cta-btn { display: inline-block; background: #568c68; color: #fff; border-radius: 999px; padding: 16px 32px; font-size: 17px; font-weight: 700; text-decoration: none; transition: background .15s ease; }
+.footer-cta-btn:hover { background: #477a56; }
+.footer-main { display: grid; grid-template-columns: 1.2fr 1fr; gap: 48px; padding: 64px 44px 40px; max-width: 1200px; margin: 0 auto; }
+.footer-brand-block { display: grid; align-content: start; gap: 18px; }
+.footer-tagline { color: #666; max-width: 360px; line-height: 1.5; }
+.footer-socials { display: flex; flex-wrap: wrap; gap: 20px; align-items: center; }
+.footer-social-link { display: inline-flex; align-items: center; gap: 8px; font-weight: 700; color: #292b29; text-decoration: none; opacity: .92; transition: opacity .12s ease; }
+.footer-social-link:hover { opacity: 1; text-decoration: underline; }
+.footer-social-link img { height: 20px; width: 22px; max-width: none; flex: 0 0 auto; object-fit: contain; }
+.footer-social-soon { color: #9aa09a; pointer-events: none; }
+.footer-contact { display: grid; align-content: start; gap: 12px; }
+.footer-contact h2 { font-size: 28px; font-weight: 400; margin: 0 0 8px; }
+.footer-contact a { font-size: 16px; color: #292b29; text-decoration: none; }
+.footer-contact a:hover { text-decoration: underline; }
+.footer-contact p { margin: 6px 0 0; color: #666; }
+@media (max-width: 760px) { .footer-main { grid-template-columns: 1fr; gap: 36px; } }
+
+
+/* Footer contact items (image + svg icons) */
+.footer-contact { gap: 14px; }
+.footer-contact-item { display: inline-flex; align-items: center; gap: 10px; font-size: 16px; color: #292b29; text-decoration: none; line-height: 1.4; }
+.footer-contact-item img, .footer-contact-item svg { width: 20px; height: 20px; flex: 0 0 auto; object-fit: contain; color: #568c68; }
+a.footer-contact-item:hover { text-decoration: underline; }
