@@ -1540,3 +1540,41 @@ a.footer-contact-item:hover { text-decoration: underline; }
 
 /* Cal.com booking embed */
 #cal-inline { width: 100%; min-height: 640px; }
+
+/* Consultation callout visual */
+.callout-visual-placeholder {
+  background-image: url('assets/callout-bw.png');
+  background-size: cover;
+  background-position: center;
+}
+
+/* Consultation callout visual (full image, no crop) */
+.callout-visual-placeholder {
+  aspect-ratio: 1600 / 1064;
+  max-width: 480px;
+  background-image: url('assets/callout-bw.png');
+  background-size: cover;
+  background-position: center;
+}
+
+/* Breathing animation for the consultation box */
+@keyframes breathe {
+  0%, 100% { transform: scale(1); }
+  50%      { transform: scale(1.06); }
+}
+.callout-visual-placeholder {
+  animation: breathe 3s ease-in-out infinite;
+}
+
+/* Whole callout: horizontal stretch-and-contract breathing (image + words together) */
+@keyframes stretchX {
+  0%, 100% { transform: scaleX(1); }
+  50%      { transform: scaleX(1.04); }
+}
+.consultation-callout {
+  animation: stretchX 3s ease-in-out infinite;
+  transform-origin: center;
+}
+.callout-visual-placeholder {
+  animation: none;   /* stop the old uniform pulse */
+}
