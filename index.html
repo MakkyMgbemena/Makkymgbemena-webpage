@@ -14,7 +14,7 @@
   <link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png">
 
   <meta name="description" content="Travel Bunny business services.">
-  <link rel="stylesheet" href="style.css?v=footer-v4">
+  <link rel="stylesheet" href="style.css?v=footer-v5">
 </head>
 <body>
   <header class="site-header">
@@ -398,5 +398,19 @@
     </div>
   </footer>
   <script src="main.js?v=search-2"></script>
+  <script>
+  (function(){
+    var list = document.querySelector('.tool-list');
+    if(!list) return;
+    var items = [].slice.call(list.children);
+    var n = items.length;
+    if(!n) return;
+    var angle = 360 / n;
+    var radius = (window.innerWidth < 700) ? 170 : 300;
+    items.forEach(function(el, i){
+      el.style.transform = 'rotateY(' + (i * angle) + 'deg) translateZ(' + radius + 'px)';
+    });
+  })();
+  </script>
 </body>
 </html>

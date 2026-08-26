@@ -1578,3 +1578,41 @@ a.footer-contact-item:hover { text-decoration: underline; }
 .callout-visual-placeholder {
   animation: none;   /* stop the old uniform pulse */
 }
+
+/* Tools: 3D halo ring */
+.tools-section { perspective: 1200px; overflow: hidden; padding-bottom: 8px; }
+.tool-list {
+  position: relative;
+  height: 320px;
+  transform-style: preserve-3d;
+  animation: tool-orbit 45s linear infinite;
+}
+@keyframes tool-orbit {
+  from { transform: rotateY(0deg); }
+  to   { transform: rotateY(360deg); }
+}
+.tool-list .tool-item {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  width: 104px;
+  height: 104px;
+  margin: -52px 0 0 -52px;
+  display: grid;
+  place-items: center;
+  align-content: center;
+  gap: 6px;
+  text-align: center;
+  padding: 10px;
+  background: #ffffff;
+  border: 1px solid #e3e6e3;
+  border-radius: 14px;
+  box-shadow: 0 14px 34px rgba(0,0,0,.12);
+}
+.tool-list .tool-item span { font-size: 11px; color: #333; }
+.tool-list .tool-item img,
+.tool-list .tool-item .tool-logo { width: 34px !important; height: 34px !important; }
+@media (max-width: 700px) {
+  .tools-section { perspective: 900px; }
+  .tool-list { height: 230px; }
+}
