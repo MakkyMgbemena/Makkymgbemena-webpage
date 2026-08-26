@@ -14,7 +14,7 @@
   <link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png">
 
   <meta name="description" content="Travel Bunny business services.">
-  <link rel="stylesheet" href="style.css?v=footer-v5">
+  <link rel="stylesheet" href="style.css?v=mascots-1">
 </head>
 <body>
   <header class="site-header">
@@ -206,6 +206,10 @@
 
 <section class="tools-section" id="tools" aria-labelledby="tools-heading">
   <h2 id="tools-heading">Tools I work with</h2>
+  <img class="mascot mascot-talking" src="assets/bunny-talking.png" alt="" aria-hidden="true">
+  <img class="mascot mascot-desk" src="assets/bunny-desk.png" alt="" aria-hidden="true">
+  <img class="mascot mascot-peek" src="assets/bunny-peek.png" alt="" aria-hidden="true">
+  <img class="mascot mascot-wander" src="assets/bunny-wander.png" alt="" aria-hidden="true">
   <div class="tool-list" aria-label="Tools and platforms">
           <div class="tool-item">
             <svg class="tool-logo" viewBox="0 0 48 48" aria-hidden="true">
@@ -406,11 +410,37 @@
     var n = items.length;
     if(!n) return;
     var angle = 360 / n;
-    var radius = (window.innerWidth < 700) ? 170 : 300;
+    var radius = (window.innerWidth < 700) ? 220 : 380;
     items.forEach(function(el, i){
       el.style.transform = 'rotateY(' + (i * angle) + 'deg) translateZ(' + radius + 'px)';
     });
   })();
+  </script>
+  <script src="https://cdn.jsdelivr.net/npm/gsap@3.12.5/dist/gsap.min.js"></script>
+  <script>
+  window.addEventListener('load', function(){
+    var sec = document.querySelector('.tools-section');
+    var w = sec ? sec.offsetWidth : 800;
+
+    // talking pair: bob + sway
+    gsap.to('.mascot-talking', { y: -12, rotation: -2, duration: 0.9, yoyo: true, repeat: -1, ease: 'sine.inOut' });
+
+    // desk pair: quick typing bob
+    gsap.to('.mascot-desk', { y: -6, duration: 0.4, yoyo: true, repeat: -1, ease: 'power2.inOut' });
+
+    // peeker: slow sway + lean further on hover
+    var peek = document.querySelector('.mascot-peek');
+    gsap.to('.mascot-peek', { rotation: -4, duration: 1.8, yoyo: true, repeat: -1, ease: 'sine.inOut' });
+    if (peek) {
+      peek.addEventListener('mouseenter', function(){ gsap.to(peek, { x: -20, y: 14, rotation: -6, duration: 0.4 }); });
+      peek.addEventListener('mouseleave', function(){ gsap.to(peek, { x: 0, y: 0, rotation: -4, duration: 0.5 }); });
+    }
+
+    // wanderer: walks across the section with a step bob + rock
+    gsap.fromTo('.mascot-wander', { x: -220 }, { x: w + 60, duration: 13, ease: 'none', repeat: -1 });
+    gsap.to('.mascot-wander', { rotation: 5, duration: 0.35, yoyo: true, repeat: -1, ease: 'sine.inOut' });
+    gsap.to('.mascot-wander', { y: -8, duration: 0.35, yoyo: true, repeat: -1, ease: 'sine.inOut' });
+  });
   </script>
 </body>
 </html>

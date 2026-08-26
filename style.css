@@ -1616,3 +1616,75 @@ a.footer-contact-item:hover { text-decoration: underline; }
   .tools-section { perspective: 900px; }
   .tool-list { height: 230px; }
 }
+
+/* Mascot bunnies around the tool halo */
+.tools-section { position: relative; overflow: hidden; }
+.tool-list { z-index: 2; }
+.mascot { position: absolute; height: auto; user-select: none; pointer-events: none; z-index: 0; }
+.mascot-talking { width: 220px; left: 2%; top: 50%; transform: translateY(-50%); animation: mascot-idle 4s ease-in-out infinite; }
+.mascot-desk { width: 250px; right: 2%; top: 50%; transform: translateY(-50%); animation: mascot-idle 4s ease-in-out infinite; }
+.mascot-peek { width: 180px; left: 42%; top: -6%; z-index: 0; animation: mascot-peekIdle 5s ease-in-out infinite; pointer-events: auto; }
+.mascot-wander { width: 190px; top: 58%; left: -20%; animation: mascot-wander 20s ease-in-out infinite; }
+@keyframes mascot-idle {
+  0%,100% { transform: translateY(calc(-50% - 0px)); }
+  50%     { transform: translateY(calc(-50% - 8px)); }
+}
+@keyframes mascot-peekIdle {
+  0%,100% { transform: translate(0,0) rotate(0deg); }
+  50%     { transform: translate(-6px,6px) rotate(-2deg); }
+}
+.mascot-peek:hover { transform: translate(-16px,14px) rotate(-5deg); animation-play-state: paused; transition: transform .4s ease; }
+@keyframes mascot-wander {
+  0%   { transform: translateX(0); }
+  50%  { transform: translateX(118vw); }
+  100% { transform: translateX(0); }
+}
+@media (max-width: 700px) {
+  .mascot-talking { width: 140px; }
+  .mascot-desk { width: 160px; }
+  .mascot-peek { width: 120px; }
+  .mascot-wander { width: 120px; }
+}
+
+/* Mascot refinements: give the section height + spread the four */
+.mascot-refine{}
+.tools-section { min-height: 500px; padding: 48px 48px 150px; }
+.mascot-talking { width: 230px; left: 4%; top: 44%; }
+.mascot-desk   { width: 260px; right: 4%; top: 44%; z-index: 3; }
+.mascot-peek   { width: 190px; left: 45%; top: 0%; z-index: 0; }
+.mascot-wander { width: 200px; top: 74%; }
+
+/* halo-scale: bigger ring + fit mascots */
+.tools-section { perspective: 1400px; min-height: 640px; padding: 70px 48px 200px; }
+.tool-list { height: 480px; }
+.tool-list .tool-item { width: 132px; height: 132px; margin: -66px 0 0 -66px; }
+.tool-list .tool-item img,
+.tool-list .tool-item .tool-logo { width: 44px !important; height: 44px !important; }
+.mascot-talking { width: 240px; left: 4%; top: 42%; }
+.mascot-desk   { width: 260px; right: 4%; top: 42%; z-index: 3; }
+.mascot-peek   { width: 200px; left: 45%; top: 2%; }
+.mascot-wander { width: 160px; top: 52%; }
+@media (max-width: 700px) {
+  .tools-section { perspective: 1000px; min-height: 420px; }
+  .tool-list { height: 300px; }
+  .mascot-talking { width: 150px; }
+  .mascot-desk { width: 170px; }
+  .mascot-peek { width: 130px; }
+  .mascot-wander { width: 110px; }
+}
+
+/* mascots-gsap: GSAP drives the motion */
+.mascot-talking, .mascot-desk, .mascot-peek, .mascot-wander { animation: none; }
+
+/* mascot-fix: responsive framing around the halo */
+.tools-section { position: relative; overflow: hidden; min-height: 560px; padding: 60px 40px 170px; }
+.mascot { position: absolute; height: auto; user-select: none; pointer-events: none; z-index: 0; }
+.mascot-talking { width: clamp(130px, 16vw, 240px); left: 3%; top: 40%; transform: translateY(-50%); }
+.mascot-desk   { width: clamp(150px, 19vw, 270px); right: 3%; top: 40%; transform: translateY(-50%); z-index: 3; }
+.mascot-peek   { width: clamp(110px, 15vw, 200px); left: 45%; top: 0%; }
+.mascot-wander { width: clamp(100px, 13vw, 180px); top: 50%; left: -22%; }
+@media (max-width: 700px) {
+  .tools-section { min-height: 420px; padding: 40px 20px 120px; }
+  .mascot-talking { left: 2%; }
+  .mascot-desk { right: 2%; }
+}
