@@ -101,11 +101,11 @@ const videoProjector = document.querySelector('[data-video-projector]');
 
 if (videoProjector) {
   const videoSlides = [
-    { title: 'Website build overview', src: '' },
-    { title: 'Dashboard and reporting overview', src: '' },
-    { title: 'Business automation overview', src: '' },
-    { title: 'Search visibility overview', src: '' },
-    { title: 'Business setup overview', src: '' }
+    { title: 'Your business here', src: '' },
+    { title: 'Your business here', src: '' },
+    { title: 'Your business here', src: '' },
+    { title: 'Your business here', src: '' },
+    { title: 'Your business here', src: '' }
   ];
 
   const video = videoProjector.querySelector('.projector-video');
@@ -119,7 +119,7 @@ if (videoProjector) {
   const renderVideoSlide = () => {
     const slide = videoSlides[currentSlide];
     current.textContent = String(currentSlide + 1);
-    number.textContent = `Video ${String(currentSlide + 1).padStart(2, '0')}`;
+    number.textContent = `Slot ${String(currentSlide + 1).padStart(2, '0')}`;
     title.textContent = slide.title;
 
     if (slide.src) {

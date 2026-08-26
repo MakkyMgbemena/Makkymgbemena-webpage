@@ -116,3 +116,90 @@ exports.addProjectComment = onRequest({cors: true}, async (req, res) => {
     res.status(401).json({error: "Please log in again."});
   }
 });
+
+// ===== Specialist portal (private, role-gated) =====
+const SPECIALIST_EMAIL = "makky@travelbunny.services";
+
+// one-time: grant the specialist role (self-grant for the owner account)
+exports.setSpecialistRole = onRequest({cors: true}, async (req, res) => {
+  try {
+    const {token} = req.body || {};
+    const decoded = await admin.auth().verifyIdToken(token);
+    if (decoded.email !== SPECIALIST_EMAIL) return res.status(403).json({error: "Not authorized."});
+    await admin.auth().setCustomUserClaims(decoded.uid, {specialist: true});
+    res.json({ok: true, specialist: true});
+  } catch (e) {
+    logger.error("setSpecialistRole error", e);
+    res.status(401).json({error: "Please log in again."});
+  }
+});
+
+async function requireSpecialist(req) {
+  const decoded = await admin.auth().verifyIdToken((req.body || {}).token);
+  if (decoded.email !== SPECIALIST_EMAIL && !decoded.specialist) throw new Error("Not specialist");
+  return decoded;
+}
+
+exports.listClients = onRequest({cors: true}, async (req, res) => {
+  try {
+    await requireSpecialist(req);
+    const snap = await admin.firestore().collection("users").get();
+    const clients = snap.docs.map(d => ({email: d.id, ...d.data()}));
+    res.json({clients});
+  } catch (e) {
+    logger.error("listClients error", e);
+    res.status(401).json({error: "Not authorized."});
+  }
+});
+
+exports.updateClientStatus = onRequest({cors: true}, async (req, res) => {
+  try {
+    await requireSpecialist(req);
+    const {email, status} = req.body || {};
+    if (!email || !status) return res.status(400).json({error: "email and status are required."});
+    await userDoc(email).update({status});
+    res.json({ok: true});
+  } catch (e) {
+    logger.error("updateClientStatus error", e);
+    res.status(401).json({error: "Not authorized."});
+  }
+});
+
+exports.sendClientUpdate = onRequest({cors: true}, async (req, res) => {
+  try {
+    await requireSpecialist(req);
+    const {email, text} = req.body || {};
+    if (!email || !text) return res.status(400).json({error: "email and text are required."});
+    const ref = userDoc(email);
+    const doc = await ref.get();
+    if (!doc.exists) return res.status(404).json({error: "No project found."});
+    const u = doc.data();
+    const updates = Array.isArray(u.updates) ? u.updates : [];
+    updates.push({at: new Date().toISOString(), text});
+    await ref.update({updates});
+    res.json({ok: true, updates});
+  } catch (e) {
+    logger.error("sendClientUpdate error", e);
+    res.status(401).json({error: "Not authorized."});
+  }
+});
+
+exports.replyClientComment = onRequest({cors: true}, async (req, res) => {
+  try {
+    await requireSpecialist(req);
+    const {email, text} = req.body || {};
+    if (!email || !text) return res.status(400).json({error: "email and text are required."});
+    const ref = userDoc(email);
+    const doc = await ref.get();
+    if (!doc.exists) return res.status(404).json({error: "No project found."});
+    const u = doc.data();
+    const replies = Array.isArray(u.replies) ? u.replies : [];
+    replies.push({at: new Date().toISOString(), text});
+    await ref.update({replies});
+    res.json({ok: true, replies});
+  } catch (e) {
+    logger.error("replyClientComment error", e);
+    res.status(401).json({error: "Not authorized."});
+  }
+});
+

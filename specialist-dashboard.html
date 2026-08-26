@@ -1,0 +1,182 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>TravelBunny specialist</title>
+<style>
+:root{--green:#568c68;--dark:#0b1710}
+*{box-sizing:border-box}
+body{margin:0;font-family:system-ui,-apple-system,Segoe UI,Roboto,Arial,sans-serif;background:var(--dark);color:#fff;min-height:100vh}
+.wrap{max-width:860px;margin:0 auto;padding:40px 20px}
+.brand{font-weight:800;letter-spacing:-.02em;margin-bottom:20px;font-size:20px}
+.brand strong{color:var(--green)}
+.card{background:#fff;color:var(--dark);border-radius:16px;padding:28px;box-shadow:0 20px 60px rgba(0,0,0,.4);margin-bottom:20px}
+h1{font-size:22px;margin:0 0 12px}
+h2{font-size:17px;margin:18px 0 8px}
+.muted{color:#666;font-size:14px}
+label{font-weight:600;font-size:14px;display:block;margin:12px 0 6px}
+input,textarea,select{width:100%;padding:11px;font-size:15px;border:1px solid #ddd;border-radius:8px}
+textarea{min-height:66px;font-family:inherit}
+button{background:var(--green);color:#fff;border:0;border-radius:8px;padding:11px 16px;font-size:15px;font-weight:700;cursor:pointer;margin-top:10px}
+button.ghost{background:#eef1ee;color:var(--dark)}
+.logout{float:right;background:transparent;color:#888;margin-top:-6px}
+.msg{min-height:20px;font-size:14px;margin-top:10px}
+.msg.err{color:#b00020}.msg.ok{color:#2e7d32}
+.hidden{display:none}
+.modal{position:fixed;inset:0;background:rgba(0,0,0,.6);display:grid;place-items:center;z-index:50;padding:20px}
+.modal .box{background:#fff;color:#0b1710;border-radius:16px;padding:28px;width:min(420px,100%);max-width:420px;min-width:300px;flex:0 0 auto}
+.client{border:1px solid #e5e8e5;border-radius:10px;padding:14px;margin:10px 0}
+.client .row{display:flex;justify-content:space-between;align-items:center;gap:12px;flex-wrap:wrap}
+.badge{background:#eef4ef;color:#2e7d32;padding:4px 10px;border-radius:20px;font-size:13px;font-weight:700}
+.update,.comment{background:#f4f6f4;border-radius:8px;padding:10px;margin:8px 0;font-size:14px}
+.when{font-size:12px;color:#888;margin-top:3px}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <div class="brand">travel<strong>Bunny</strong><span>.</span> <span style="margin-left:8px;font-weight:400;color:#a9b3ab">Specialist</span>
+    <button class="logout" id="logout">Log out</button>
+  </div>
+
+  <div class="card hidden" id="clients-panel">
+    <h1>Clients</h1>
+    <p class="muted">Manage client projects, statuses, and replies.</p>
+    <div id="clients"><p class="muted">Loading…</p></div>
+  </div>
+
+  <div class="card hidden" id="client-panel">
+    <button class="ghost" id="back">← Back to clients</button>
+    <h1 id="c-email"></h1>
+    <label>Status</label>
+    <input id="c-status">
+    <button id="c-save-status">Save status</button>
+    <div class="msg" id="c-status-msg"></div>
+
+    <h2>Updates</h2><div id="c-updates"><p class="muted">None yet.</p></div>
+    <textarea id="c-update-text" placeholder="Add an update for this client…"></textarea>
+    <button id="c-add-update">Send update</button>
+
+    <h2>Comments &amp; replies</h2><div id="c-comments"><p class="muted">None yet.</p></div>
+    <textarea id="c-reply-text" placeholder="Reply to the client…"></textarea>
+    <button id="c-send-reply">Send reply</button>
+    <div class="msg" id="c-action-msg"></div>
+  </div>
+</div>
+
+<div class="modal" id="login-modal">
+  <div class="box">
+    <h1>Specialist login</h1>
+    <p class="muted">Only the TravelBunny specialist can access this portal.</p>
+    <form id="login-form">
+      <label for="email">Email</label><input id="email" type="email" autocomplete="email" required>
+      <label for="pass">Password</label><input id="pass" type="password" autocomplete="current-password" required>
+      <button type="submit" style="width:100%">Log in</button>
+      <div class="msg" id="login-status"></div>
+    </form>
+  </div>
+</div>
+
+<script>
+(function(){
+  var API_KEY="AIzaSyAqbMu6_vNoZIGrU7Unl3wAYtDYDZ7CFAk";
+  var AUTH="https://identitytoolkit.googleapis.com/v1/accounts";
+  var BASE="https://us-central1-makkymgbemena-webpage.cloudfunctions.net";
+  var SPECIALIST_EMAIL="makky@travelbunny.services";
+  var token=""; var clientsCache=[];
+
+  function esc(s){var d=document.createElement("div");d.textContent=s||"";return d.innerHTML;}
+  function show(el,m,err){el.textContent=m||"";el.className="msg"+(err?" err":" ok");}
+
+  async function api(path,body){
+    var r=await fetch(BASE+path,{method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify(Object.assign({token:token},body||{}))});
+    var d=await r.json().catch(function(){return{};});
+    if(r.status!==200) throw new Error(d.error||"Request failed.");
+    return d;
+  }
+
+  function renderClients(list){
+    document.getElementById("clients").innerHTML = list.length ? list.map(function(c){
+      var name=(c.firstName||c.lastName)?((c.firstName||"")+" "+(c.lastName||"")).trim():c.email;
+      return '<div class="client"><div class="row"><div><strong>'+esc(name)+'</strong><div class="muted">'+esc(c.service||"")+'</div></div><span class="badge">'+esc(c.status||"No status")+'</span></div><button class="ghost" data-open="'+esc(c.email)+'">Manage</button></div>';
+    }).join("") : '<p class="muted">No clients yet.</p>';
+    Array.prototype.forEach.call(document.querySelectorAll("[data-open]"),function(b){
+      b.addEventListener("click",function(){openClient(b.getAttribute("data-open"));});
+    });
+  }
+
+  function renderClient(c){
+    document.getElementById("c-email").textContent=c.email;
+    document.getElementById("c-status").value=c.status||"";
+    var ups=(c.updates||[]);
+    document.getElementById("c-updates").innerHTML=ups.length?ups.map(function(u){return '<div class="update">'+esc(u.text)+'<div class="when">'+new Date(u.at).toLocaleString()+'</div></div>';}).join(""):'<p class="muted">None yet.</p>';
+    var items=[];
+    (c.comments||[]).forEach(function(x){items.push('<div class="comment"><strong>Client</strong> '+esc(x.text)+'<div class="when">'+new Date(x.at).toLocaleString()+'</div></div>');});
+    (c.replies||[]).forEach(function(x){items.push('<div class="comment"><strong>You</strong> '+esc(x.text)+'<div class="when">'+new Date(x.at).toLocaleString()+'</div></div>');});
+    document.getElementById("c-comments").innerHTML=items.join("")||'<p class="muted">None yet.</p>';
+  }
+
+  function openClient(email){
+    var c=clientsCache.filter(function(x){return x.email===email;})[0];
+    if(c) renderClient(c);
+    document.getElementById("clients-panel").classList.add("hidden");
+    document.getElementById("client-panel").classList.remove("hidden");
+  }
+
+  async function loadClients(){
+    var data=await api("/listClients",{});
+    clientsCache=data.clients;
+    renderClients(data.clients);
+    document.getElementById("clients-panel").classList.remove("hidden");
+    document.getElementById("login-modal").style.display="none";
+  }
+
+  document.getElementById("login-form").addEventListener("submit",async function(e){
+    e.preventDefault();
+    var email=document.getElementById("email").value.trim().toLowerCase();
+    var pass=document.getElementById("pass").value;
+    var s=document.getElementById("login-status");
+    show(s,"Logging in…",false);
+    try{
+      var r=await fetch(AUTH+":signInWithPassword?key="+API_KEY,{method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify({email:email,password:pass,returnSecureToken:true})});
+      var d=await r.json();
+      if(!r.ok||!d.idToken) throw new Error(d.error&&d.error.message?d.error.message:"Incorrect email or password.");
+      if(email!==SPECIALIST_EMAIL) throw new Error("This portal is for the specialist only.");
+      token=d.idToken;
+      await api("/setSpecialistRole",{});
+      await loadClients();
+    }catch(err){show(s,err.message,true);}
+  });
+
+  document.getElementById("c-save-status").addEventListener("click",async function(){
+    var email=document.getElementById("c-email").textContent;
+    var status=document.getElementById("c-status").value.trim();
+    try{await api("/updateClientStatus",{email:email,status:status});show(document.getElementById("c-status-msg"),"Saved.",false);}
+    catch(e){show(document.getElementById("c-status-msg"),e.message,true);}
+  });
+
+  document.getElementById("c-add-update").addEventListener("click",async function(){
+    var email=document.getElementById("c-email").textContent;
+    var text=document.getElementById("c-update-text").value.trim();
+    var m=document.getElementById("c-action-msg");
+    try{if(!text)throw new Error("Enter an update.");await api("/sendClientUpdate",{email:email,text:text});document.getElementById("c-update-text").value="";show(m,"Update sent.",false);openClient(email);}
+    catch(e){show(m,e.message,true);}
+  });
+
+  document.getElementById("c-send-reply").addEventListener("click",async function(){
+    var email=document.getElementById("c-email").textContent;
+    var text=document.getElementById("c-reply-text").value.trim();
+    var m=document.getElementById("c-action-msg");
+    try{if(!text)throw new Error("Enter a reply.");await api("/replyClientComment",{email:email,text:text});document.getElementById("c-reply-text").value="";show(m,"Reply sent.",false);openClient(email);}
+    catch(e){show(m,e.message,true);}
+  });
+
+  document.getElementById("back").addEventListener("click",function(){
+    document.getElementById("client-panel").classList.add("hidden");
+    document.getElementById("clients-panel").classList.remove("hidden");
+  });
+
+  document.getElementById("logout").addEventListener("click",function(){token="";location.href="/specialist-dashboard.html";});
+})();
+</script>
+</body>
+</html>
