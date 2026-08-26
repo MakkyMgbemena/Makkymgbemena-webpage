@@ -1688,3 +1688,8 @@ a.footer-contact-item:hover { text-decoration: underline; }
   .mascot-talking { left: 2%; }
   .mascot-desk { right: 2%; }
 }
+
+/* mascot-mobile: hide bunnies on phones (clean halo-only strip) */
+@media (max-width: 700px) {
+  .mascot { display: none; }
+}
