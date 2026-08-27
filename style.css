@@ -1732,3 +1732,7 @@ body.ad-modal-open{overflow:hidden}
 .utility-bar a:hover,.utility-bar a:focus-visible{background:#477a56;color:#fff}
 /* remove the deco dash above the principle cards */
 .principle-line{display:none}
+
+/* Prevent horizontal overflow "shaking" from animated transforms
+   (consultation-callout, tool-list halo, mascots) */
+html, body { overflow-x: hidden; width: 100%; position: relative; }
