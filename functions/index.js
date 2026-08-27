@@ -294,3 +294,32 @@ exports.adWebhook = onRequest(
     res.json({received: true});
   }
 );
+
+// ===== Local Ad Screen: specialist review =====
+exports.listAds = onRequest({cors: true}, async (req, res) => {
+  try {
+    await requireSpecialist(req);
+    const snap = await admin.firestore().collection("ads").orderBy("createdAt", "desc").get();
+    const ads = snap.docs.map(d => ({id: d.id, ...d.data()}));
+    res.json({ads});
+  } catch (e) {
+    logger.error("listAds error", e);
+    res.status(401).json({error: "Not authorized."});
+  }
+});
+
+exports.reviewAd = onRequest({cors: true}, async (req, res) => {
+  try {
+    await requireSpecialist(req);
+    const {id, approve} = req.body || {};
+    if (!id) return res.status(400).json({error: "id is required."});
+    await admin.firestore().collection("ads").doc(id).update({
+      status: approve ? "approved" : "rejected",
+      reviewedAt: admin.firestore.FieldValue.serverTimestamp(),
+    });
+    res.json({ok: true});
+  } catch (e) {
+    logger.error("reviewAd error", e);
+    res.status(401).json({error: "Not authorized."});
+  }
+});

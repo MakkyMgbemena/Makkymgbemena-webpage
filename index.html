@@ -14,7 +14,7 @@
   <link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png">
 
   <meta name="description" content="Travel Bunny business services.">
-  <link rel="stylesheet" href="style.css?v=ad-3">
+  <link rel="stylesheet" href="style.css?v=adreserve-5">
 </head>
 <body>
   <header class="site-header">
@@ -198,6 +198,7 @@
         <span data-current-video>1</span><span aria-hidden="true">/</span><span>5</span>
         <span class="visually-hidden"> videos</span>
       </p>
+      <button id="ad-reserve" class="ad-reserve-btn" type="button">Reserve your spot</button>
       <button type="button" class="projector-next" data-next-video>
         <span>Next video</span><span aria-hidden="true">→</span>
       </button>
@@ -442,6 +443,43 @@
     gsap.to('.mascot-wander', { rotation: 5, duration: 0.35, yoyo: true, repeat: -1, ease: 'sine.inOut' });
     gsap.to('.mascot-wander', { y: -8, duration: 0.35, yoyo: true, repeat: -1, ease: 'sine.inOut' });
   });
+  </script>
+  <div class="ad-modal" id="ad-reserve-modal" hidden>
+    <div class="ad-modal-box">
+      <h3>Reserve your ad spot</h3>
+      <p class="ad-modal-sub">$3.99/month to get your business on the screen. Pay now; you'll send your ad art after approval.</p>
+      <label>Business name<input id="ad-business" type="text" required></label>
+      <label>Email<input id="ad-email" type="email" required></label>
+      <label>Image or video URL (optional)<input id="ad-media" type="text" placeholder="https://..."></label>
+      <button id="ad-reserve-submit" type="button">Reserve &amp; pay</button>
+      <button class="ad-modal-close" id="ad-close" type="button">Close</button>
+      <div class="ad-modal-msg" id="ad-msg"></div>
+    </div>
+  </div>
+  <script>
+  (function(){
+    var BASE='https://us-central1-makkymgbemena-webpage.cloudfunctions.net';
+    var btn=document.getElementById('ad-reserve'), modal=document.getElementById('ad-reserve-modal');
+    var close=document.getElementById('ad-close'), submit=document.getElementById('ad-reserve-submit');
+    var msg=document.getElementById('ad-msg');
+    if(!btn||!modal) return;
+    var show=function(t,err){msg.textContent=t||'';msg.className='ad-modal-msg'+(err?' err':'');};
+    btn.addEventListener('click',function(){modal.hidden=false;document.body.classList.add('ad-modal-open');});
+    close.addEventListener('click',function(){modal.hidden=true;document.body.classList.remove('ad-modal-open');});
+    submit.addEventListener('click',async function(){
+      var business=document.getElementById('ad-business').value.trim();
+      var email=document.getElementById('ad-email').value.trim();
+      var media=document.getElementById('ad-media').value.trim();
+      if(!business||!email){show('Please enter your business name and email.',true);return;}
+      submit.disabled=true; show('Redirecting to secure checkout…',false);
+      try{
+        var r=await fetch(BASE+'/adCheckout',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({email:email,business:business,imageUrl:media,videoUrl:media})});
+        var d=await r.json().catch(function(){return{};});
+        if(d.url){window.location.href=d.url;return;}
+        throw new Error(d.error||'Something went wrong.');
+      }catch(e){submit.disabled=false;show(e.message,true);}
+    });
+  })();
   </script>
 </body>
 </html>

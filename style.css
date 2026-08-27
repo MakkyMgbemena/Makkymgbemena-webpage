@@ -1693,3 +1693,31 @@ a.footer-contact-item:hover { text-decoration: underline; }
 @media (max-width: 700px) {
   .mascot { display: none; }
 }
+
+/* Ad Screen reserve modal */
+.ad-reserve-btn{display:inline-block;margin-top:22px;background:#568c68;color:#fff;border:0;border-radius:999px;padding:14px 28px;font-size:16px;font-weight:700;cursor:pointer}
+.ad-modal{position:fixed;inset:0;background:rgba(0,0,0,.6);display:flex;align-items:center;justify-content:center;z-index:60;padding:20px}
+.ad-modal[hidden]{display:none}
+.ad-modal-box{background:#fff;color:#0b1710;border-radius:16px;padding:28px;width:min(420px,100%);max-width:420px;min-width:300px}
+.ad-modal-box h3{margin:0 0 8px}
+.ad-modal-sub{color:#666;font-size:14px;margin:0 0 16px}
+.ad-modal-box label{font-weight:600;font-size:14px;display:block;margin:12px 0 6px}
+.ad-modal-box input{width:100%;padding:11px;font-size:15px;border:1px solid #ddd;border-radius:8px}
+.ad-modal-box button{background:#568c68;color:#fff;border:0;border-radius:8px;padding:12px 18px;font-size:15px;font-weight:700;cursor:pointer;margin-top:14px}
+.ad-modal-box button.ad-modal-close{background:#eef1ee;color:#0b1710;margin-left:10px}
+.ad-modal-msg{margin-top:10px;font-size:14px;min-height:18px}
+.ad-modal-msg.err{color:#b00020}
+
+/* Ad reserve button: right-aligned, content width */
+.ad-reserve-btn{display:block;margin-left:auto;width:fit-content;margin-top:22px;background:#568c68;color:#fff;border:0;border-radius:999px;padding:12px 22px;font-size:15px;font-weight:700;cursor:pointer}
+
+/* place the reserve button in the right column, right-aligned */
+.ad-reserve-btn{grid-column:2;justify-self:end}
+
+/* reserve button centered in the projector controls */
+.ad-reserve-btn{grid-column:auto;justify-self:auto;display:inline-block;margin:0 14px;width:auto;background:#568c68;color:#fff;border:0;border-radius:999px;padding:10px 20px;font-size:14px;font-weight:700;cursor:pointer}
+
+/* lock page scroll behind the modal */
+body.ad-modal-open{overflow:hidden}
+/* make sure the reserve button doesn't inherit projector/tool hover animations */
+#ad-reserve{animation:none;transition:none}

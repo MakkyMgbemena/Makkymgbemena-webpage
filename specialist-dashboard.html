@@ -44,6 +44,12 @@ button.ghost{background:#eef1ee;color:var(--dark)}
     <div id="clients"><p class="muted">Loading…</p></div>
   </div>
 
+  <div class="card hidden" id="ads-panel">
+    <h1>Ad reviews</h1>
+    <p class="muted">Approve or reject Local Ad Screen submissions.</p>
+    <div id="ads"><p class="muted">Loading…</p></div>
+  </div>
+
   <div class="card hidden" id="client-panel">
     <button class="ghost" id="back">← Back to clients</button>
     <h1 id="c-email"></h1>
@@ -174,6 +180,27 @@ button.ghost{background:#eef1ee;color:var(--dark)}
     document.getElementById("client-panel").classList.add("hidden");
     document.getElementById("clients-panel").classList.remove("hidden");
   });
+
+  async function loadAds(){
+    var data = await api("/listAds",{});
+    renderAds(data.ads);
+    document.getElementById("ads-panel").classList.remove("hidden");
+  }
+  async function reviewAd(id, approve){
+    await api("/reviewAd",{id:id, approve:approve});
+    await loadAds();
+  }
+  function renderAds(list){
+    document.getElementById("ads").innerHTML = list.length ? list.map(function(a){
+      var st = a.status || "pending", isPending = (st==="pending");
+      var media = a.imageUrl || a.videoUrl || "";
+      var mediaHtml = media ? '<div class="muted">'+esc(media)+'</div>' : '';
+      var btns = isPending ? '<button class="ghost" data-approve="'+esc(a.id)+'">Approve</button> <button class="ghost" data-reject="'+esc(a.id)+'">Reject</button>' : '';
+      return '<div class="client"><div class="row"><div><strong>'+esc(a.business||a.email)+'</strong><div class="muted">'+esc(a.email||"")+'</div>'+mediaHtml+'</div><span class="badge">'+esc(st)+'</span></div>'+btns+'</div>';
+    }).join("") : '<p class="muted">No ad submissions yet.</p>';
+    Array.prototype.forEach.call(document.querySelectorAll("[data-approve]"),function(b){b.addEventListener("click",function(){reviewAd(b.getAttribute("data-approve"),true);});});
+    Array.prototype.forEach.call(document.querySelectorAll("[data-reject]"),function(b){b.addEventListener("click",function(){reviewAd(b.getAttribute("data-reject"),false);});});
+  }
 
   document.getElementById("logout").addEventListener("click",function(){token="";location.href="/specialist-dashboard.html";});
 })();
