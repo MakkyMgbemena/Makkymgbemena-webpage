@@ -335,3 +335,16 @@ exports.getActiveAds = onRequest({cors: true}, async (req, res) => {
     res.json({ads: []});
   }
 });
+
+exports.deleteAd = onRequest({cors: true}, async (req, res) => {
+  try {
+    await requireSpecialist(req);
+    const {id} = req.body || {};
+    if (!id) return res.status(400).json({error: "id is required."});
+    await admin.firestore().collection("ads").doc(id).delete();
+    res.json({ok: true});
+  } catch (e) {
+    logger.error("deleteAd error", e);
+    res.status(401).json({error: "Not authorized."});
+  }
+});
