@@ -323,3 +323,18 @@ exports.reviewAd = onRequest({cors: true}, async (req, res) => {
     res.status(401).json({error: "Not authorized."});
   }
 });
+
+// public: approved ads for the Local Ad Screen
+exports.getActiveAds = onRequest({cors: true}, async (req, res) => {
+  try {
+    const snap = await admin.firestore().collection("ads")
+      .where("status", "==", "approved")
+      .orderBy("createdAt", "asc")
+      .get();
+    const ads = snap.docs.map(d => ({id: d.id, ...d.data()}));
+    res.json({ads});
+  } catch (e) {
+    logger.error("getActiveAds error", e);
+    res.json({ads: []});
+  }
+});

@@ -100,38 +100,37 @@ if (window.location.hash) {
 const videoProjector = document.querySelector('[data-video-projector]');
 
 if (videoProjector) {
-  const videoSlides = [
-    { title: 'Your business here', src: '' },
-    { title: 'Your business here', src: '' },
-    { title: 'Your business here', src: '' },
-    { title: 'Your business here', src: '' },
-    { title: 'Your business here', src: '' }
-  ];
+  const BASE = 'https://us-central1-makkymgbemena-webpage.cloudfunctions.net';
+  let videoSlides = [ { title: 'Your business here', src: '', sub: 'Ad rotation preview. Live spots opening soon' } ];
 
   const video = videoProjector.querySelector('.projector-video');
   const placeholder = videoProjector.querySelector('[data-video-placeholder]');
   const number = videoProjector.querySelector('[data-video-number]');
   const title = videoProjector.querySelector('[data-video-title]');
   const current = videoProjector.querySelector('[data-current-video]');
+  const total = videoProjector.querySelector('[data-video-total]');
   const next = videoProjector.querySelector('[data-next-video]');
+  const subEl = placeholder.querySelector('span:last-child');
   let currentSlide = 0;
 
   const renderVideoSlide = () => {
-    const slide = videoSlides[currentSlide];
+    const slide = videoSlides[currentSlide] || { title: 'Your business here', src: '', sub: '' };
     current.textContent = String(currentSlide + 1);
-    number.textContent = `Slot ${String(currentSlide + 1).padStart(2, '0')}`;
+    if (total) total.textContent = String(videoSlides.length);
+    number.textContent = 'Slot ' + String(currentSlide + 1).padStart(2, '0');
     title.textContent = slide.title;
-
-    if (slide.src) {
-      video.src = slide.src;
-      video.hidden = false;
-      placeholder.hidden = true;
-      video.load();
+    if (subEl && slide.sub) subEl.textContent = slide.sub;
+    if (slide.image) {
+      placeholder.style.backgroundImage = 'url(' + slide.image + ')';
+      placeholder.style.backgroundSize = 'cover';
+      placeholder.style.backgroundPosition = 'center';
+      video.hidden = true; placeholder.hidden = false;
+    } else if (slide.src) {
+      placeholder.style.backgroundImage = '';
+      video.src = slide.src; video.hidden = false; placeholder.hidden = true; video.load();
     } else {
-      video.pause();
-      video.removeAttribute('src');
-      video.hidden = true;
-      placeholder.hidden = false;
+      placeholder.style.backgroundImage = '';
+      video.pause(); video.removeAttribute('src'); video.hidden = true; placeholder.hidden = false;
     }
   };
 
@@ -139,6 +138,22 @@ if (videoProjector) {
     currentSlide = (currentSlide + 1) % videoSlides.length;
     renderVideoSlide();
   });
+
+  fetch(BASE + '/getActiveAds', {method:'POST', headers:{'Content-Type':'application/json'}, body:'{}'})
+    .then(function(r){ return r.json(); })
+    .then(function(d){
+      const ads = (d.ads || []).filter(function(a){ return a.status === 'approved'; });
+      if (ads.length) {
+        videoSlides = ads.map(function(a){
+          const isImage = a.imageUrl && /\.(png|jpe?g|webp|gif)$/i.test(a.imageUrl);
+          const isVideo = a.videoUrl && /\.(mp4|webm|mov)$/i.test(a.videoUrl);
+          return { title: a.business || 'Your business here', sub: (a.videoUrl || a.imageUrl || a.email || ''), image: isImage ? a.imageUrl : '', src: isVideo ? a.videoUrl : '' };
+        });
+        currentSlide = 0;
+      }
+      renderVideoSlide();
+    })
+    .catch(function(){ renderVideoSlide(); });
 
   renderVideoSlide();
 }

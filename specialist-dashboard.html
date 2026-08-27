@@ -133,6 +133,7 @@ button.ghost{background:#eef1ee;color:var(--dark)}
     clientsCache=data.clients;
     renderClients(data.clients);
     document.getElementById("clients-panel").classList.remove("hidden");
+    await loadAds();
     document.getElementById("login-modal").style.display="none";
   }
 
