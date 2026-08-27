@@ -195,7 +195,12 @@ button.ghost{background:#eef1ee;color:var(--dark)}
     document.getElementById("ads").innerHTML = list.length ? list.map(function(a){
       var st = a.status || "pending", isPending = (st==="pending");
       var media = a.imageUrl || a.videoUrl || "";
-      var mediaHtml = media ? '<div class="muted">'+esc(media)+'</div>' : '';
+      var mediaHtml='';
+      if(media){
+        if(/\.(png|jpe?g|webp|gif)$/i.test(media)){ mediaHtml='<img src="'+esc(media)+'" style="max-width:100%;max-height:180px;border-radius:8px;margin-top:8px">'; }
+        else if(/youtube|youtu\.be/i.test(media)){ var m=media.match(/(?:youtube\.com\/(?:watch\?v=|shorts\/|embed\/)|youtu\.be\/)([A-Za-z0-9_-]{6,})/); mediaHtml=m?'<iframe src="https://www.youtube.com/embed/'+m[1]+'" style="width:100%;aspect-ratio:16/9;border:0;border-radius:8px;margin-top:8px" allowfullscreen></iframe>':'<div class="muted">'+esc(media)+'</div>'; }
+        else { mediaHtml='<video src="'+esc(media)+'" controls style="max-width:100%;max-height:180px;border-radius:8px;margin-top:8px"></video>'; }
+      }
       var btns = isPending ? '<button class="ghost" data-approve="'+esc(a.id)+'">Approve</button> <button class="ghost" data-reject="'+esc(a.id)+'">Reject</button>' : '';
       return '<div class="client"><div class="row"><div><strong>'+esc(a.business||a.email)+'</strong><div class="muted">'+esc(a.email||"")+'</div>'+mediaHtml+'</div><span class="badge">'+esc(st)+'</span></div>'+btns+'</div>';
     }).join("") : '<p class="muted">No ad submissions yet.</p>';

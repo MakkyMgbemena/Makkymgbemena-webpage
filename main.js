@@ -129,7 +129,7 @@ if (videoProjector) {
     if (subEl && slide.sub) subEl.textContent = slide.sub;
 
     if (slide.youtube) {
-      placeholder.innerHTML = '<iframe src="' + slide.youtube + '" style="position:absolute;inset:0;width:100%;height:100%;border:0" allow="autoplay; encrypted-media; picture-in-picture" allowfullscreen></iframe>';
+      placeholder.innerHTML = '<iframe src="' + slide.youtube + '?autoplay=1&mute=1" style="position:absolute;inset:0;width:100%;height:100%;border:0" allow="autoplay; encrypted-media; picture-in-picture" allowfullscreen></iframe>';
       placeholder.hidden = false; video.hidden = true;
       return;
     }
@@ -142,7 +142,7 @@ if (videoProjector) {
       video.hidden = true; placeholder.hidden = false;
     } else if (slide.src) {
       placeholder.style.backgroundImage = '';
-      video.src = slide.src; video.hidden = false; placeholder.hidden = true; video.load();
+      video.src = slide.src; video.hidden = false; placeholder.hidden = true; video.muted = true; video.playsInline = true; video.autoplay = true; video.load(); video.play().catch(function(){});
     } else {
       placeholder.style.backgroundImage = '';
       video.pause(); video.removeAttribute('src'); video.hidden = true; placeholder.hidden = false;

@@ -231,8 +231,8 @@ exports.adCheckout = onRequest(
         line_items: [{price: prices.data[0].id, quantity: 1}],
         customer_email: email,
         metadata: {business: business || "", imageUrl: imageUrl || "", videoUrl: videoUrl || ""},
-        success_url: "https://travelbunny.services/booking-success.html",
-        cancel_url: "https://travelbunny.services/booking-cancelled.html",
+        success_url: "https://travelbunny.services/ad-success.html",
+        cancel_url: "https://travelbunny.services/ad-cancelled.html",
       });
       res.json({url: session.url});
     } catch (err) {
