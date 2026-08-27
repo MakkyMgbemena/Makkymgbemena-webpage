@@ -142,7 +142,7 @@ if (videoProjector) {
       video.hidden = true; placeholder.hidden = false;
     } else if (slide.src) {
       placeholder.style.backgroundImage = '';
-      video.src = slide.src; video.hidden = false; placeholder.hidden = true; video.muted = true; video.playsInline = true; video.autoplay = true; video.load(); video.play().catch(function(){});
+      video.src = slide.src; video.hidden = false; placeholder.hidden = true; video.muted = true; video.playsInline = true; video.autoplay = true; video.loop = true; video.preload = 'auto'; video.load(); video.play().catch(function(){});
     } else {
       placeholder.style.backgroundImage = '';
       video.pause(); video.removeAttribute('src'); video.hidden = true; placeholder.hidden = false;
@@ -159,10 +159,11 @@ if (videoProjector) {
     .then(function(d){
       const ads = (d.ads || []).filter(function(a){ return a.status === 'approved'; });
       if (ads.length) {
-        videoSlides = ads.map(function(a){
-          const isImage = a.imageUrl && /\.(png|jpe?g|webp|gif)$/i.test(a.imageUrl);
-          const isVideo = a.videoUrl && /\.(mp4|webm|mov)$/i.test(a.videoUrl);
-          return { title: a.business || 'Your business here', sub: (a.videoUrl || a.imageUrl || a.email || ''), image: isImage ? a.imageUrl : '', src: isVideo ? a.videoUrl : '', youtube: youTubeEmbed(a.videoUrl || a.imageUrl || '') };
+                videoSlides = ads.map(function(a){
+          var mediaUrl = a.videoUrl || a.imageUrl || '';
+          var yt = youTubeEmbed(mediaUrl);
+          var isImage = /\.(png|jpe?g|webp|gif)(\?|$)/i.test(a.imageUrl || '');
+          return { title: a.business || 'Your business here', sub: (mediaUrl || a.email || ''), image: isImage ? a.imageUrl : '', src: (!isImage && !yt) ? mediaUrl : '', youtube: yt };
         });
         currentSlide = 0;
       }
