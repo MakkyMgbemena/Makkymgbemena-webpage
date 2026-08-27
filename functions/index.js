@@ -203,3 +203,94 @@ exports.replyClientComment = onRequest({cors: true}, async (req, res) => {
   }
 });
 
+// ===== Local Ad Screen: subscription checkout + daily intake cap =====
+const AD_LOOKUP = "ad-screen-starter-monthly-cad";
+const AD_DAILY_CAP = 10;
+
+exports.adCheckout = onRequest(
+  {secrets: [stripeSecretKey], cors: true},
+  async (req, res) => {
+    try {
+      const stripe = require("stripe")(stripeSecretKey.value());
+      const {email, business, imageUrl, videoUrl} = req.body || {};
+      if (!email) return res.status(400).json({error: "Email is required."});
+
+      const db = admin.firestore();
+      const day = new Date().toISOString().slice(0, 10); // YYYY-MM-DD
+      const counter = await db.collection("adMeta").doc(day).get();
+      const used = counter.exists ? (counter.data().intake || 0) : 0;
+      if (used >= AD_DAILY_CAP) {
+        return res.status(409).json({error: "Today's ad intake is full. Please try again tomorrow."});
+      }
+
+      const prices = await stripe.prices.list({lookup_keys: [AD_LOOKUP]});
+      if (!prices.data.length) return res.status(404).json({error: `Ad price not found for "${AD_LOOKUP}".`});
+
+      const session = await stripe.checkout.sessions.create({
+        mode: "subscription",
+        line_items: [{price: prices.data[0].id, quantity: 1}],
+        customer_email: email,
+        metadata: {business: business || "", imageUrl: imageUrl || "", videoUrl: videoUrl || ""},
+        success_url: "https://travelbunny.services/booking-success.html",
+        cancel_url: "https://travelbunny.services/booking-cancelled.html",
+      });
+      res.json({url: session.url});
+    } catch (err) {
+      logger.error("adCheckout error", err);
+      res.status(500).json({error: "Something went wrong starting your ad checkout."});
+    }
+  }
+);
+
+// ===== Local Ad Screen: Stripe webhook -> pending/active/expired ad =====
+const stripeWebhookSecret = defineSecret("STRIPE_WEBHOOK_SECRET");
+
+const adsBySub = (subId) => admin.firestore().collection("ads").where("stripeSubId", "==", subId).limit(1);
+
+exports.adWebhook = onRequest(
+  {secrets: [stripeSecretKey, stripeWebhookSecret], cors: false},
+  async (req, res) => {
+    const stripe = require("stripe")(stripeSecretKey.value());
+    const sig = req.headers["stripe-signature"];
+    const payload = req.rawBody || Buffer.from(JSON.stringify(req.body || {}));
+    let event;
+    try {
+      event = stripe.webhooks.constructEvent(payload, sig, stripeWebhookSecret.value());
+    } catch (e) {
+      return res.status(400).json({error: "Webhook signature verification failed."});
+    }
+
+    const db = admin.firestore();
+    if (event.type === "checkout.session.completed") {
+      const s = event.data.object;
+      const meta = s.metadata || {};
+      const day = new Date().toISOString().slice(0, 10);
+      await db.collection("ads").add({
+        business: meta.business || "",
+        imageUrl: meta.imageUrl || "",
+        videoUrl: meta.videoUrl || "",
+        email: s.customer_email || "",
+        stripeCustomer: s.customer,
+        stripeSubId: s.subscription,
+        status: "pending",
+        day: day,
+        createdAt: admin.firestore.FieldValue.serverTimestamp(),
+      });
+      await db.collection("adMeta").doc(day).set(
+        {intake: admin.firestore.FieldValue.increment(1)},
+        {merge: true}
+      );
+    } else if (event.type === "invoice.paid") {
+      const inv = event.data.object;
+      const snap = await adsBySub(inv.subscription).get();
+      if (!snap.empty) {
+        await snap.docs[0].ref.update({status: "active", paidAt: admin.firestore.FieldValue.serverTimestamp()});
+      }
+    } else if (event.type === "customer.subscription.deleted") {
+      const sub = event.data.object;
+      const snap = await adsBySub(sub.id).get();
+      if (!snap.empty) { await snap.docs[0].ref.update({status: "expired"}); }
+    }
+    res.json({received: true});
+  }
+);
