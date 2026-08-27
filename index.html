@@ -451,11 +451,14 @@
       <label>Business name<input id="ad-business" type="text" required></label>
       <label>Email<input id="ad-email" type="email" required></label>
       <label>Image or video URL (optional)<input id="ad-media" type="text" placeholder="https://..."></label>
+      <label>Upload image or video (mp4)<input id="ad-file" type="file" accept="image/*,video/mp4,video/webm"></label>
       <button id="ad-reserve-submit" type="button">Reserve &amp; pay</button>
       <button class="ad-modal-close" id="ad-close" type="button">Close</button>
       <div class="ad-modal-msg" id="ad-msg"></div>
     </div>
   </div>
+  <script src="https://www.gstatic.com/firebasejs/10.12.0/firebase-app-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/10.12.0/firebase-storage-compat.js"></script>
   <script>
   (function(){
     var BASE='https://us-central1-makkymgbemena-webpage.cloudfunctions.net';
@@ -463,6 +466,11 @@
     var close=document.getElementById('ad-close'), submit=document.getElementById('ad-reserve-submit');
     var msg=document.getElementById('ad-msg');
     if(!btn||!modal) return;
+    var fileInput=document.getElementById('ad-file');
+    firebase.initializeApp({apiKey:'AIzaSyAqbMu6_vNoZIGrU7Unl3wAYtDYDZ7CFAk',authDomain:'makkymgbemena-webpage.firebaseapp.com',projectId:'makkymgbemena-webpage',storageBucket:'makkymgbemena-webpage.firebasestorage.app'});
+    var storage=firebase.storage();
+    function uploadFile(file){var path='ads/'+Date.now()+'_'+file.name.replace(/[^a-zA-Z0-9._-]/g,'_');var ref=storage.ref(path);return ref.put(file).then(function(){return ref.getDownloadURL();});}
+
     var show=function(t,err){msg.textContent=t||'';msg.className='ad-modal-msg'+(err?' err':'');};
     btn.addEventListener('click',function(){modal.hidden=false;document.body.classList.add('ad-modal-open');});
     close.addEventListener('click',function(){modal.hidden=true;document.body.classList.remove('ad-modal-open');});
