@@ -1721,3 +1721,14 @@ a.footer-contact-item:hover { text-decoration: underline; }
 body.ad-modal-open{overflow:hidden}
 /* make sure the reserve button doesn't inherit projector/tool hover animations */
 #ad-reserve{animation:none;transition:none}
+
+/* Next button as a pill (same style as Reserve) */
+.projector-next{display:inline-flex;align-items:center;gap:8px;background:#568c68;color:#fff;border:0;border-radius:999px;padding:12px 22px;font-size:15px;font-weight:700;cursor:pointer;margin-left:auto}
+.projector-next:hover,.projector-next:focus-visible{background:#477a56;color:#fff}
+.projector-next span:last-child{font-size:inherit;font-weight:inherit;transform:none;transition:none}
+
+/* Client Login / Specialist as pill buttons */
+.utility-bar a{display:inline-block;background:#568c68;color:#fff;border-radius:999px;padding:8px 16px;font-size:13px;font-weight:700;text-decoration:none;transition:background 160ms ease}
+.utility-bar a:hover,.utility-bar a:focus-visible{background:#477a56;color:#fff}
+/* remove the deco dash above the principle cards */
+.principle-line{display:none}
