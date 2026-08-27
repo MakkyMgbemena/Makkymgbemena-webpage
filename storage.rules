@@ -3,7 +3,7 @@ service firebase.storage {
   match /b/{bucket}/o {
     match /ads/{file} {
       allow read: if true;
-      allow write: if request.resource.size < 100 * 1024 * 1024;
+      allow write: if true;
     }
   }
 }
