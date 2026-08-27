@@ -101,6 +101,12 @@ const videoProjector = document.querySelector('[data-video-projector]');
 
 if (videoProjector) {
   const BASE = 'https://us-central1-makkymgbemena-webpage.cloudfunctions.net';
+  function youTubeEmbed(url){
+    if(!url) return '';
+    var m = url.match(/(?:youtube\.com\/(?:watch\?v=|shorts\/|embed\/)|youtu\.be\/)([A-Za-z0-9_-]{6,})/);
+    return m ? 'https://www.youtube.com/embed/' + m[1] : '';
+  }
+
   let videoSlides = [ { title: 'Your business here', src: '', sub: 'Ad rotation preview. Live spots opening soon' } ];
 
   const video = videoProjector.querySelector('.projector-video');
@@ -111,6 +117,7 @@ if (videoProjector) {
   const total = videoProjector.querySelector('[data-video-total]');
   const next = videoProjector.querySelector('[data-next-video]');
   const subEl = placeholder.querySelector('span:last-child');
+  const placeholderHtml = placeholder.innerHTML;
   let currentSlide = 0;
 
   const renderVideoSlide = () => {
@@ -120,6 +127,14 @@ if (videoProjector) {
     number.textContent = 'Slot ' + String(currentSlide + 1).padStart(2, '0');
     title.textContent = slide.title;
     if (subEl && slide.sub) subEl.textContent = slide.sub;
+
+    if (slide.youtube) {
+      placeholder.innerHTML = '<iframe src="' + slide.youtube + '" style="position:absolute;inset:0;width:100%;height:100%;border:0" allow="autoplay; encrypted-media; picture-in-picture" allowfullscreen></iframe>';
+      placeholder.hidden = false; video.hidden = true;
+      return;
+    }
+    if (!placeholder.querySelector('[data-video-title]')) placeholder.innerHTML = placeholderHtml;
+
     if (slide.image) {
       placeholder.style.backgroundImage = 'url(' + slide.image + ')';
       placeholder.style.backgroundSize = 'cover';
@@ -147,7 +162,7 @@ if (videoProjector) {
         videoSlides = ads.map(function(a){
           const isImage = a.imageUrl && /\.(png|jpe?g|webp|gif)$/i.test(a.imageUrl);
           const isVideo = a.videoUrl && /\.(mp4|webm|mov)$/i.test(a.videoUrl);
-          return { title: a.business || 'Your business here', sub: (a.videoUrl || a.imageUrl || a.email || ''), image: isImage ? a.imageUrl : '', src: isVideo ? a.videoUrl : '' };
+          return { title: a.business || 'Your business here', sub: (a.videoUrl || a.imageUrl || a.email || ''), image: isImage ? a.imageUrl : '', src: isVideo ? a.videoUrl : '', youtube: youTubeEmbed(a.videoUrl || a.imageUrl || '') };
         });
         currentSlide = 0;
       }
