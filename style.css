@@ -1736,3 +1736,24 @@ body.ad-modal-open{overflow:hidden}
 /* Prevent horizontal overflow "shaking" from animated transforms
    (consultation-callout, tool-list halo, mascots) */
 html, body { overflow-x: hidden; width: 100%; position: relative; }
+
+/* About section */
+.about-section{display:grid;grid-template-columns:minmax(220px,.8fr) minmax(0,1.2fr);gap:clamp(32px,5vw,80px);background:#fff;padding:96px 44px;max-width:1200px;margin:0 auto}
+.about-photo .about-photo-placeholder{aspect-ratio:3/4;max-width:320px;border-radius:22px;border:2px dashed #c9d2cd;background:#f3f6f4;display:flex;align-items:center;justify-content:center;color:#93a19b;font-size:14px;font-weight:600}
+.about-copy{display:grid;align-content:center;gap:18px}
+.about-copy h2{font-size:clamp(30px,4vw,54px);font-weight:600;letter-spacing:-.02em;margin:0;line-height:1.1}
+.about-copy p{font-size:18px;line-height:1.6;color:#414a44;margin:0;max-width:760px}
+@media(max-width:820px){.about-section{grid-template-columns:1fr;padding:64px 22px}.about-photo .about-photo-placeholder{max-width:100%}}
+
+/* Footer about (in footer-main) */
+
+.footer-about{display:grid;gap:10px;align-content:start}
+.footer-about-photo .about-photo-placeholder{aspect-ratio:4/3;max-width:170px;border-radius:14px;border:2px dashed #c9d2cd;background:#eef0ee;display:flex;align-items:center;justify-content:center;color:#93a19b;font-size:13px;font-weight:600}
+.footer-about-kicker{color:#568c68;font-size:12px;font-weight:800;letter-spacing:.12em;text-transform:uppercase;margin:10px 0 4px}
+.footer-about-title{font-size:22px;font-weight:700;margin:0 0 8px;color:#1c2a22}
+.footer-about-text{font-size:14px;line-height:1.55;color:#5b6660;margin:0}
+
+/* Clean footer: brand | about | contact */
+.footer-main{display:grid;grid-template-columns:1fr 1.2fr 1fr;gap:56px;align-items:start}
+.footer-main > *{min-width:0}
+@media(max-width:820px){.footer-main{grid-template-columns:1fr;gap:36px}}
