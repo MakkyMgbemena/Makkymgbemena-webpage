@@ -20,7 +20,7 @@ const PRICE_LOOKUP_KEYS = {
 const userDoc = (email) => admin.firestore().collection("users").doc(String(email).toLowerCase());
 
 exports.createCheckoutSession = onRequest(
-  {secrets: [stripeSecretKey], cors: true},
+  {secrets: [stripeSecretKey], cors: true, invoker: "public"},
   async (req, res) => {
     try {
       const stripe = require("stripe")(stripeSecretKey.value());
@@ -85,7 +85,7 @@ async function authedEmail(req) {
   return String(decoded.email).toLowerCase();
 }
 
-exports.getProject = onRequest({cors: true}, async (req, res) => {
+exports.getProject = onRequest({cors: true, invoker: "public"}, async (req, res) => {
   try {
     const email = await authedEmail(req);
     const doc = await userDoc(email).get();
@@ -98,7 +98,7 @@ exports.getProject = onRequest({cors: true}, async (req, res) => {
   }
 });
 
-exports.addProjectComment = onRequest({cors: true}, async (req, res) => {
+exports.addProjectComment = onRequest({cors: true, invoker: "public"}, async (req, res) => {
   try {
     const email = await authedEmail(req);
     const text = String((req.body || {}).comment || "").trim();
@@ -121,7 +121,7 @@ exports.addProjectComment = onRequest({cors: true}, async (req, res) => {
 const SPECIALIST_EMAIL = "makky@travelbunny.services";
 
 // one-time: grant the specialist role (self-grant for the owner account)
-exports.setSpecialistRole = onRequest({cors: true}, async (req, res) => {
+exports.setSpecialistRole = onRequest({cors: true, invoker: "public"}, async (req, res) => {
   try {
     const {token} = req.body || {};
     const decoded = await admin.auth().verifyIdToken(token);
@@ -140,7 +140,7 @@ async function requireSpecialist(req) {
   return decoded;
 }
 
-exports.listClients = onRequest({cors: true}, async (req, res) => {
+exports.listClients = onRequest({cors: true, invoker: "public"}, async (req, res) => {
   try {
     await requireSpecialist(req);
     const snap = await admin.firestore().collection("users").get();
@@ -152,7 +152,7 @@ exports.listClients = onRequest({cors: true}, async (req, res) => {
   }
 });
 
-exports.updateClientStatus = onRequest({cors: true}, async (req, res) => {
+exports.updateClientStatus = onRequest({cors: true, invoker: "public"}, async (req, res) => {
   try {
     await requireSpecialist(req);
     const {email, status} = req.body || {};
@@ -165,7 +165,7 @@ exports.updateClientStatus = onRequest({cors: true}, async (req, res) => {
   }
 });
 
-exports.sendClientUpdate = onRequest({cors: true}, async (req, res) => {
+exports.sendClientUpdate = onRequest({cors: true, invoker: "public"}, async (req, res) => {
   try {
     await requireSpecialist(req);
     const {email, text} = req.body || {};
@@ -184,7 +184,7 @@ exports.sendClientUpdate = onRequest({cors: true}, async (req, res) => {
   }
 });
 
-exports.replyClientComment = onRequest({cors: true}, async (req, res) => {
+exports.replyClientComment = onRequest({cors: true, invoker: "public"}, async (req, res) => {
   try {
     await requireSpecialist(req);
     const {email, text} = req.body || {};
@@ -208,7 +208,7 @@ const AD_LOOKUP = "ad-screen-starter-monthly-cad";
 const AD_DAILY_CAP = 10;
 
 exports.adCheckout = onRequest(
-  {secrets: [stripeSecretKey], cors: true},
+  {secrets: [stripeSecretKey], cors: true, invoker: "public"},
   async (req, res) => {
     try {
       const stripe = require("stripe")(stripeSecretKey.value());
@@ -248,7 +248,7 @@ const stripeWebhookSecret = defineSecret("STRIPE_WEBHOOK_SECRET");
 const adsBySub = (subId) => admin.firestore().collection("ads").where("stripeSubId", "==", subId).limit(1);
 
 exports.adWebhook = onRequest(
-  {secrets: [stripeSecretKey, stripeWebhookSecret], cors: false},
+  {secrets: [stripeSecretKey, stripeWebhookSecret], cors: false, invoker: "public"},
   async (req, res) => {
     const stripe = require("stripe")(stripeSecretKey.value());
     const sig = req.headers["stripe-signature"];
@@ -296,7 +296,7 @@ exports.adWebhook = onRequest(
 );
 
 // ===== Local Ad Screen: specialist review =====
-exports.listAds = onRequest({cors: true}, async (req, res) => {
+exports.listAds = onRequest({cors: true, invoker: "public"}, async (req, res) => {
   try {
     await requireSpecialist(req);
     const snap = await admin.firestore().collection("ads").orderBy("createdAt", "desc").get();
@@ -308,7 +308,7 @@ exports.listAds = onRequest({cors: true}, async (req, res) => {
   }
 });
 
-exports.reviewAd = onRequest({cors: true}, async (req, res) => {
+exports.reviewAd = onRequest({cors: true, invoker: "public"}, async (req, res) => {
   try {
     await requireSpecialist(req);
     const {id, approve} = req.body || {};
@@ -325,7 +325,7 @@ exports.reviewAd = onRequest({cors: true}, async (req, res) => {
 });
 
 // public: approved ads for the Local Ad Screen
-exports.getActiveAds = onRequest({cors: true}, async (req, res) => {
+exports.getActiveAds = onRequest({cors: true, invoker: "public"}, async (req, res) => {
   try {
     const snap = await admin.firestore().collection("ads").orderBy("createdAt", "asc").get();
     const ads = snap.docs.map(d => ({id: d.id, ...d.data()})).filter(a => a.status === "approved");
@@ -336,7 +336,7 @@ exports.getActiveAds = onRequest({cors: true}, async (req, res) => {
   }
 });
 
-exports.deleteAd = onRequest({cors: true}, async (req, res) => {
+exports.deleteAd = onRequest({cors: true, invoker: "public"}, async (req, res) => {
   try {
     await requireSpecialist(req);
     const {id} = req.body || {};

@@ -479,9 +479,12 @@
       var email=document.getElementById('ad-email').value.trim();
       var media=document.getElementById('ad-media').value.trim();
       if(!business||!email){show('Please enter your business name and email.',true);return;}
-      submit.disabled=true; show('Redirecting to secure checkout…',false);
+      submit.disabled=true; show('Processing…',false);
       try{
-        var r=await fetch(BASE+'/adCheckout',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({email:email,business:business,imageUrl:media,videoUrl:media})});
+        var url=media;
+        var file=fileInput&&fileInput.files&&fileInput.files[0];
+        if(file){ show('Uploading your file…',false); url=await uploadFile(file); }
+        var r=await fetch(BASE+'/adCheckout',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({email:email,business:business,imageUrl:url,videoUrl:url})});
         var d=await r.json().catch(function(){return{};});
         if(d.url){window.location.href=d.url;return;}
         throw new Error(d.error||'Something went wrong.');
