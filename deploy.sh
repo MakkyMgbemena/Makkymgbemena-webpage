@@ -13,6 +13,9 @@ fi
 echo "==> Pushing to GitHub (auto-deploys Hosting via Actions)"
 git push origin main
 
+echo "==> Deploying Storage rules"
+firebase deploy --only storage --project makkymgbemena-webpage
+
 echo "==> Deploying Cloud Functions"
 firebase deploy --only functions --project makkymgbemena-webpage
 
