@@ -1506,8 +1506,8 @@ button {
 .footer-cta { background: #0b1710; color: #fff; text-align: center; padding: 64px 44px; }
 .footer-cta-kicker { color: #a9b3ab; text-transform: uppercase; letter-spacing: .08em; font-weight: 600; font-size: 13px; margin: 0 0 14px; }
 .footer-cta h2 { font-size: clamp(26px, 4vw, 44px); font-weight: 500; line-height: 1.15; max-width: 780px; margin: 0 auto 28px; }
-.footer-cta-btn { display: inline-block; background: #568c68; color: #fff; border-radius: 999px; padding: 16px 32px; font-size: 17px; font-weight: 700; text-decoration: none; transition: background .15s ease; }
-.footer-cta-btn:hover { background: #477a56; }
+.footer-cta-btn { display: inline-block; background: #4b7a5a; color: #fff; border-radius: 999px; padding: 16px 32px; font-size: 17px; font-weight: 700; text-decoration: none; transition: background .15s ease; }
+.footer-cta-btn:hover { background: #3f6848; }
 .footer-main { display: grid; grid-template-columns: 1.2fr 1fr; gap: 48px; padding: 64px 44px 40px; max-width: 1200px; margin: 0 auto; }
 .footer-brand-block { display: grid; align-content: start; gap: 18px; }
 .footer-tagline { color: #666; max-width: 360px; line-height: 1.5; }
@@ -1527,7 +1527,7 @@ button {
 /* Footer contact items (image + svg icons) */
 .footer-contact { gap: 14px; }
 .footer-contact-item { display: inline-flex; align-items: center; gap: 10px; font-size: 16px; color: #292b29; text-decoration: none; line-height: 1.4; }
-.footer-contact-item img, .footer-contact-item svg { width: 20px; height: 20px; flex: 0 0 auto; object-fit: contain; color: #568c68; }
+.footer-contact-item img, .footer-contact-item svg { width: 20px; height: 20px; flex: 0 0 auto; object-fit: contain; color: #4b7a5a; }
 a.footer-contact-item:hover { text-decoration: underline; }
 
 
@@ -1695,7 +1695,7 @@ a.footer-contact-item:hover { text-decoration: underline; }
 }
 
 /* Ad Screen reserve modal */
-.ad-reserve-btn{display:inline-block;margin-top:22px;background:#568c68;color:#fff;border:0;border-radius:999px;padding:14px 28px;font-size:16px;font-weight:700;cursor:pointer}
+.ad-reserve-btn{display:inline-block;margin-top:22px;background:#4b7a5a;color:#fff;border:0;border-radius:999px;padding:14px 28px;font-size:16px;font-weight:700;cursor:pointer}
 .ad-modal{position:fixed;inset:0;background:rgba(0,0,0,.6);display:flex;align-items:center;justify-content:center;z-index:60;padding:20px}
 .ad-modal[hidden]{display:none}
 .ad-modal-box{background:#fff;color:#0b1710;border-radius:16px;padding:28px;width:min(420px,100%);max-width:420px;min-width:300px}
@@ -1703,19 +1703,19 @@ a.footer-contact-item:hover { text-decoration: underline; }
 .ad-modal-sub{color:#666;font-size:14px;margin:0 0 16px}
 .ad-modal-box label{font-weight:600;font-size:14px;display:block;margin:12px 0 6px}
 .ad-modal-box input{width:100%;padding:11px;font-size:15px;border:1px solid #ddd;border-radius:8px}
-.ad-modal-box button{background:#568c68;color:#fff;border:0;border-radius:8px;padding:12px 18px;font-size:15px;font-weight:700;cursor:pointer;margin-top:14px}
+.ad-modal-box button{background:#4b7a5a;color:#fff;border:0;border-radius:8px;padding:12px 18px;font-size:15px;font-weight:700;cursor:pointer;margin-top:14px}
 .ad-modal-box button.ad-modal-close{background:#eef1ee;color:#0b1710;margin-left:10px}
 .ad-modal-msg{margin-top:10px;font-size:14px;min-height:18px}
 .ad-modal-msg.err{color:#b00020}
 
 /* Ad reserve button: right-aligned, content width */
-.ad-reserve-btn{display:block;margin-left:auto;width:fit-content;margin-top:22px;background:#568c68;color:#fff;border:0;border-radius:999px;padding:12px 22px;font-size:15px;font-weight:700;cursor:pointer}
+.ad-reserve-btn{display:block;margin-left:auto;width:fit-content;margin-top:22px;background:#4b7a5a;color:#fff;border:0;border-radius:999px;padding:12px 22px;font-size:15px;font-weight:700;cursor:pointer}
 
 /* place the reserve button in the right column, right-aligned */
 .ad-reserve-btn{grid-column:2;justify-self:end}
 
 /* reserve button centered in the projector controls */
-.ad-reserve-btn{grid-column:auto;justify-self:auto;display:inline-block;margin:0 14px;width:auto;background:#568c68;color:#fff;border:0;border-radius:999px;padding:10px 20px;font-size:14px;font-weight:700;cursor:pointer}
+.ad-reserve-btn{grid-column:auto;justify-self:auto;display:inline-block;margin:0 14px;width:auto;background:#4b7a5a;color:#fff;border:0;border-radius:999px;padding:10px 20px;font-size:14px;font-weight:700;cursor:pointer}
 
 /* lock page scroll behind the modal */
 body.ad-modal-open{overflow:hidden}
@@ -1723,13 +1723,13 @@ body.ad-modal-open{overflow:hidden}
 #ad-reserve{animation:none;transition:none}
 
 /* Next button as a pill (same style as Reserve) */
-.projector-next{display:inline-flex;align-items:center;gap:8px;background:#568c68;color:#fff;border:0;border-radius:999px;padding:12px 22px;font-size:15px;font-weight:700;cursor:pointer;margin-left:auto}
-.projector-next:hover,.projector-next:focus-visible{background:#477a56;color:#fff}
+.projector-next{display:inline-flex;align-items:center;gap:8px;background:#4b7a5a;color:#fff;border:0;border-radius:999px;padding:12px 22px;font-size:15px;font-weight:700;cursor:pointer;margin-left:auto}
+.projector-next:hover,.projector-next:focus-visible{background:#3f6848;color:#fff}
 .projector-next span:last-child{font-size:inherit;font-weight:inherit;transform:none;transition:none}
 
 /* Client Login / Specialist as pill buttons */
-.utility-bar a{display:inline-block;background:#568c68;color:#fff;border-radius:999px;padding:8px 16px;font-size:13px;font-weight:700;text-decoration:none;transition:background 160ms ease}
-.utility-bar a:hover,.utility-bar a:focus-visible{background:#477a56;color:#fff}
+.utility-bar a{display:inline-block;background:#4b7a5a;color:#fff;border-radius:999px;padding:8px 16px;font-size:13px;font-weight:700;text-decoration:none;transition:background 160ms ease}
+.utility-bar a:hover,.utility-bar a:focus-visible{background:#3f6848;color:#fff}
 /* remove the deco dash above the principle cards */
 .principle-line{display:none}
 
@@ -1749,7 +1749,7 @@ html, body { overflow-x: hidden; width: 100%; position: relative; }
 
 .footer-about{display:grid;gap:10px;align-content:start}
 .footer-about-photo .about-photo-placeholder{aspect-ratio:4/3;max-width:170px;border-radius:14px;border:2px dashed #c9d2cd;background:#eef0ee;display:flex;align-items:center;justify-content:center;color:#93a19b;font-size:13px;font-weight:600}
-.footer-about-kicker{color:#568c68;font-size:12px;font-weight:800;letter-spacing:.12em;text-transform:uppercase;margin:10px 0 4px}
+.footer-about-kicker{color:#4b7a5a;font-size:12px;font-weight:800;letter-spacing:.12em;text-transform:uppercase;margin:10px 0 4px}
 .footer-about-title{font-size:22px;font-weight:700;margin:0 0 8px;color:#1c2a22}
 .footer-about-text{font-size:14px;line-height:1.55;color:#5b6660;margin:0}
 
@@ -1762,25 +1762,25 @@ html, body { overflow-x: hidden; width: 100%; position: relative; }
 .about-hero{background:#fff;color:#1b1b1b}
 .about-hero-top{background:#0b0b0b;display:flex;align-items:center;justify-content:space-between;padding:16px 44px}
 .about-hero-logo{font-size:22px;font-weight:800;letter-spacing:-.02em;color:#fff;text-decoration:none}
-.about-hero-logo strong{color:#568c68}
+.about-hero-logo strong{color:#4b7a5a}
 .about-hero-logo span{color:#fff}
 .about-hero-body{display:grid;grid-template-columns:auto auto;justify-content:start;gap:clamp(32px,5vw,72px);align-items:center;padding:clamp(40px,6vw,96px) clamp(56px,8vw,140px);max-width:none;margin:0}
 .about-hero-left{position:relative}
-.about-hero-badge{display:inline-block;background:#568c68;color:#fff;font-size:13px;font-weight:800;letter-spacing:.08em;text-transform:uppercase;padding:8px 16px;border-radius:4px}
+.about-hero-badge{display:inline-block;background:#4b7a5a;color:#fff;font-size:13px;font-weight:800;letter-spacing:.08em;text-transform:uppercase;padding:8px 16px;border-radius:4px}
 .about-hero-title{position:relative;font-size:clamp(42px,6vw,86px);font-weight:800;letter-spacing:-.03em;line-height:1.02;margin:8px 0 22px;z-index:1}
-.about-hero-title .accent{color:#568c68}
+.about-hero-title .accent{color:#4b7a5a}
 .about-hero-title .about-watermark{position:absolute;top:-.45em;left:-.06em;font-size:2.3em;font-weight:800;letter-spacing:.02em;color:rgba(0,0,0,.05);z-index:-1;white-space:nowrap;pointer-events:none}
 .about-hero-title .about-watermark::before{content:'ABOUT'}
 .about-portrait{margin-top:8px}
 .about-photo-placeholder{display:flex;align-items:center;justify-content:center;width:min(100%,300px);aspect-ratio:3/4;border-radius:12px;background:#e9eef2;color:#8a97a3;font-size:14px;font-weight:600}
 .about-hero-right{display:grid;gap:16px;align-content:center}
-.about-hero-name{font-size:13px;font-weight:700;letter-spacing:.14em;text-transform:uppercase;color:#568c68}
+.about-hero-name{font-size:13px;font-weight:700;letter-spacing:.14em;text-transform:uppercase;color:#4b7a5a}
 .about-hero-role{font-size:clamp(26px,3.2vw,44px);font-weight:800;line-height:1.1;letter-spacing:-.02em;margin:0;color:#1b1b1b}
-.about-hero-role .accent{color:#568c68}
+.about-hero-role .accent{color:#4b7a5a}
 .about-hero-copy{display:grid;gap:12px}
 .about-hero-copy p{margin:0;color:#5b6660;font-size:16px;line-height:1.6}
-.about-hero-cta{justify-self:start;display:inline-block;background:#568c68;color:#0b0b0b;border-radius:6px;padding:14px 30px;font-weight:800;font-size:15px;text-decoration:none;margin-top:8px}
-.about-hero-cta:hover{background:#477a56}
+.about-hero-cta{justify-self:start;display:inline-block;background:#4b7a5a;color:#0b0b0b;border-radius:6px;padding:14px 30px;font-weight:800;font-size:15px;text-decoration:none;margin-top:8px}
+.about-hero-cta:hover{background:#3f6848}
 @media(max-width:820px){.about-hero-body{grid-template-columns:1fr;gap:32px}.about-hero-top{padding:16px 22px}}
 
 
@@ -1791,9 +1791,9 @@ html, body { overflow-x: hidden; width: 100%; position: relative; }
 .site-footer { padding: 0; background: #0b1710; }
 
 .footer-hero {
-  max-width: 1200px;
-  margin: 0 auto;
-  padding: clamp(56px, 7vw, 104px) clamp(24px, 6vw, 80px) clamp(34px, 4vw, 56px);
+  max-width: none;
+  margin: 0;
+  padding: clamp(56px, 7vw, 104px) clamp(32px, 6vw, 96px) clamp(34px, 4vw, 56px);
   color: #fff;
   display: grid;
   gap: clamp(40px, 5vw, 64px);
@@ -1825,7 +1825,7 @@ html, body { overflow-x: hidden; width: 100%; position: relative; }
 }
 .footer-hero .footer-cta-btn {
   display: inline-block;
-  background: #568c68;
+  background: #4b7a5a;
   color: #fff;
   border-radius: 999px;
   padding: 16px 34px;
@@ -1834,7 +1834,7 @@ html, body { overflow-x: hidden; width: 100%; position: relative; }
   text-decoration: none;
   transition: background .15s ease;
 }
-.footer-hero .footer-cta-btn:hover { background: #477a56; }
+.footer-hero .footer-cta-btn:hover { background: #3f6848; }
 
 .footer-hero-head .footer-brand {
   flex: 0 0 auto;
@@ -1846,22 +1846,22 @@ html, body { overflow-x: hidden; width: 100%; position: relative; }
   text-decoration: none;
 }
 .footer-hero-head .footer-brand strong { font-weight: 700; }
-.footer-hero-head .footer-brand span { color: #568c68; }
+.footer-hero-head .footer-brand span { color: #4b7a5a; }
 
 /* --- Columns row: brand + socials | contact --- */
 .footer-hero-cols {
-  display: grid;
-  grid-template-columns: 1fr 1fr;
-  gap: clamp(28px, 4vw, 48px);
-  align-items: start;
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  gap: clamp(60px, 10vw, 180px);   /* big empty gap between the two sides */
   padding-top: clamp(32px, 4vw, 48px);
   border-top: 1px solid rgba(255, 255, 255, .12);
 }
 .footer-hero-cols .footer-brand-block {
-  justify-self: start;
   display: grid;
   align-content: start;
   gap: 22px;
+  flex: 0 0 auto;
 }
 .footer-hero-cols .footer-tagline {
   margin: 0;
@@ -1897,13 +1897,11 @@ html, body { overflow-x: hidden; width: 100%; position: relative; }
 }
 
 .footer-hero-cols .footer-contact {
-  justify-self: start;
-  margin-left: 0;
+  flex: 0 0 auto;
+  margin-left: auto;
   display: grid;
   align-content: start;
   gap: 14px;
-  width: max-content;
-  max-width: 100%;
 }
 .footer-hero-cols .footer-contact h2 {
   margin: 0 0 6px;
