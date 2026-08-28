@@ -1764,7 +1764,7 @@ html, body { overflow-x: hidden; width: 100%; position: relative; }
 .about-hero-logo{font-size:22px;font-weight:800;letter-spacing:-.02em;color:#fff;text-decoration:none}
 .about-hero-logo strong{color:#568c68}
 .about-hero-logo span{color:#fff}
-.about-hero-body{display:grid;grid-template-columns:1fr 1fr;gap:clamp(32px,5vw,80px);align-items:center;padding:clamp(40px,6vw,96px) clamp(24px,6vw,80px);max-width:1200px;margin:0 auto}
+.about-hero-body{display:grid;grid-template-columns:auto auto;justify-content:start;gap:clamp(32px,5vw,72px);align-items:center;padding:clamp(40px,6vw,96px) clamp(56px,8vw,140px);max-width:none;margin:0}
 .about-hero-left{position:relative}
 .about-hero-badge{display:inline-block;background:#568c68;color:#fff;font-size:13px;font-weight:800;letter-spacing:.08em;text-transform:uppercase;padding:8px 16px;border-radius:4px}
 .about-hero-title{position:relative;font-size:clamp(42px,6vw,86px);font-weight:800;letter-spacing:-.03em;line-height:1.02;margin:8px 0 22px;z-index:1}
@@ -1852,11 +1852,13 @@ html, body { overflow-x: hidden; width: 100%; position: relative; }
 .footer-hero-cols {
   display: grid;
   grid-template-columns: 1fr 1fr;
-  gap: clamp(32px, 5vw, 72px);
+  gap: clamp(28px, 4vw, 48px);
+  align-items: start;
   padding-top: clamp(32px, 4vw, 48px);
   border-top: 1px solid rgba(255, 255, 255, .12);
 }
 .footer-hero-cols .footer-brand-block {
+  justify-self: start;
   display: grid;
   align-content: start;
   gap: 22px;
@@ -1895,9 +1897,13 @@ html, body { overflow-x: hidden; width: 100%; position: relative; }
 }
 
 .footer-hero-cols .footer-contact {
+  justify-self: start;
+  margin-left: 0;
   display: grid;
   align-content: start;
   gap: 14px;
+  width: max-content;
+  max-width: 100%;
 }
 .footer-hero-cols .footer-contact h2 {
   margin: 0 0 6px;
