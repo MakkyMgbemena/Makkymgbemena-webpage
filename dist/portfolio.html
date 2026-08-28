@@ -8,7 +8,7 @@
   <script type="module" crossorigin src="/assets/modulepreload-polyfill-P2Xu9kJm.js"></script>
   <script type="module" crossorigin src="/assets/main-CLUpx4o_.js"></script>
   <link rel="stylesheet" crossorigin href="/assets/main-Be9Bagfe.css">
-  <link rel="stylesheet" crossorigin href="/assets/portfolio-BHEIF-KY.css">
+  <link rel="stylesheet" crossorigin href="/assets/portfolio-CPtAAWp7.css">
 </head>
 <body>
   <header class="site-header">
@@ -106,64 +106,151 @@
       <p>Real client sites we've built. Click any card to visit the live website.</p>
     </section>
 
-    <div class="pf-filters" aria-label="Filter projects">
-      <span class="pf-chip is-active">All</span>
-      <span class="pf-chip">Websites</span>
-      <span class="pf-chip">Business Systems</span>
-      <span class="pf-chip">SEO &amp; Visibility</span>
+    <div class="pf-filter-row" aria-label="Filter projects">
+      <div class="pf-dropdown">
+        <button class="pf-dropdown-toggle" type="button" aria-expanded="false" aria-controls="pf-filter-menu">
+          All projects <span aria-hidden="true">▾</span>
+        </button>
+        <div class="pf-dropdown-menu" id="pf-filter-menu" hidden>
+          <button type="button">All projects</button>
+          <button type="button">By business type</button>
+          <button type="button">By service</button>
+          <button type="button">SEO &amp; visibility</button>
+        </div>
+      </div>
     </div>
 
-    <section class="pf-grid" aria-label="Project examples">
-      <a class="pf-card" href="#" target="_blank" rel="noopener">
-        <div class="pf-thumb">Client Website 1</div>
+            <section class="pf-grid" aria-label="Project examples">
+      <article class="pf-card">
+        <div class="pf-thumb">Independent bookkeeping practice</div>
         <div class="pf-body">
-          <h2>Client One</h2>
-          <p>Website build &amp; local visibility.</p>
-          <span class="pf-visit">Visit site</span>
+          <p class="pf-industry">Independent bookkeeping practice</p>
+          <h2>Financial books & clean reporting</h2>
+          <div class="pf-about-pop">A solo bookkeeper who keeps small businesses' numbers straight, with one clean client portal for statements, invoices and monthly reporting.</div>
+          <div class="pf-menu">
+            <button class="pf-menu-toggle" type="button" aria-expanded="false" aria-controls="pf-menu-1">Actions <span aria-hidden="true">▾</span></button>
+            <div class="pf-menu-list" id="pf-menu-1" hidden>
+              <button type="button">View website ↗</button>
+              <button type="button">Book a consultation ↗</button>
+            </div>
+          </div>
         </div>
-      </a>
-      <a class="pf-card" href="#" target="_blank" rel="noopener">
-        <div class="pf-thumb">Client Website 2</div>
+      </article>
+      <article class="pf-card">
+        <div class="pf-thumb">Local HVAC contractor</div>
         <div class="pf-body">
-          <h2>Client Two</h2>
-          <p>Custom website &amp; SEO setup.</p>
-          <span class="pf-visit">Visit site</span>
+          <p class="pf-industry">Local HVAC contractor</p>
+          <h2>Heating & cooling, on call</h2>
+          <div class="pf-about-pop">A family-run HVAC company handling installs and emergency repairs, with a site that makes it easy to request service and see the service area.</div>
+          <div class="pf-menu">
+            <button class="pf-menu-toggle" type="button" aria-expanded="false" aria-controls="pf-menu-2">Actions <span aria-hidden="true">▾</span></button>
+            <div class="pf-menu-list" id="pf-menu-2" hidden>
+              <button type="button">View website ↗</button>
+              <button type="button">Book a consultation ↗</button>
+            </div>
+          </div>
         </div>
-      </a>
-      <a class="pf-card" href="#" target="_blank" rel="noopener">
-        <div class="pf-thumb">Client Website 3</div>
+      </article>
+      <article class="pf-card">
+        <div class="pf-thumb">Bakery & café</div>
         <div class="pf-body">
-          <h2>Client Three</h2>
-          <p>Business website &amp; tracking.</p>
-          <span class="pf-visit">Visit site</span>
+          <p class="pf-industry">Bakery & café</p>
+          <h2>Fresh bakes, daily orders</h2>
+          <div class="pf-about-pop">A neighbourhood bakery and café doing custom cakes, wholesale and daily counter service, with online ordering and a visible pickup schedule.</div>
+          <div class="pf-menu">
+            <button class="pf-menu-toggle" type="button" aria-expanded="false" aria-controls="pf-menu-3">Actions <span aria-hidden="true">▾</span></button>
+            <div class="pf-menu-list" id="pf-menu-3" hidden>
+              <button type="button">View website ↗</button>
+              <button type="button">Book a consultation ↗</button>
+            </div>
+          </div>
         </div>
-      </a>
-      <a class="pf-card" href="#" target="_blank" rel="noopener">
-        <div class="pf-thumb">Client Website 4</div>
+      </article>
+      <article class="pf-card">
+        <div class="pf-thumb">Landscaping & garden services</div>
         <div class="pf-body">
-          <h2>Client Four</h2>
-          <p>Website redesign &amp; dashboards.</p>
-          <span class="pf-visit">Visit site</span>
+          <p class="pf-industry">Landscaping & garden services</p>
+          <h2>Outdoor spaces, planned & built</h2>
+          <div class="pf-about-pop">A landscaping crew that designs and maintains gardens and lawns, letting homeowners request a quote and browse completed projects online.</div>
+          <div class="pf-menu">
+            <button class="pf-menu-toggle" type="button" aria-expanded="false" aria-controls="pf-menu-4">Actions <span aria-hidden="true">▾</span></button>
+            <div class="pf-menu-list" id="pf-menu-4" hidden>
+              <button type="button">View website ↗</button>
+              <button type="button">Book a consultation ↗</button>
+            </div>
+          </div>
         </div>
-      </a>
-      <a class="pf-card" href="#" target="_blank" rel="noopener">
-        <div class="pf-thumb">Client Website 5</div>
+      </article>
+      <article class="pf-card">
+        <div class="pf-thumb">Dental clinic</div>
         <div class="pf-body">
-          <h2>Client Five</h2>
-          <p>Automation &amp; reporting setup.</p>
-          <span class="pf-visit">Visit site</span>
+          <p class="pf-industry">Dental clinic</p>
+          <h2>Everyday & family dentistry</h2>
+          <div class="pf-about-pop">A friendly family dental practice offering checkups, cleanings and cosmetic work, with online booking and clear details on the services they cover.</div>
+          <div class="pf-menu">
+            <button class="pf-menu-toggle" type="button" aria-expanded="false" aria-controls="pf-menu-5">Actions <span aria-hidden="true">▾</span></button>
+            <div class="pf-menu-list" id="pf-menu-5" hidden>
+              <button type="button">View website ↗</button>
+              <button type="button">Book a consultation ↗</button>
+            </div>
+          </div>
         </div>
-      </a>
-      <a class="pf-card" href="#" target="_blank" rel="noopener">
-        <div class="pf-thumb">Client Website 6</div>
+      </article>
+      <article class="pf-card">
+        <div class="pf-thumb">Real-estate photography</div>
         <div class="pf-body">
-          <h2>Client Six</h2>
-          <p>Website build &amp; ad extension.</p>
-          <span class="pf-visit">Visit site</span>
+          <p class="pf-industry">Real-estate photography</p>
+          <h2>Listings that show well</h2>
+          <div class="pf-about-pop">A real-estate photographer shooting listings for agents and builders, with a portfolio-driven site and a simple way to book a session.</div>
+          <div class="pf-menu">
+            <button class="pf-menu-toggle" type="button" aria-expanded="false" aria-controls="pf-menu-6">Actions <span aria-hidden="true">▾</span></button>
+            <div class="pf-menu-list" id="pf-menu-6" hidden>
+              <button type="button">View website ↗</button>
+              <button type="button">Book a consultation ↗</button>
+            </div>
+          </div>
         </div>
-      </a>
+      </article>
     </section>
   </main>
+
+  <script>
+  // Simplest state: toggle the 'is-open' class for hover-about + toggle the menu lists
+  document.querySelectorAll('.pf-menu-toggle').forEach(function(btn){
+    btn.addEventListener('click', function(e){
+      e.stopPropagation();
+      var list = document.getElementById(btn.getAttribute('aria-controls'));
+      if(!list) return;
+      var open = !list.hidden;
+      document.querySelectorAll('.pf-menu-list').forEach(function(l){ l.hidden = true; });
+      list.hidden = !open;
+      btn.setAttribute('aria-expanded', String(!open));
+    });
+  });
+  document.querySelectorAll('.pf-dropdown-toggle').forEach(function(btn){
+    btn.addEventListener('click', function(e){
+      e.stopPropagation();
+      var m = document.getElementById(btn.getAttribute('aria-controls'));
+      if(!m) return;
+      var open = !m.hidden;
+      document.querySelectorAll('.pf-dropdown-menu').forEach(function(x){ x.hidden = true; });
+      m.hidden = !open;
+      btn.setAttribute('aria-expanded', String(!open));
+    });
+  });
+  document.addEventListener('click', function(){
+    document.querySelectorAll('.pf-menu-list').forEach(function(l){ l.hidden = true; });
+    document.querySelectorAll('.pf-dropdown-menu').forEach(function(m){ m.hidden = true; });
+    document.querySelectorAll('.pf-card').forEach(function(c){ c.classList.remove('is-open'); });
+  });
+  // Open "what they do" popup on click too (not just hover)
+  document.querySelectorAll('.pf-card').forEach(function(c){
+    c.addEventListener('click', function(e){
+      if(e.target.closest('.pf-menu')) return; // don't toggle on the menu
+      c.classList.add('is-open');
+    });
+  });
+  </script>
 
 </body>
 </html>

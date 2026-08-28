@@ -1,4 +1,4 @@
-/* Portfolio page — dark green page, light green accents, clickable cards */
+/* Portfolio page — dark green, light green accents, clean cards */
 :root {
   --pf-dark: #1b3f0c;
   --pf-accent: #93bc5e;
@@ -12,11 +12,11 @@ body {
   color: #eef4e8;
 }
 
-/* --- Page header (NOT a full hero — a slim header band) --- */
+/* --- Slim page header (not a hero) --- */
 .portfolio-head {
   background: var(--pf-dark);
   text-align: center;
-  padding: clamp(56px, 8vw, 110px) clamp(24px, 6vw, 80px) clamp(30px, 4vw, 50px);
+  padding: clamp(56px, 8vw, 110px) clamp(24px, 6vw, 80px) clamp(26px, 4vw, 40px);
 }
 .portfolio-head .pf-kicker {
   color: var(--pf-accent);
@@ -28,7 +28,7 @@ body {
 }
 .portfolio-head h1 {
   margin: 0 0 18px;
-  font-size: clamp(34px, 5vw, 58px);
+  font-size: clamp(34px, 5vw, 56px);
   font-weight: 800;
   line-height: 1.05;
   letter-spacing: -.02em;
@@ -42,96 +42,172 @@ body {
   line-height: 1.5;
 }
 
-/* --- Filter chips row (Clio-style) --- */
-.pf-filters {
+/* --- Filter as a dropdown --- */
+.pf-filter-row {
   display: flex;
-  gap: 10px;
   justify-content: center;
-  flex-wrap: wrap;
-  padding: 0 clamp(24px, 6vw, 80px) clamp(40px, 5vw, 60px);
+  padding: 0 clamp(24px, 6vw, 80px) clamp(36px, 5vw, 56px);
 }
-.pf-chip {
+.pf-dropdown { position: relative; }
+.pf-dropdown-toggle {
   background: rgba(255,255,255,.06);
   color: #dbe7d3;
   border: 1px solid rgba(147,188,94,.4);
   border-radius: 999px;
-  padding: 9px 18px;
-  font-size: 13px;
-  font-weight: 600;
+  padding: 10px 20px;
+  font-size: 14px;
+  font-weight: 700;
   cursor: pointer;
   transition: background .15s ease, color .15s ease;
 }
-.pf-chip:hover, .pf-chip.is-active {
-  background: var(--pf-accent);
-  color: var(--pf-dark);
+.pf-dropdown-toggle:hover { background: var(--pf-accent); color: var(--pf-dark); }
+.pf-dropdown-menu {
+  position: absolute;
+  top: calc(100% + 8px);
+  left: 50%;
+  transform: translateX(-50%);
+  background: #224a0f;
+  border: 1px solid rgba(147,188,94,.4);
+  border-radius: 12px;
+  padding: 8px;
+  min-width: 180px;
+  z-index: 30;
 }
+.pf-dropdown-menu[hidden] { display: none; }
+.pf-dropdown-menu button {
+  display: block;
+  width: 100%;
+  text-align: left;
+  background: none;
+  border: 0;
+  color: #dbe7d3;
+  padding: 10px 14px;
+  font-size: 14px;
+  border-radius: 8px;
+  cursor: pointer;
+}
+.pf-dropdown-menu button:hover { background: var(--pf-accent); color: var(--pf-dark); }
 
-/* --- Card grid --- */
+/* --- Clean card grid --- */
 .pf-grid {
   display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+  grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
   gap: 28px;
   max-width: 1200px;
   margin: 0 auto;
   padding: clamp(24px, 5vw, 48px) clamp(24px, 6vw, 80px) clamp(64px, 8vw, 100px);
 }
 
-/* Each card is a real link -> opens the client's site in a new tab */
 .pf-card {
-  display: block;
-  text-decoration: none;
-  color: inherit;
+  position: relative;
   background: #224a0f;
   border: 1px solid rgba(147,188,94,.25);
   border-radius: 16px;
-  overflow: hidden;
-  transition: transform .25s ease, box-shadow .25s ease, border-color .25s ease;
+/* overflow visible so dropdown   overflow: hidden; about popup show */
+  transition: border-color .2s ease, box-shadow .2s ease, transform .2s ease;
 }
-/* Clio-style hover: lift + scale up, grows a glow */
 .pf-card:hover {
-  transform: translateY(-6px) scale(1.03);
-  box-shadow: 0 18px 40px rgba(0,0,0,.45);
   border-color: var(--pf-accent);
+  box-shadow: 0 12px 30px rgba(0,0,0,.35);
+  transform: translateY(-3px);
 }
 
 .pf-thumb {
   aspect-ratio: 16 / 10;
-  background: #0e2a05;
+  background: #122d06;
   display: flex;
   align-items: center;
   justify-content: center;
   color: var(--pf-accent);
-  font-weight: 700;
-  font-size: 15px;
-  overflow: hidden;
-}
-.pf-thumb img {
-  width: 100%;
-  height: 100%;
-  object-fit: cover;
-  display: block;
-}
-.pf-body {
-  padding: 18px 20px 22px;
-}
-.pf-body h2 {
-  margin: 0 0 8px;
-  font-size: 19px;
-  font-weight: 800;
-  color: var(--pf-white);
-}
-.pf-body p {
-  margin: 0 0 14px;
-  color: #c3d1ba;
   font-size: 14px;
-  line-height: 1.45;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: .06em;
 }
-.pf-visit {
-  display: inline-flex;
-  align-items: center;
-  gap: 8px;
+.pf-thumb img { width: 100%; height: 100%; object-fit: cover; display: block; }
+
+.pf-body { padding: 18px 20px 20px; }
+.pf-industry {
+  margin: 0 0 6px;
   color: var(--pf-accent);
+  font-size: 12px;
   font-weight: 700;
-  font-size: 14px;
+  text-transform: uppercase;
+  letter-spacing: .1em;
 }
-.pf-visit::after { content: "↗"; font-size: 15px; }
+.pf-body h2 { margin: 0; font-size: 20px; font-weight: 800; color: var(--pf-white); }
+
+/* --- "What they do" popup (on hover/click) --- */
+.pf-about-pop {
+  position: absolute;
+  left: 12px;
+  right: 12px;
+  bottom: calc(100% - 12px);
+  margin-bottom: 10px;
+  background: rgba(11,32,4,.97);
+  border: 1px solid rgba(147,188,94,.5);
+  border-radius: 12px;
+  padding: 14px 16px;
+  color: #eef4e8;
+  font-size: 14px;
+  line-height: 1.5;
+  opacity: 0;
+  transform: translateY(8px);
+  pointer-events: none;
+  transition: opacity .2s ease, transform .2s ease;
+  z-index: 10;
+}
+.pf-card:hover .pf-about-pop,
+.pf-card.is-open .pf-about-pop { opacity: 1; transform: translateY(0); }
+
+/* --- Actions dropdown on the card --- */
+.pf-menu { position: relative; margin-top: 14px; }
+.pf-menu-toggle {
+  background: var(--pf-dark);
+  color: var(--pf-accent);
+  border: 1px solid rgba(147,188,94,.5);
+  border-radius: 999px;
+  padding: 9px 18px;
+  font-size: 13px;
+  font-weight: 700;
+  cursor: pointer;
+  transition: background .15s ease, color .15s ease;
+}
+.pf-menu-toggle:hover { background: var(--pf-accent); color: var(--pf-dark); }
+.pf-menu-list {
+  position: absolute;
+  top: calc(100% + 6px);
+  left: 0;
+  background: #122d06;
+  border: 1px solid rgba(147,188,94,.4);
+  border-radius: 10px;
+  padding: 6px;
+  min-width: 180px;
+  z-index: 20;
+}
+.pf-menu-list[hidden] { display: none; }
+.pf-menu-list button {
+  display: block;
+  width: 100%;
+  text-align: left;
+  background: none;
+  border: 0;
+  color: #dbe7d3;
+  padding: 10px 14px;
+  font-size: 14px;
+  border-radius: 8px;
+  cursor: pointer;
+}
+.pf-menu-list button:hover { background: var(--pf-accent); color: var(--pf-dark); }
+
+/* About popup — moved ABOVE the card so it never covers the Actions dropdown */
+.pf-about-pop {
+  position: absolute;
+  left: 12px;
+  right: 12px;
+  bottom: calc(100% - 12px);   /* anchor just above the card */
+  transform: translateY(8px);
+  margin-bottom: 10px;
+}
+.pf-card:hover .pf-about-pop,
+.pf-card.is-open .pf-about-pop { opacity: 1; transform: translateY(0); }
