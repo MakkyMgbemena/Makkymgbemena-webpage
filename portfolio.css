@@ -92,7 +92,7 @@ body {
 .pf-grid {
   display: grid;
   grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
-  gap: 28px;
+  gap: 36px 72px;
   max-width: 1200px;
   margin: 0 auto;
   padding: clamp(24px, 5vw, 48px) clamp(24px, 6vw, 80px) clamp(64px, 8vw, 100px);

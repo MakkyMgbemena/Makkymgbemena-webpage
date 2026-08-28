@@ -8,7 +8,7 @@
   <script type="module" crossorigin src="/assets/modulepreload-polyfill-P2Xu9kJm.js"></script>
   <script type="module" crossorigin src="/assets/main-CLUpx4o_.js"></script>
   <link rel="stylesheet" crossorigin href="/assets/main-Be9Bagfe.css">
-  <link rel="stylesheet" crossorigin href="/assets/portfolio-CPtAAWp7.css">
+  <link rel="stylesheet" crossorigin href="/assets/portfolio-DSJIo_FD.css">
 </head>
 <body>
   <header class="site-header">
@@ -221,10 +221,10 @@
       e.stopPropagation();
       var list = document.getElementById(btn.getAttribute('aria-controls'));
       if(!list) return;
-      var open = !list.hidden;
+      var isOpen = !list.hidden;
       document.querySelectorAll('.pf-menu-list').forEach(function(l){ l.hidden = true; });
-      list.hidden = !open;
-      btn.setAttribute('aria-expanded', String(!open));
+      list.hidden = isOpen;
+      btn.setAttribute('aria-expanded', String(!isOpen));
     });
   });
   document.querySelectorAll('.pf-dropdown-toggle').forEach(function(btn){
@@ -232,13 +232,16 @@
       e.stopPropagation();
       var m = document.getElementById(btn.getAttribute('aria-controls'));
       if(!m) return;
-      var open = !m.hidden;
+      var isOpen = !m.hidden;
       document.querySelectorAll('.pf-dropdown-menu').forEach(function(x){ x.hidden = true; });
-      m.hidden = !open;
-      btn.setAttribute('aria-expanded', String(!open));
+      m.hidden = isOpen;
+      btn.setAttribute('aria-expanded', String(!isOpen));
     });
   });
-  document.addEventListener('click', function(){
+  // Close menus only when clicking OUTSIDE a menu/toggle
+  document.addEventListener('click', function(e){
+    var inside = e.target.closest('.pf-menu, .pf-dropdown');
+    if (inside) return;
     document.querySelectorAll('.pf-menu-list').forEach(function(l){ l.hidden = true; });
     document.querySelectorAll('.pf-dropdown-menu').forEach(function(m){ m.hidden = true; });
     document.querySelectorAll('.pf-card').forEach(function(c){ c.classList.remove('is-open'); });
