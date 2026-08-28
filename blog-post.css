@@ -1,0 +1,99 @@
+/* Blog post page — Clio-style hero on Travel Bunny palette */
+:root {
+  --bp-dark: #1b3f0c;
+  --bp-accent: #93bc5e;
+  --bp-white: #ffffff;
+}
+
+body { margin: 0; font-family: Arial, Helvetica, sans-serif; background: var(--bp-white); color: #1b1b1b; }
+
+/* --- Hero (dark green, Clio-style) --- */
+.blog-hero {
+  position: relative;
+  background: var(--bp-dark);
+  color: var(--bp-white);
+  text-align: center;
+  padding: clamp(80px, 12vw, 160px) clamp(24px, 6vw, 80px);
+  overflow: hidden;
+}
+/* soft radial glow so it's not flat */
+.blog-hero::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: radial-gradient(60% 60% at 50% 0%, rgba(147,188,94,.18), transparent 70%);
+  pointer-events: none;
+}
+
+.blog-hero-inner {
+  position: relative;
+  max-width: 780px;
+  margin: 0 auto;
+}
+.blog-hero-kicker {
+  color: var(--bp-accent);
+  text-transform: uppercase;
+  letter-spacing: .18em;
+  font-size: 13px;
+  font-weight: 700;
+  margin: 0 0 18px;
+}
+.blog-hero h1 {
+  margin: 0 0 22px;
+  font-size: clamp(38px, 6vw, 72px);
+  font-weight: 800;
+  line-height: 1.05;
+  letter-spacing: -.02em;
+}
+.blog-hero h1 .accent { color: var(--bp-accent); }
+.blog-hero p {
+  max-width: 560px;
+  margin: 0 auto 34px;
+  color: rgba(255,255,255,.82);
+  font-size: clamp(16px, 1.6vw, 20px);
+  line-height: 1.5;
+}
+.blog-hero-buttons {
+  display: flex;
+  gap: 14px;
+  justify-content: center;
+  flex-wrap: wrap;
+}
+.blog-hero-btn {
+  display: inline-block;
+  padding: 16px 30px;
+  border-radius: 999px;
+  font-weight: 700;
+  font-size: 15px;
+  text-decoration: none;
+  transition: background .15s ease;
+}
+.blog-hero-btn.primary {
+  background: var(--bp-accent);
+  color: var(--bp-dark);
+}
+.blog-hero-btn.primary:hover { background: #a8cf7a; }
+.blog-hero-btn.ghost {
+  background: transparent;
+  color: var(--bp-white);
+  border: 1px solid rgba(255,255,255,.6);
+}
+.blog-hero-btn.ghost:hover { border-color: var(--bp-white); background: rgba(255,255,255,.08); }
+
+/* --- Body intro following the hero (matches Clio's "We are Clio Websites" section) --- */
+.blog-intro {
+  max-width: 780px;
+  margin: 0 auto;
+  padding: clamp(64px, 8vw, 110px) clamp(24px, 6vw, 80px);
+}
+.blog-intro h2 {
+  font-size: clamp(26px, 3vw, 38px);
+  font-weight: 800;
+  margin: 0 0 20px;
+  text-align: center;
+}
+.blog-intro p {
+  font-size: 18px;
+  line-height: 1.65;
+  color: #4c5350;
+}
