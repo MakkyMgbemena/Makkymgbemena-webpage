@@ -7,13 +7,22 @@
   <meta http-equiv="Pragma" content="no-cache">
   <meta http-equiv="Expires" content="0">
   <title>Travel Bunny</title>
+  <!-- Favicon Assets Links -->
+  <link rel="icon" type="image/x-icon" href="/favicon.ico">
+  <link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png">
+  <link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png">
+
   <meta name="description" content="Travel Bunny business services.">
-  <link rel="stylesheet" crossorigin href="/assets/index-Cg1sHxBJ.css">
+  <script type="module" crossorigin src="/assets/main-2ii0uJ1R.js"></script>
+  <link rel="modulepreload" crossorigin href="/assets/modulepreload-polyfill-P2Xu9kJm.js">
+  <link rel="stylesheet" crossorigin href="/assets/main-De_hoWi6.css">
 </head>
 <body>
   <header class="site-header">
     <div class="utility-bar" aria-label="Utility navigation">
-      <a href="#client-login">Client Login <span aria-hidden="true">↗</span></a>
+      <a href="/client-dashboard.html">Client Login</a>
+      <a href="/specialist-dashboard.html">Specialist</a>
       <button class="language-button" type="button" aria-label="Select language">
         Canada – English <span class="chevron" aria-hidden="true"></span>
       </button>
@@ -46,7 +55,7 @@
             Work <span class="chevron" aria-hidden="true"></span>
           </button>
           <div class="nav-dropdown-menu" id="work-menu" hidden>
-            <a href="#selected-work">Featured work</a>
+            <a href="#selected-work">Local Ad</a>
             <a href="#tools">Tools and platforms</a>
             <a href="#selected-work">Project examples</a>
           </div>
@@ -114,17 +123,14 @@
       <div class="feature-strip" id="services" aria-label="Featured landing pages">
         <a href="business-processes-and-automation.html" class="feature-item">
           <h2>Business Processes and Automation</h2>
-          <span class="card-arrow" aria-hidden="true">→</span>
           <p>Cut the Busywork</p>
         </a>
         <a href="landing-two.html" class="feature-item">
           <h2>Dashboards &amp; Reporting</h2>
-          <span class="card-arrow" aria-hidden="true">→</span>
           <p>Understand Your Numbers</p>
         </a>
         <a href="landing-three.html" class="feature-item">
           <h2>Websites &amp; Search Visibility</h2>
-          <span class="card-arrow" aria-hidden="true">→</span>
           <p>Get Found Online</p>
         </a>
       </div>
@@ -132,10 +138,10 @@
 
     <nav class="section-navigation" aria-label="Page sections">
       <a href="#overview">Overview</a>
-      <a href="#selected-work">Featured Work</a>
+      <a href="#selected-work">Local Ad</a>
       <a href="#tools">Tools</a>
       <a href="#faq">FAQ</a>
-      <a href="#consultation">Book a Consultation</a>
+      <a href="https://cal.com/makky-travelbunny/consultation" target="_blank" rel="noopener">Book a Consultation</a>
     </nav>
 
     <div id="about"></div>
@@ -176,26 +182,27 @@
 
     <section class="selected-work-section" id="selected-work" aria-labelledby="selected-work-heading">
       <div class="selected-work-intro">
-        <p class="section-kicker">Featured Work</p>
-        <h2 id="selected-work-heading">Practical examples of websites, dashboards, automation, reporting, and business setup support.</h2>
+        <p class="section-kicker">Local Ad Screen</p>
+        <h2 id="selected-work-heading">A rotating screen where local businesses get seen by other businesses nearby. Reserve your spot for $3.99/month.</h2>
       </div>
 
   <div class="work-projector" data-video-projector>
     <div class="projector-screen">
-      <video class="projector-video" controls preload="metadata" playsinline hidden aria-label="Featured work video with audio overview"></video>
+      <video class="projector-video" controls preload="metadata" playsinline hidden aria-label="Local Ad Screen video"></video>
       <div class="video-placeholder" data-video-placeholder role="img" aria-live="polite">
-        <span class="video-placeholder-number" data-video-number>Video 01</span>
-        <p data-video-title>Website build overview</p>
-        <span>Video and audio overview placeholder</span>
+        <span class="video-placeholder-number" data-video-number>Slot 01</span>
+        <p data-video-title>Your business here</p>
+        <span>Ad rotation preview. Live spots opening soon</span>
       </div>
     </div>
     <div class="projector-controls">
       <p class="projector-progress" aria-live="polite">
-        <span data-current-video>1</span><span aria-hidden="true">/</span><span>5</span>
+        <span data-current-video>1</span><span aria-hidden="true">/</span><span data-video-total>5</span>
         <span class="visually-hidden"> videos</span>
       </p>
+      <button id="ad-reserve" class="ad-reserve-btn" type="button">Reserve your spot</button>
       <button type="button" class="projector-next" data-next-video>
-        <span>Next video</span><span aria-hidden="true">→</span>
+        <span>Next video</span>
       </button>
     </div>
   </div>
@@ -203,6 +210,10 @@
 
 <section class="tools-section" id="tools" aria-labelledby="tools-heading">
   <h2 id="tools-heading">Tools I work with</h2>
+  <img class="mascot mascot-talking" src="/assets/bunny-talking-CiB_DRs2.png" alt="" aria-hidden="true">
+  <img class="mascot mascot-desk" src="/assets/bunny-desk-BYbpyCsY.png" alt="" aria-hidden="true">
+  <img class="mascot mascot-peek" src="/assets/bunny-peek-DPOI-vMK.png" alt="" aria-hidden="true">
+  <img class="mascot mascot-wander" src="/assets/bunny-wander-CUrPzaRO.png" alt="" aria-hidden="true">
   <div class="tool-list" aria-label="Tools and platforms">
           <div class="tool-item">
             <svg class="tool-logo" viewBox="0 0 48 48" aria-hidden="true">
@@ -274,7 +285,7 @@
         <p class="section-kicker">Start with clarity</p>
         <h2 id="consultation-heading">Not sure what your business needs first?</h2>
         <p>Start with a focused consultation to identify the clearest next step.</p>
-        <a href="#contact-form">Book a Consultation</a>
+        <a href="https://cal.com/makky-travelbunny/consultation" target="_blank" rel="noopener">Book a Consultation</a>
       </div>
     </section>
 
@@ -283,27 +294,39 @@
       <div class="faq-list">
         <details>
           <summary>What kinds of businesses do you work with?</summary>
-          <p>[Answer placeholder]</p>
+          <p>Small business owners, startups, and local service businesses (retail, food, beauty, trades, admin, and consulting) who need systems, reporting, websites, or marketing support but don't have a full internal team for it.</p>
         </details>
         <details>
           <summary>Can you improve an existing website or system?</summary>
-          <p>[Answer placeholder]</p>
+          <p>Yes. Most projects start with an audit of what you already have (website, spreadsheets, workflows, reports) before deciding what to fix, replace, or build from scratch.</p>
         </details>
         <details>
           <summary>Do you offer individual services or complete business setups?</summary>
-          <p>[Answer placeholder]</p>
+          <p>Both. Book a single Starter service (a landing page, a dashboard cleanup), a full Core Project (a complete website build or automation), or a Premium package that bundles several services into one business systems setup.</p>
         </details>
         <details>
           <summary>How does pricing work?</summary>
-          <p>[Answer placeholder]</p>
+          <p>Fixed pricing for clearly scoped work, hourly for troubleshooting and small fixes, and monthly retainers for ongoing support like reporting, bookkeeping, or website maintenance. You'll know the price or price range before work starts.</p>
         </details>
         <details>
           <summary>What happens after the project launches?</summary>
-          <p>[Answer placeholder]</p>
+          <p>You get the final files, a walkthrough, and documentation, plus the option of ongoing monthly support for reporting, updates, bookkeeping, or automation maintenance if you want it. Nothing locks you into a subscription unless you choose one.</p>
         </details>
         <details>
           <summary>Can you work with tools my business already uses?</summary>
-          <p>[Answer placeholder]</p>
+          <p>Most likely. Excel, Google Sheets, Power BI, QuickBooks, Wix, Squarespace, WordPress, Google Analytics, and more (see the full list above). Using something not listed? Ask during your consultation.</p>
+        </details>
+        <details>
+          <summary>Why work with you instead of a bigger agency?</summary>
+          <p>You deal with one point of contact: me, not a rotating account team. Behind the scenes, I bring in specialists as projects need them, and you can track exactly what's happening through your own client dashboard: progress, updates, and a place to leave comments directly. You get real capability without the agency-style overhead or runaround.</p>
+        </details>
+        <details>
+          <summary>Why not just use Salesforce or HubSpot for CRM?</summary>
+          <p>QuickBooks already holds your customer and invoice data, with built-in tools like native Mailchimp integration for email and re-engagement. Instead of paying for a separate CRM platform, I build the deeper automation on top of what you already have: pipeline tracking, lead scoring, and marketing automation across channels, through custom API integrations tailored to your business, at a fraction of enterprise CRM pricing.</p>
+        </details>
+        <details>
+          <summary>What's the local Ad Screen?</summary>
+          <p>A low-cost way for local businesses to get seen by other businesses nearby. You upload your info or a short promo, and it displays where others can find you. It's priced low right now ($3.99/month) on purpose while it's building adoption, not meant to be a profit driver yet.</p>
         </details>
       </div>
     </section>
@@ -312,113 +335,192 @@
       <div class="contact-form-panel">
         <p class="section-kicker">Get in touch</p>
         <h2 id="contact-heading">Tell me about the project you want to move forward.</h2>
-        <p class="contact-intro">Share your goals, current tools, and the challenges you want to solve, and I’ll respond with the best next step.</p>
+        <p class="contact-intro">Pick a time that works for you. Tell me a little about your project and I’ll prepare before we meet.</p>
 
-        <form id="contact-form" class="contact-form">
-          <label>
-            Name
-            <input type="text" name="name" autocomplete="name" placeholder="Your name">
-          </label>
-          <label>
-            Email
-            <input type="email" name="email" autocomplete="email" placeholder="Your email">
-          </label>
-          <label>
-            Business name
-            <input type="text" name="business" autocomplete="organization" placeholder="Your business name">
-          </label>
-          <label>
-            Website or system URL
-            <input type="url" name="website" placeholder="Example: https://yourbusiness.com">
-          </label>
-          <label class="full-field">
-            Service of interest
-            <select name="service">
-              <option value="">Choose a service</option>
-              <option>Business processes and automation</option>
-              <option>Dashboards and reporting</option>
-              <option>Websites and search visibility</option>
-              <option>Data workflows and cloud automation</option>
-            </select>
-          </label>
-          <label class="full-field">
-            Brief description
-            <textarea name="description" rows="5" placeholder="Describe the business problem, the tools you use, and your desired outcome."></textarea>
-          </label>
-          <label class="full-field">
-            Preferred contact method
-            <select name="contact-method">
-              <option value="">Choose a contact method</option>
-              <option>Email</option>
-              <option>Phone</option>
-              <option>Video call</option>
-            </select>
-          </label>
-          <label class="consent-field full-field">
-            <input type="checkbox" name="consent">
-            <span>I agree to be contacted about this request.</span>
-          </label>
-          <button type="button">Send request</button>
-        </form>
+                                <!-- Live booking (Cal.com) -->
+        <iframe
+          src="https://cal.com/makky-travelbunny/consultation?embed=true"
+          title="Book a consultation"
+          style="width:100%; height:850px; border:0; overflow:hidden"
+          loading="lazy">
+        </iframe>
       </div>
 
       <aside class="contact-aside" aria-label="Consultation process steps">
         <p class="section-kicker">What happens next</p>
         <h2>A fast, practical response to your request.</h2>
         <ol>
-          <li><span>01</span>Review your goals and current workflow.</li>
-          <li><span>02</span>Identify the best improvement path.</li>
-          <li><span>03</span>Recommend clear next steps and timing.</li>
+          <li><span>01</span>We review your business. Your current tools, workflows, and biggest pain points, so we understand exactly what's actually going on before suggesting anything.</li>
+          <li><span>02</span>We map the right fit. Which service actually solves it (automation, dashboards, a website, marketing, design, or bookkeeping), and what that looks like for your specific setup.</li>
+          <li><span>03</span>You leave with a plan. A clear next step, realistic timeline, and what it would cost to move forward. No pressure to decide on the call.</li>
         </ol>
       </aside>
     </section>
+    <section class="about-hero" id="about" aria-labelledby="about-heading">
+      <div class="about-hero-top">
+        <a class="about-hero-logo" href="#home">travel<strong>Bunny</strong><span aria-hidden="true">.</span></a>
+      </div>
+      <div class="about-hero-body">
+        <div class="about-hero-left">
+          <span class="about-hero-badge">Get to know me</span>
+          <h1 class="about-hero-title" id="about-heading">About <span class="accent">me</span><span class="about-watermark" aria-hidden="true"></span></h1>
+          <div class="about-portrait"><span class="about-photo-placeholder" aria-hidden="true">Photo coming soon</span></div>
+        </div>
+        <div class="about-hero-right">
+          <span class="about-hero-name">Makky Mgbemena</span>
+          <h2 class="about-hero-role">Business Setup &amp; Web <span class="accent">Consultant</span> from Toronto</h2>
+          <div class="about-hero-copy">
+            <p>Hi, I'm Makky, the person behind TravelBunny. My background is a B.Sc. in Communications and Media, where website development, advertising, marketing, and PR were the focus, followed by a diploma in International Business from Seneca Polytechnic with a 3.6 GPA that deepened an understanding of business operations.</p>
+            <p>Years in finance, billing reconciliation, vendor negotiation, and client account management came next. TravelBunny grew out of a pattern seen again and again: small businesses drowning in the admin side of running things, bookkeeping, scattered tools, high overhead, no real system behind the scenes, and no ability to take a break.</p>
+            <p>TravelBunny exists to fix that, setting up operations, books, marketing, and dashboards so business owners can actually run their business instead of managing the chaos of it. Every client deals with one point of contact throughout: me, while specialists work behind the scenes as projects need them, tracked through your own client dashboard.</p>
+          </div>
+          <a class="about-hero-cta" href="#selected-work">View work</a>
+        </div>
+      </div>
+    </section>
+
   </main>
 
   <footer class="site-footer">
-    <div class="footer-top">
-      <a class="footer-brand" href="#home">travel<strong>Bunny</strong><span aria-hidden="true">.</span></a>
-      <div class="footer-socials" aria-label="Social links">
-        <a href="https://www.linkedin.com/in/makkymgbemena/" target="_blank" rel="noopener noreferrer">LinkedIn <span aria-hidden="true">↗</span></a>
-        <a href="#social">[Social]</a>
-      </div>
-    </div>
+    <div class="footer-hero">
 
-    <div class="footer-columns">
-      <section>
-        <h2>Services</h2>
-        <a href="#services">Business systems</a>
-        <a href="#services">Dashboards and reporting</a>
-        <a href="#services">Websites and visibility</a>
-      </section>
-      <section>
-        <h2>Solutions</h2>
-        <a href="#solutions">[Solution one]</a>
-        <a href="#solutions">[Solution two]</a>
-        <a href="#solutions">[Solution three]</a>
-      </section>
-      <section>
-        <h2>Company</h2>
-        <a href="#about">About</a>
-        <a href="#selected-work">Selected Work</a>
-        <a href="#faq">FAQ</a>
-      </section>
-      <section>
-        <h2>Contact</h2>
-        <a href="#contact">Book a Consultation</a>
-        <a href="mailto:Makky@travelbunny.services">Makky@travelbunny.services</a>
-        <a href="tel:+16478083432">+1 647 808 3432</a>
-      </section>
-    </div>
-
-    <div class="footer-bottom">
-      <div>
-        <a href="#privacy">Privacy</a>
-        <a href="#terms">Terms</a>
-        <a href="#accessibility">Accessibility</a>
+      <div class="footer-hero-head">
+        <div class="footer-hero-intro">
+          <p class="footer-cta-kicker">Let us help</p>
+          <h2>Get found, stay organized, and grow with a professional setup that works.</h2>
+          <a class="footer-cta-btn" href="https://cal.com/makky-travelbunny/consultation" target="_blank" rel="noopener">Book a free consultation</a>
+        </div>
+        <a class="footer-brand" href="#home">travel<strong>Bunny</strong><span aria-hidden="true">.</span></a>
       </div>
-      <p>Copyright © 2026 Travel Bunny. All rights reserved.</p>
+
+      <div class="footer-hero-cols">
+        <div class="footer-brand-block">
+          <p class="footer-tagline">Clean business setup, reporting &amp; visibility for growing teams.</p>
+          <div class="footer-socials" aria-label="Social links">
+            <a class="footer-social-link" href="https://www.linkedin.com/company/travelbunny783/?viewAsMember=true" target="_blank" rel="noopener noreferrer"><img src="/assets/linkedin-DCGMTdli.png" alt="" aria-hidden="true"><span>LinkedIn</span></a>
+            <a class="footer-social-link" href="https://www.instagram.com/travelbunny_tb/" target="_blank" rel="noopener noreferrer"><img src="/assets/instagram-B1ffyRKB.png" alt="" aria-hidden="true"><span>Instagram</span></a>
+          </div>
+        </div>
+
+        <div class="footer-contact">
+          <h2>Get in touch</h2>
+          <a class="footer-contact-item" href="https://cal.com/makky-travelbunny/consultation" target="_blank" rel="noopener">
+            <img src="/assets/contact-calendar-nTgBp5US.png" alt="" aria-hidden="true">
+            <span>Book a consultation</span>
+          </a>
+          <a class="footer-contact-item" href="mailto:Makky@travelbunny.services">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/><polyline points="22,6 12,13 2,6"/></svg>
+            <span>Makky@travelbunny.services</span>
+          </a>
+          <a class="footer-contact-item" href="tel:+16478083432">
+            <img src="/assets/contact-phone-BvfpRjle.png" alt="" aria-hidden="true">
+            <span>+1 647 808 3432</span>
+          </a>
+          <span class="footer-contact-item">
+            <img src="/assets/contact-pin-Ba2S69zz.png" alt="" aria-hidden="true">
+            <span>Toronto, Canada</span>
+          </span>
+        </div>
+      </div>
+
+      <div class="footer-bottom">
+        <div>
+          <a href="#privacy">Privacy</a>
+          <a href="#terms">Terms</a>
+          <a href="#accessibility">Accessibility</a>
+        </div>
+        <p>Copyright &copy; 2026 Travel Bunny. All rights reserved.</p>
+      </div>
+
     </div>
   </footer>
-  <script src="main.js?v=search-2"></script>
+  <script>
+  (function(){
+    var list = document.querySelector('.tool-list');
+    if(!list) return;
+    var items = [].slice.call(list.children);
+    var n = items.length;
+    if(!n) return;
+    var angle = 360 / n;
+    var radius = (window.innerWidth < 700) ? 220 : 380;
+    items.forEach(function(el, i){
+      el.style.transform = 'rotateY(' + (i * angle) + 'deg) translateZ(' + radius + 'px)';
+    });
+  })();
+  </script>
+  <script src="https://cdn.jsdelivr.net/npm/gsap@3.12.5/dist/gsap.min.js"></script>
+  <script>
+  window.addEventListener('load', function(){
+    var sec = document.querySelector('.tools-section');
+    var w = sec ? sec.offsetWidth : 800;
+
+    // talking pair: bob + sway
+    gsap.to('.mascot-talking', { y: -12, rotation: -2, duration: 0.9, yoyo: true, repeat: -1, ease: 'sine.inOut' });
+
+    // desk pair: quick typing bob
+    gsap.to('.mascot-desk', { y: -6, duration: 0.4, yoyo: true, repeat: -1, ease: 'power2.inOut' });
+
+    // peeker: slow sway + lean further on hover
+    var peek = document.querySelector('.mascot-peek');
+    gsap.to('.mascot-peek', { rotation: -4, duration: 1.8, yoyo: true, repeat: -1, ease: 'sine.inOut' });
+    if (peek) {
+      peek.addEventListener('mouseenter', function(){ gsap.to(peek, { x: -20, y: 14, rotation: -6, duration: 0.4 }); });
+      peek.addEventListener('mouseleave', function(){ gsap.to(peek, { x: 0, y: 0, rotation: -4, duration: 0.5 }); });
+    }
+
+    // wanderer: walks across the section with a step bob + rock
+    gsap.fromTo('.mascot-wander', { x: -220 }, { x: w + 60, duration: 13, ease: 'none', repeat: -1 });
+    gsap.to('.mascot-wander', { rotation: 5, duration: 0.35, yoyo: true, repeat: -1, ease: 'sine.inOut' });
+    gsap.to('.mascot-wander', { y: -8, duration: 0.35, yoyo: true, repeat: -1, ease: 'sine.inOut' });
+  });
+  </script>
+  <div class="ad-modal" id="ad-reserve-modal" hidden>
+    <div class="ad-modal-box">
+      <h3>Reserve your ad spot</h3>
+      <p class="ad-modal-sub">$3.99/month to get your business on the screen. Pay now; you'll send your ad art after approval.</p>
+      <label>Business name<input id="ad-business" type="text" required></label>
+      <label>Email<input id="ad-email" type="email" required></label>
+      <label>Image or video URL (optional)<input id="ad-media" type="text" placeholder="https://..."></label>
+      <label>Upload image or video (mp4)<input id="ad-file" type="file" accept="image/*,video/mp4,video/webm"></label>
+      <button id="ad-reserve-submit" type="button">Reserve &amp; pay</button>
+      <button class="ad-modal-close" id="ad-close" type="button">Close</button>
+      <div class="ad-modal-msg" id="ad-msg"></div>
+    </div>
+  </div>
+  <script src="https://www.gstatic.com/firebasejs/10.12.0/firebase-app-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/10.12.0/firebase-storage-compat.js"></script>
+  <script>
+  (function(){
+    var BASE='https://us-central1-makkymgbemena-webpage.cloudfunctions.net';
+    var btn=document.getElementById('ad-reserve'), modal=document.getElementById('ad-reserve-modal');
+    var close=document.getElementById('ad-close'), submit=document.getElementById('ad-reserve-submit');
+    var msg=document.getElementById('ad-msg');
+    if(!btn||!modal) return;
+    var fileInput=document.getElementById('ad-file');
+    firebase.initializeApp({apiKey:'AIzaSyAqbMu6_vNoZIGrU7Unl3wAYtDYDZ7CFAk',authDomain:'makkymgbemena-webpage.firebaseapp.com',projectId:'makkymgbemena-webpage',storageBucket:'makkymgbemena-webpage.firebasestorage.app'});
+    var storage=firebase.storage();
+    function uploadFile(file){var path='ads/'+Date.now()+'_'+file.name.replace(/[^a-zA-Z0-9._-]/g,'_');var ref=storage.ref(path);return ref.put(file).then(function(){return ref.getDownloadURL();});}
+
+    var show=function(t,err){msg.textContent=t||'';msg.className='ad-modal-msg'+(err?' err':'');};
+    btn.addEventListener('click',function(){modal.hidden=false;document.body.classList.add('ad-modal-open');});
+    close.addEventListener('click',function(){modal.hidden=true;document.body.classList.remove('ad-modal-open');});
+    submit.addEventListener('click',async function(){
+      var business=document.getElementById('ad-business').value.trim();
+      var email=document.getElementById('ad-email').value.trim();
+      var media=document.getElementById('ad-media').value.trim();
+      if(!business||!email){show('Please enter your business name and email.',true);return;}
+      submit.disabled=true; show('Processing…',false);
+      try{
+        var url=media;
+        var file=fileInput&&fileInput.files&&fileInput.files[0];
+        if(file){ show('Uploading your file…',false); url=await uploadFile(file); }
+        var r=await fetch(BASE+'/adCheckout',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({email:email,business:business,imageUrl:url,videoUrl:url})});
+        var d=await r.json().catch(function(){return{};});
+        if(d.url){window.location.href=d.url;return;}
+        throw new Error(d.error||'Something went wrong.');
+      }catch(e){submit.disabled=false;show(e.message,true);}
+    });
+  })();
+  </script>
 </body>
 </html>
