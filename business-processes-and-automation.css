@@ -50,6 +50,9 @@
 
 .abs-hero-content {
   color: #ffffff;
+  width: 100%;
+  max-width: 980px;
+  margin-left: 0;
 }
 
 .abs-eyebrow {
@@ -304,7 +307,8 @@
   min-height: 100%;
   display: flex !important;
   flex-direction: column;
-  justify-content: flex-start;
+  justify-content: center;
+  align-items: center;
   padding-top: 2rem;
   padding-bottom: 2rem;
 }
@@ -378,7 +382,8 @@ html, body { overflow-x: hidden; }
   min-height: 100%;
   display: flex !important;
   flex-direction: column;
-  justify-content: flex-start;
+  justify-content: center;
+  align-items: center;
   padding-top: 2rem;
   padding-bottom: 2rem;
 }
@@ -418,9 +423,9 @@ html, body { overflow-x: hidden; }
 }
 
 /* Blog-style slide layout */
-.abs-blog-slide{background:#f5f7f9}
-.blog-wrap{width:100%;max-width:1180px;margin:0 auto;padding:48px 24px;display:flex;align-items:center;min-height:100vh}
-.blog-layout{display:grid;grid-template-columns:1fr 1.35fr 1fr;gap:clamp(28px,4vw,60px);align-items:center;width:100%}
+.abs-blog-slide{background:linear-gradient(rgba(245,247,249,.92),rgba(245,247,249,.92)),url("../assets/wmremove-transformed.jpeg") center center / cover no-repeat}
+.blog-wrap{width:100%;max-width:none;margin:0;padding:clamp(48px,6vw,90px) clamp(32px,7vw,110px);display:flex;align-items:center;min-height:100vh}
+.blog-layout{display:grid;grid-template-columns:0.9fr 1.3fr 1fr;gap:clamp(40px,6vw,90px);align-items:center;width:100%;max-width:1500px;margin:0 auto}
 .blog-intro{display:grid;gap:18px}
 .blog-kicker{color:#568c68;font-size:13px;font-weight:800;letter-spacing:.12em;text-transform:uppercase}
 .blog-title{font-size:clamp(30px,4vw,54px);font-weight:700;line-height:1.08;letter-spacing:-.02em;margin:0;color:#152536}
