@@ -211,3 +211,14 @@ body {
 }
 .pf-card:hover .pf-about-pop,
 .pf-card.is-open .pf-about-pop { opacity: 1; transform: translateY(0); }
+
+/* Mobile: keep the Actions dropdown on-screen */
+@media (max-width: 640px) {
+  .pf-menu-list {
+    left: auto;
+    right: 0;             /* anchor to the right so it doesn't clip off the right */
+    min-width: 0;
+    width: max-content;
+    max-width: 100%;
+  }
+}
