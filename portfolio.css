@@ -175,17 +175,41 @@ body {
 }
 .pf-menu-toggle:hover { background: var(--pf-accent); color: var(--pf-dark); }
 .pf-menu-list {
-  position: absolute;
-  top: calc(100% + 6px);
-  left: 0;
   background: #122d06;
   border: 1px solid rgba(147,188,94,.4);
   border-radius: 10px;
   padding: 6px;
   min-width: 180px;
+  max-width: calc(100vw - 24px);
+}
+/* Floating overlay (native Popover API): renders in the browser's top
+   layer, so it's never boxed in by, or painted behind, a sibling card —
+   this is what stops it disappearing behind the next card in the grid.
+   JS sets top/left next to the button that opened it. */
+.pf-menu-list[popover] {
+  position: fixed;
+  inset: auto;
+  margin: 0;
   z-index: 20;
 }
-.pf-menu-list[hidden] { display: none; }
+/* Fallback for browsers without Popover API support (JS swaps to this
+   when unsupported) — original in-card dropdown behavior. */
+.pf-menu-list--fallback {
+  position: absolute;
+  top: calc(100% + 6px);
+  left: 0;
+  z-index: 20;
+}
+.pf-menu-list--fallback[hidden] { display: none; }
+@media (max-width: 640px) {
+  .pf-menu-list--fallback {
+    left: auto;
+    right: 0;
+    min-width: 0;
+    width: max-content;
+    max-width: 100%;
+  }
+}
 .pf-menu-list button {
   display: block;
   width: 100%;
@@ -212,13 +236,3 @@ body {
 .pf-card:hover .pf-about-pop,
 .pf-card.is-open .pf-about-pop { opacity: 1; transform: translateY(0); }
 
-/* Mobile: keep the Actions dropdown on-screen */
-@media (max-width: 640px) {
-  .pf-menu-list {
-    left: auto;
-    right: 0;             /* anchor to the right so it doesn't clip off the right */
-    min-width: 0;
-    width: max-content;
-    max-width: 100%;
-  }
-}

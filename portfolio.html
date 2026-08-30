@@ -126,8 +126,8 @@
           <h2>Financial books & clean reporting</h2>
           <div class="pf-about-pop">A solo bookkeeper who keeps small businesses' numbers straight, with one clean client portal for statements, invoices and monthly reporting.</div>
           <div class="pf-menu">
-            <button class="pf-menu-toggle" type="button" aria-expanded="false" aria-controls="pf-menu-1">Actions <span aria-hidden="true">▾</span></button>
-            <div class="pf-menu-list" id="pf-menu-1" hidden>
+            <button class="pf-menu-toggle" type="button" aria-expanded="false" aria-controls="pf-menu-1" popovertarget="pf-menu-1" popovertargetaction="toggle">Actions <span aria-hidden="true">▾</span></button>
+            <div class="pf-menu-list" id="pf-menu-1" popover>
               <button type="button">View website</button>
               <button type="button">Book a consultation</button>
             </div>
@@ -141,8 +141,8 @@
           <h2>Heating & cooling, on call</h2>
           <div class="pf-about-pop">A family-run HVAC company handling installs and emergency repairs, with a site that makes it easy to request service and see the service area.</div>
           <div class="pf-menu">
-            <button class="pf-menu-toggle" type="button" aria-expanded="false" aria-controls="pf-menu-2">Actions <span aria-hidden="true">▾</span></button>
-            <div class="pf-menu-list" id="pf-menu-2" hidden>
+            <button class="pf-menu-toggle" type="button" aria-expanded="false" aria-controls="pf-menu-2" popovertarget="pf-menu-2" popovertargetaction="toggle">Actions <span aria-hidden="true">▾</span></button>
+            <div class="pf-menu-list" id="pf-menu-2" popover>
               <button type="button">View website</button>
               <button type="button">Book a consultation</button>
             </div>
@@ -156,8 +156,8 @@
           <h2>Fresh bakes, daily orders</h2>
           <div class="pf-about-pop">A neighbourhood bakery and café doing custom cakes, wholesale and daily counter service, with online ordering and a visible pickup schedule.</div>
           <div class="pf-menu">
-            <button class="pf-menu-toggle" type="button" aria-expanded="false" aria-controls="pf-menu-3">Actions <span aria-hidden="true">▾</span></button>
-            <div class="pf-menu-list" id="pf-menu-3" hidden>
+            <button class="pf-menu-toggle" type="button" aria-expanded="false" aria-controls="pf-menu-3" popovertarget="pf-menu-3" popovertargetaction="toggle">Actions <span aria-hidden="true">▾</span></button>
+            <div class="pf-menu-list" id="pf-menu-3" popover>
               <button type="button">View website</button>
               <button type="button">Book a consultation</button>
             </div>
@@ -171,8 +171,8 @@
           <h2>Outdoor spaces, planned & built</h2>
           <div class="pf-about-pop">A landscaping crew that designs and maintains gardens and lawns, letting homeowners request a quote and browse completed projects online.</div>
           <div class="pf-menu">
-            <button class="pf-menu-toggle" type="button" aria-expanded="false" aria-controls="pf-menu-4">Actions <span aria-hidden="true">▾</span></button>
-            <div class="pf-menu-list" id="pf-menu-4" hidden>
+            <button class="pf-menu-toggle" type="button" aria-expanded="false" aria-controls="pf-menu-4" popovertarget="pf-menu-4" popovertargetaction="toggle">Actions <span aria-hidden="true">▾</span></button>
+            <div class="pf-menu-list" id="pf-menu-4" popover>
               <button type="button">View website</button>
               <button type="button">Book a consultation</button>
             </div>
@@ -186,8 +186,8 @@
           <h2>Everyday & family dentistry</h2>
           <div class="pf-about-pop">A friendly family dental practice offering checkups, cleanings and cosmetic work, with online booking and clear details on the services they cover.</div>
           <div class="pf-menu">
-            <button class="pf-menu-toggle" type="button" aria-expanded="false" aria-controls="pf-menu-5">Actions <span aria-hidden="true">▾</span></button>
-            <div class="pf-menu-list" id="pf-menu-5" hidden>
+            <button class="pf-menu-toggle" type="button" aria-expanded="false" aria-controls="pf-menu-5" popovertarget="pf-menu-5" popovertargetaction="toggle">Actions <span aria-hidden="true">▾</span></button>
+            <div class="pf-menu-list" id="pf-menu-5" popover>
               <button type="button">View website</button>
               <button type="button">Book a consultation</button>
             </div>
@@ -201,8 +201,8 @@
           <h2>Listings that show well</h2>
           <div class="pf-about-pop">A real-estate photographer shooting listings for agents and builders, with a portfolio-driven site and a simple way to book a session.</div>
           <div class="pf-menu">
-            <button class="pf-menu-toggle" type="button" aria-expanded="false" aria-controls="pf-menu-6">Actions <span aria-hidden="true">▾</span></button>
-            <div class="pf-menu-list" id="pf-menu-6" hidden>
+            <button class="pf-menu-toggle" type="button" aria-expanded="false" aria-controls="pf-menu-6" popovertarget="pf-menu-6" popovertargetaction="toggle">Actions <span aria-hidden="true">▾</span></button>
+            <div class="pf-menu-list" id="pf-menu-6" popover>
               <button type="button">View website</button>
               <button type="button">Book a consultation</button>
             </div>
@@ -214,18 +214,50 @@
 
   <script type="module" src="main.js"></script>
   <script>
-  // Simplest state: toggle the 'is-open' class for hover-about + toggle the menu lists
-  document.querySelectorAll('.pf-menu-toggle').forEach(function(btn){
-    btn.addEventListener('click', function(e){
-      e.stopPropagation();
-      var list = document.getElementById(btn.getAttribute('aria-controls'));
-      if(!list) return;
-      var isOpen = !list.hidden;
-      document.querySelectorAll('.pf-menu-list').forEach(function(l){ l.hidden = true; });
-      list.hidden = isOpen;
-      btn.setAttribute('aria-expanded', String(!isOpen));
-    });
+  // Actions menu: uses the native Popover API (popovertarget on the button)
+  // so the menu floats free of the card in the browser's top layer — it can
+  // never end up painted behind the next card. JS just positions it next to
+  // its button and mirrors state onto aria-expanded.
+  var supportsPopover = !!(window.HTMLElement && HTMLElement.prototype.showPopover);
+  document.querySelectorAll('.pf-menu').forEach(function(menu){
+    var btn = menu.querySelector('.pf-menu-toggle');
+    var list = menu.querySelector('.pf-menu-list');
+    if (!btn || !list) return;
+
+    if (supportsPopover) {
+      list.addEventListener('toggle', function(e){
+        if (e.newState !== 'open') { btn.setAttribute('aria-expanded', 'false'); return; }
+        btn.setAttribute('aria-expanded', 'true');
+        var r = btn.getBoundingClientRect();
+        var mw = list.offsetWidth || 180;
+        var mh = list.offsetHeight || 90;
+        var left = Math.min(r.left, window.innerWidth - mw - 12);
+        left = Math.max(12, left);
+        var top = r.bottom + 6;
+        if (top + mh > window.innerHeight - 12) top = Math.max(12, r.top - mh - 6);
+        list.style.left = left + 'px';
+        list.style.top = top + 'px';
+      });
+    } else {
+      // Fallback for browsers without the Popover API: original in-card toggle.
+      list.classList.add('pf-menu-list--fallback');
+      list.hidden = true;
+      btn.addEventListener('click', function(e){
+        e.stopPropagation();
+        var isOpen = !list.hidden;
+        document.querySelectorAll('.pf-menu-list--fallback').forEach(function(l){ l.hidden = true; });
+        list.hidden = isOpen;
+        btn.setAttribute('aria-expanded', String(!isOpen));
+      });
+    }
   });
+  if (!supportsPopover) {
+    document.addEventListener('click', function(e){
+      if (e.target.closest('.pf-menu')) return;
+      document.querySelectorAll('.pf-menu-list--fallback').forEach(function(l){ l.hidden = true; });
+    });
+  }
+
   document.querySelectorAll('.pf-dropdown-toggle').forEach(function(btn){
     btn.addEventListener('click', function(e){
       e.stopPropagation();
@@ -241,7 +273,6 @@
   document.addEventListener('click', function(e){
     var inside = e.target.closest('.pf-menu, .pf-dropdown');
     if (inside) return;
-    document.querySelectorAll('.pf-menu-list').forEach(function(l){ l.hidden = true; });
     document.querySelectorAll('.pf-dropdown-menu').forEach(function(m){ m.hidden = true; });
     document.querySelectorAll('.pf-card').forEach(function(c){ c.classList.remove('is-open'); });
   });
