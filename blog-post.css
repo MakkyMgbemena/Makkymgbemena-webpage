@@ -46,9 +46,10 @@
 .bp-search-btn { padding: 8px; color: rgba(0,0,0,.6); display: inline-flex; transition: color .2s; }
 .bp-search-btn:hover { color: var(--bp-foreground); }
 @media (max-width: 1024px) { .bp-nav { display: none; } }
-@media (max-width: 768px) {
-  .bp-btn-outline { display: none; }
-@media (max-width: 768px) { .bp-btn-primary { display: inline-flex; } }
+@media (max-width: 480px) {
+  .bp-header-inner { padding: 0 16px; gap: 12px; }
+  .bp-header-actions { gap: 8px; }
+  .bp-btn { padding: 6px 12px; font-size: 11px; }
 }
 
 /* Hero */
@@ -192,4 +193,19 @@
 .bp-sem-hero-overlay .bp-cta-button {
   font-size: clamp(14px, .6vw + 12px, 17px);
   padding: clamp(12px, 1vw + 8px, 16px) clamp(24px, 2vw + 16px, 32px);
+}
+
+/* Mobile: the image's own aspect ratio makes the banner too short to hold
+   the overlay text (heading/subtext/button spill past its edges). Give the
+   banner a real minimum height on narrow screens and let the image fill it
+   (cropped) instead of shrinking to its natural, very short, ratio. */
+@media (max-width: 768px) {
+  .bp-sem-hero { min-height: 380px; }
+  .bp-sem-hero img {
+    position: absolute;
+    inset: 0;
+    height: 100%;
+    aspect-ratio: auto;
+    object-fit: cover;
+  }
 }
