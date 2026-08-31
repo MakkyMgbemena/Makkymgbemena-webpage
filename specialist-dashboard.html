@@ -82,6 +82,7 @@ button.ghost{background:#eef1ee;color:var(--dark)}
   </div>
 </div>
 
+  <script src="embed.js"></script>
 <script>
 (function(){
   var API_KEY="AIzaSyAqbMu6_vNoZIGrU7Unl3wAYtDYDZ7CFAk";
@@ -202,13 +203,12 @@ button.ghost{background:#eef1ee;color:var(--dark)}
       var media = a.imageUrl || a.videoUrl || "";
       var mediaHtml='';
       if(media){
-        if(/\.(png|jpe?g|webp|gif)$/i.test(media)){ mediaHtml='<img src="'+esc(media)+'" style="max-width:100%;max-height:180px;border-radius:8px;margin-top:8px">'; }
-        else if(/youtube|youtu\.be/i.test(media)){ var m=media.match(/(?:youtube\.com\/(?:watch\?v=|shorts\/|embed\/)|youtu\.be\/)([A-Za-z0-9_-]{6,})/); mediaHtml=m?'<iframe src="https://www.youtube.com/embed/'+m[1]+'" style="width:100%;aspect-ratio:16/9;border:0;border-radius:8px;margin-top:8px" allowfullscreen></iframe>':'<div class="muted">'+esc(media)+'</div>'; }
-        else { mediaHtml='<video src="'+esc(media)+'" controls style="max-width:100%;max-height:180px;border-radius:8px;margin-top:8px"></video>'; }
+        mediaHtml = (window.getEmbedHTML ? window.getEmbedHTML(media) : '');
       }
       var btns = (isPending ? '<button class="ghost" data-approve="'+esc(a.id)+'">Approve</button> <button class="ghost" data-reject="'+esc(a.id)+'">Reject</button>' : '') + '<button class="ghost" data-delete="'+esc(a.id)+'">Delete</button>';
       return '<div class="client"><div class="row"><div><strong>'+esc(a.business||a.email)+'</strong><div class="muted">'+esc(a.email||"")+'</div>'+mediaHtml+'</div><span class="badge">'+esc(st)+'</span></div>'+btns+'</div>';
     }).join("") : '<p class="muted">No ad submissions yet.</p>';
+    if(window.processEmbeds) window.processEmbeds();
     Array.prototype.forEach.call(document.querySelectorAll("[data-approve]"),function(b){b.addEventListener("click",function(){reviewAd(b.getAttribute("data-approve"),true);});});
     Array.prototype.forEach.call(document.querySelectorAll("[data-reject]"),function(b){b.addEventListener("click",function(){reviewAd(b.getAttribute("data-reject"),false);});});
     Array.prototype.forEach.call(document.querySelectorAll("[data-delete]"),function(b){b.addEventListener("click",function(){deleteAd(b.getAttribute("data-delete"));});});
