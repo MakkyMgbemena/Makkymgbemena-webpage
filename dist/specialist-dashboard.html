@@ -97,7 +97,7 @@ button.ghost{background:#eef1ee;color:var(--dark)}
   var AUTH="https://identitytoolkit.googleapis.com/v1/accounts";
   var BASE="https://us-central1-makkymgbemena-webpage.cloudfunctions.net";
   var SPECIALIST_EMAIL="makky@travelbunny.services";
-  var token=""; var clientsCache=[];
+  var token=localStorage.getItem("tb_token")||""; var clientsCache=[];
 
   function esc(s){var d=document.createElement("div");d.textContent=s||"";return d.innerHTML;}
   function show(el,m,err){el.textContent=m||"";el.className="msg"+(err?" err":" ok");}
@@ -157,7 +157,7 @@ button.ghost{background:#eef1ee;color:var(--dark)}
       var d=await r.json();
       if(!r.ok||!d.idToken) throw new Error(d.error&&d.error.message?d.error.message:"Incorrect email or password.");
       if(email!==SPECIALIST_EMAIL) throw new Error("This portal is for the specialist only.");
-      token=d.idToken;
+      token=d.idToken; localStorage.setItem("tb_token",token);
       await api("/setSpecialistRole",{});
       await loadClients();
     }catch(err){show(s,err.message,true);}
@@ -222,9 +222,10 @@ button.ghost{background:#eef1ee;color:var(--dark)}
     Array.prototype.forEach.call(document.querySelectorAll("[data-delete]"),function(b){b.addEventListener("click",function(){deleteAd(b.getAttribute("data-delete"));});});
   }
 
-  document.getElementById("logout").addEventListener("click",function(){token="";location.href="/specialist-dashboard.html";});
+  document.getElementById("logout").addEventListener("click",function(){token="";localStorage.removeItem("tb_token");location.href="/specialist-dashboard.html";});
   window.addEventListener("focus",function(){ if(token) loadClients(); });
   setInterval(function(){ if(token) loadClients(); }, 30000);
+  if(token){ api("/setSpecialistRole",{}).then(function(){return loadClients();}).catch(function(){ token=""; localStorage.removeItem("tb_token"); }); }
 })();
 </script>
 <footer class="legal-footer" style="position:relative;z-index:1;padding:32px 24px;text-align:center;font-family:-apple-system,'Segoe UI',Roboto,Arial,sans-serif;font-size:13px;background:#0b1710;color:#cfd8cf;line-height:1.6;">

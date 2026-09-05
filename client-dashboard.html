@@ -89,8 +89,8 @@
   const params = new URLSearchParams(window.location.search);
   if (params.get("email")) emailInput.value = params.get("email");
 
-  let token = sessionStorage.getItem("tb_token") || "";
-  let userEmail = sessionStorage.getItem("tb_email") || "";
+  let token = localStorage.getItem("tb_token") || "";
+  let userEmail = localStorage.getItem("tb_email") || "";
 
   const showMsg = (el,m,isErr)=>{el.textContent=m||"";el.className="msg"+(isErr?" err":" ok");};
   const esc = s => {const d=document.createElement("div");d.textContent=s||"";return d.innerHTML;};
@@ -114,7 +114,7 @@
     if(!token) return;
     const {data}=await post("/getProject",{token});
     if(data.user){render(data.user);modal.style.display="none";}
-    else {token="";userEmail="";sessionStorage.removeItem("tb_token");sessionStorage.removeItem("tb_email");}
+    else {token="";userEmail="";localStorage.removeItem("tb_token");localStorage.removeItem("tb_email");}
   }
 
   document.getElementById("login-form").addEventListener("submit", async e=>{
@@ -127,7 +127,7 @@
       const d=await r.json();
       if(!r.ok || !d.idToken) throw new Error(d.error?.message || "Incorrect email or password.");
       token=d.idToken; userEmail=d.email;
-      sessionStorage.setItem("tb_token",token);sessionStorage.setItem("tb_email",userEmail);
+      localStorage.setItem("tb_token",token);localStorage.setItem("tb_email",userEmail);
       const gp=await post("/getProject",{token});
       if(gp.data.user){render(gp.data.user);modal.style.display="none";}
       else throw new Error("No project found.");
@@ -163,7 +163,7 @@
   });
 
   document.getElementById("logout").addEventListener("click",()=>{
-    sessionStorage.removeItem("tb_token");sessionStorage.removeItem("tb_email");
+    localStorage.removeItem("tb_token");localStorage.removeItem("tb_email");
     token="";userEmail="";location.href="/client-dashboard.html";
   });
 
