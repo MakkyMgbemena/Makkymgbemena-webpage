@@ -45,10 +45,11 @@
     var baseIframe=' style="width:100%;aspect-ratio:16/9;border:0;border-radius:8px;margin-top:8px"';
 
     // Direct image file
-    if(/\.(png|jpe?g|webp|gif|svg)$/i.test(u)) return '<img src="'+esc(u)+'"'+baseImg+'>';
+    var uPath = u.split(/[?#]/)[0];
+    if(/\.(png|jpe?g|webp|gif|svg)$/i.test(uPath)) return '<img src="'+esc(u)+'"'+baseImg+'>';
 
     // Direct video file
-    if(/\.(mp4|webm|ogg|mov|m4v)$/i.test(u)) return '<video src="'+esc(u)+'" controls'+baseImg+'></video>';
+    if(/\.(mp4|webm|ogg|mov|m4v)$/i.test(uPath)) return '<video src="'+esc(u)+'" controls'+baseImg+'></video>';
 
     // YouTube
     if(/youtube\.com|youtu\.be/i.test(u)){

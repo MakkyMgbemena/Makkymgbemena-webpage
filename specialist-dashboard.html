@@ -104,7 +104,7 @@ button.ghost{background:#eef1ee;color:var(--dark)}
   function renderClients(list){
     document.getElementById("clients").innerHTML = list.length ? list.map(function(c){
       var name=(c.firstName||c.lastName)?((c.firstName||"")+" "+(c.lastName||"")).trim():c.email;
-      return '<div class="client"><div class="row"><div><strong>'+esc(name)+'</strong><div class="muted">'+esc(c.service||"")+'</div></div><span class="badge">'+esc(c.status||"No status")+'</span></div><button class="ghost" data-open="'+esc(c.email)+'">Manage</button></div>';
+      var msgs=(c.comments||[]).concat(c.replies||[]);var last=msgs.length?msgs[msgs.length-1]:null;var lastTxt=last?('<div class="muted" style="margin-top:6px;padding:6px 8px;background:#f4f6f4;border-radius:6px">New message: '+esc(last.text)+'</div>'):'';return '<div class="client"><div class="row"><div><strong>'+esc(name)+'</strong><div class="muted">'+esc(c.service||"")+'</div></div><span class="badge">'+esc(c.status||"No status")+'</span></div>'+lastTxt+'<button class="ghost" data-open="'+esc(c.email)+'">Manage</button></div>';
     }).join("") : '<p class="muted">No clients yet.</p>';
     Array.prototype.forEach.call(document.querySelectorAll("[data-open]"),function(b){
       b.addEventListener("click",function(){openClient(b.getAttribute("data-open"));});
@@ -215,6 +215,8 @@ button.ghost{background:#eef1ee;color:var(--dark)}
   }
 
   document.getElementById("logout").addEventListener("click",function(){token="";location.href="/specialist-dashboard.html";});
+  window.addEventListener("focus",function(){ if(token) loadClients(); });
+  setInterval(function(){ if(token) loadClients(); }, 30000);
 })();
 </script>
 <footer class="legal-footer" style="position:relative;z-index:1;padding:32px 24px;text-align:center;font-family:-apple-system,'Segoe UI',Roboto,Arial,sans-serif;font-size:13px;background:#0b1710;color:#cfd8cf;line-height:1.6;">
