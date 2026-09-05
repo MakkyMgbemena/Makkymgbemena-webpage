@@ -133,6 +133,14 @@ if (videoProjector) {
       placeholder.hidden = false; video.hidden = true;
       return;
     }
+    if (slide.embed) {
+      placeholder.style.backgroundImage = '';
+      video.pause(); video.removeAttribute('src'); video.hidden = true; placeholder.hidden = false;
+      placeholder.innerHTML = '<div style="position:absolute;inset:0;background:#000;overflow:hidden;display:flex;align-items:center;justify-content:center;"><div id="projector-embed" style="transform-origin:center center;">' + (window.getEmbedHTML ? window.getEmbedHTML(slide.embed) : '') + '</div></div>';
+      if (window.processEmbeds) window.processEmbeds();
+      fitEmbedToScreen();
+      return;
+    }
     if (!placeholder.querySelector('[data-video-title]')) placeholder.innerHTML = placeholderHtml;
 
     if (slide.image) {
@@ -149,6 +157,25 @@ if (videoProjector) {
     }
   };
 
+  function fitEmbedToScreen(){
+    var screen = videoProjector.querySelector('.projector-screen');
+    var box = placeholder.querySelector('#projector-embed');
+    if(!screen || !box) return;
+    var tries = 0;
+    function run(){
+      var child = box.querySelector('iframe') || box.firstElementChild;
+      var ew = child ? child.offsetWidth : 0;
+      var eh = child ? child.offsetHeight : 0;
+      if(!eh || eh < 40){ if(tries < 24){ tries++; setTimeout(run, 250); } return; }
+      var cw = screen.clientWidth || 1, ch = screen.clientHeight || 1;
+      var s = Math.min(cw / ew, ch / eh, 1);
+      box.style.width = ew + 'px'; box.style.height = eh + 'px';
+      box.style.transform = 'scale(' + s + ')';
+    }
+    run();
+    window.addEventListener('resize', function(){ setTimeout(run, 60); });
+  }
+
   next.addEventListener('click', () => {
     currentSlide = (currentSlide + 1) % videoSlides.length;
     renderVideoSlide();
@@ -163,7 +190,9 @@ if (videoProjector) {
           var mediaUrl = a.videoUrl || a.imageUrl || '';
           var yt = youTubeEmbed(mediaUrl);
           var isImage = /\.(png|jpe?g|webp|gif)(\?|$)/i.test(a.imageUrl || '');
-          return { title: a.business || 'Your business here', sub: (mediaUrl || a.email || ''), image: isImage ? a.imageUrl : '', src: (!isImage && !yt) ? mediaUrl : '', youtube: yt };
+          var isVideo = /\.(mp4|webm|ogg|mov|m4v)(\?|$)/i.test(mediaUrl);
+          var isEmbed = !yt && !isImage && !isVideo;
+          return { title: a.business || 'Your business here', sub: (mediaUrl || a.email || ''), image: isImage ? a.imageUrl : '', src: (!isImage && !yt && isVideo) ? mediaUrl : '', youtube: yt, embed: isEmbed ? mediaUrl : '' };
         });
         currentSlide = 0;
       }

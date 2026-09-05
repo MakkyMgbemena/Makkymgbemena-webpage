@@ -17,6 +17,14 @@
 
   <meta name="description" content="Travel Bunny business services.">
   <link rel="stylesheet" href="style.css">
+  <!-- Google tag (gtag.js) -->
+  <script async src="https://www.googletagmanager.com/gtag/js?id=G-049MHJM2KP"></script>
+  <script>
+    window.dataLayer = window.dataLayer || [];
+    function gtag(){dataLayer.push(arguments);}
+    gtag('js', new Date());
+    gtag('config', 'G-049MHJM2KP');
+  </script>
 </head>
 <body>
   <header class="site-header">
@@ -216,9 +224,6 @@
     </div>
   </div>
 
-  <div class="ad-screen-feed" id="ad-screen-feed" style="margin-top:36px;" aria-label="Live Local Ad Screen">
-    <p style="color:#5b655b;font-size:15px;text-align:center;">Approved ads will appear here.</p>
-  </div>
 </section>
 
 <section class="tools-section" id="tools" aria-labelledby="tools-heading">
@@ -507,27 +512,6 @@
     </div>
   </div>
   <script src="embed.js"></script>
-  <script>
-  (function(){
-    var BASE='https://us-central1-makkymgbemena-webpage.cloudfunctions.net';
-    var feed=document.getElementById('ad-screen-feed');
-    if(!feed) return;
-    fetch(BASE+'/getActiveAds',{method:'POST',headers:{'Content-Type':'application/json'},body:'{}'})
-      .then(function(r){return r.json();})
-      .then(function(d){
-        var ads=(d&&d.ads)||[];
-        if(!ads.length) return;
-        var esc=function(s){var e=document.createElement('div');e.textContent=s||'';return e.innerHTML;};
-        var html=ads.map(function(a){
-          var media=a.imageUrl||a.videoUrl||'';
-          var emb=media&&window.getEmbedHTML?window.getEmbedHTML(media):'';
-          return '<div class="ad-screen-card" style="width:100%;max-width:520px;background:#fff;border:1px solid #e2e5e2;border-radius:12px;padding:16px;margin:0 auto;"><div class="ad-screen-meta" style="margin-bottom:8px;font-weight:700;">'+esc(a.business||a.email)+'</div>'+emb+'</div>';
-        }).join('');
-        feed.innerHTML='<div style="display:flex;flex-direction:column;gap:20px;">'+html+'</div>';
-        if(window.processEmbeds) window.processEmbeds();
-      }).catch(function(){});
-  })();
-  </script>
   <script src="https://www.gstatic.com/firebasejs/10.12.0/firebase-app-compat.js"></script>
   <script src="https://www.gstatic.com/firebasejs/10.12.0/firebase-storage-compat.js"></script>
   <script>
