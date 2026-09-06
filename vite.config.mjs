@@ -20,6 +20,7 @@ export default defineConfig({
         bookingCancelled: resolve(__dirname, 'booking-cancelled.html'),
         bookingSuccess: resolve(__dirname, 'booking-success.html'),
         notFound: resolve(__dirname, '404.html'),
+        about: resolve(__dirname, 'about.html'),
         privacy: resolve(__dirname, 'privacy.html'),
         terms: resolve(__dirname, 'terms.html'),
       },
