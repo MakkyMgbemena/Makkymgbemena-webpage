@@ -348,7 +348,7 @@ button {
   position: relative;
   isolation: isolate;
   overflow: hidden;
-  background: url("assets/travel-bunny-hero.png") center 56% / cover no-repeat;
+  background: url("assets/travel-bunny-hero.webp") center 56% / cover no-repeat;
   color: var(--white);
 }
 
@@ -525,7 +525,7 @@ button {
   position: relative;
   isolation: isolate;
   overflow: hidden;
-  background: url("assets/travel-bunny-hero.png") center 52% / cover no-repeat;
+  background: url("assets/travel-bunny-hero.webp") center 52% / cover no-repeat;
   color: #ffffff;
 }
 

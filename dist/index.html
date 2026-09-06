@@ -80,7 +80,7 @@
   </script>
   <script type="module" crossorigin src="/assets/modulepreload-polyfill-P2Xu9kJm.js"></script>
   <script type="module" crossorigin src="/assets/main-gdvaJvPp.js"></script>
-  <link rel="stylesheet" crossorigin href="/assets/style-Be9Bagfe.css">
+  <link rel="stylesheet" crossorigin href="/assets/style-Cy95W0kO.css">
 </head>
 <body>
   <header class="site-header">
@@ -567,8 +567,8 @@
     </div>
   </div>
   <script src="embed.js"></script>
-  <script src="https://www.gstatic.com/firebasejs/10.12.0/firebase-app-compat.js"></script>
-  <script src="https://www.gstatic.com/firebasejs/10.12.0/firebase-storage-compat.js"></script>
+  <script defer src="https://www.gstatic.com/firebasejs/10.12.0/firebase-app-compat.js"></script>
+  <script defer src="https://www.gstatic.com/firebasejs/10.12.0/firebase-storage-compat.js"></script>
   <script>
   (function(){
     var BASE='https://us-central1-makkymgbemena-webpage.cloudfunctions.net';
@@ -577,9 +577,8 @@
     var msg=document.getElementById('ad-msg');
     if(!btn||!modal) return;
     var fileInput=document.getElementById('ad-file');
-    firebase.initializeApp({apiKey:'AIzaSyAqbMu6_vNoZIGrU7Unl3wAYtDYDZ7CFAk',authDomain:'makkymgbemena-webpage.firebaseapp.com',projectId:'makkymgbemena-webpage',storageBucket:'makkymgbemena-webpage.firebasestorage.app'});
-    var storage=firebase.storage();
-    function uploadFile(file){var path='ads/'+Date.now()+'_'+file.name.replace(/[^a-zA-Z0-9._-]/g,'_');var ref=storage.ref(path);return ref.put(file).then(function(){return ref.getDownloadURL();});}
+    function getStorage(){if(!firebase.apps.length){firebase.initializeApp({apiKey:'AIzaSyAqbMu6_vNoZIGrU7Unl3wAYtDYDZ7CFAk',authDomain:'makkymgbemena-webpage.firebaseapp.com',projectId:'makkymgbemena-webpage',storageBucket:'makkymgbemena-webpage.firebasestorage.app'});}return firebase.storage();}
+    function uploadFile(file){var path='ads/'+Date.now()+'_'+file.name.replace(/[^a-zA-Z0-9._-]/g,'_');var ref=getStorage().ref(path);return ref.put(file).then(function(){return ref.getDownloadURL();});}
 
     var show=function(t,err){msg.textContent=t||'';msg.className='ad-modal-msg'+(err?' err':'');};
     btn.addEventListener('click',function(){modal.hidden=false;document.body.classList.add('ad-modal-open');});
