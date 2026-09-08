@@ -236,3 +236,14 @@ body {
 .pf-card:hover .pf-about-pop,
 .pf-card.is-open .pf-about-pop { opacity: 1; transform: translateY(0); }
 
+
+.pf-menu-list a { display:block; width:100%; text-align:left; background:none; border:0; color:#dbe7d3; padding:10px 14px; font-size:14px; border-radius:8px; cursor:pointer; text-decoration:none; box-sizing:border-box; }
+.pf-menu-list a:hover { background: var(--pf-accent); color: var(--pf-dark); }
+
+.pf-thumb-live { position: relative; display: block; padding: 0; background: none; }
+.pf-thumb-live iframe { width: 100%; height: 100%; border: 0; display: block; pointer-events: none; }
+.pf-live-badge { position: absolute; left: 10px; top: 10px; background: var(--pf-accent); color: var(--pf-dark); font-size: 11px; font-weight: 700; padding: 4px 10px; border-radius: 20px; text-transform: uppercase; letter-spacing: .08em; }
+
+body { background: #0b0f0d; }
+.pf-bg-video { position: fixed; top: 0; left: 0; width: 100vw; height: 100vh; object-fit: cover; object-position: center; z-index: -1; pointer-events: none; }
+@media (prefers-reduced-motion: reduce) { .pf-bg-video { display: none; } }
