@@ -522,7 +522,7 @@
     var n = items.length;
     if(!n) return;
     var angle = 360 / n;
-    var radius = (window.innerWidth < 700) ? 220 : 380;
+    var radius = (window.innerWidth < 700) ? Math.min(220, window.innerWidth * 0.32) : 380;
     items.forEach(function(el, i){
       el.style.transform = 'rotateY(' + (i * angle) + 'deg) translateZ(' + radius + 'px)';
     });
