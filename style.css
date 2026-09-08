@@ -1968,3 +1968,10 @@ html, body { overflow-x: hidden; width: 100%; position: relative; }
   .footer-hero-cols .footer-contact { margin-left: 0; }
   .footer-hero .footer-bottom { flex-direction: column; align-items: flex-start; gap: 14px; }
 }
+
+/* Mobile only: clean swipeable row of tool cards. Desktop keeps the 3D fan. */
+@media (max-width: 699px) {
+  .tool-list { display: flex; flex-wrap: nowrap; overflow-x: auto; gap: 14px; height: auto; animation: none; transform: none; width: 100%; padding: 12px 6px; scroll-snap-type: x mandatory; }
+  .tool-list .tool-item { position: static !important; width: 150px; height: 130px; margin: 0 !important; transform: none !important; flex: 0 0 auto; scroll-snap-align: center; }
+  .tools-section { overflow: visible; }
+}
