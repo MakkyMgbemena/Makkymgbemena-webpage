@@ -15,6 +15,7 @@ const PRICE_LOOKUP_KEYS = {
   brand: "brand-design-starter-deposit",
   product: "product-presentation-starter-deposit",
   operations: "operations-setup-starter-deposit",
+  growth: "growth-strategy-deposit",
 };
 
 const userDoc = (email) => admin.firestore().collection("users").doc(String(email).toLowerCase());
