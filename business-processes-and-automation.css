@@ -6,7 +6,7 @@
   background-color: #ffffff;
 }
 
-.carousel-inner, .carousel-item {
+.carousel-inner.carousel-item {
   height: 100vh !important;
 }
 
@@ -132,7 +132,7 @@
   color: #718096;
 }
 
-.arrow-step-card:hover ~ .arrow-step-timeline-wrapper .arrow-step-node, .arrow-step-node.active {
+.arrow-step-card:hover ~ .arrow-step-timeline-wrapper .arrow-step-node.arrow-step-node.active {
   border-color: #0b1710;
   background-color: #ffffff;
   color: #0b1710;
@@ -261,8 +261,7 @@
 }
 
 /* Hover effects for elegant feedback */
-.carousel-control-prev:hover .carousel-control-prev-icon,
-.carousel-control-next:hover .carousel-control-next-icon {
+.carousel-control-prev:hover .carousel-control-prev-icon.carousel-control-next:hover .carousel-control-next-icon {
   opacity: 1; /* Fully visible on hover */
   transform: scale(1.08); /* Subtle scale up on hover */
 }
@@ -289,10 +288,7 @@
 }
 
 /* Hide MDBootstrap's default font/pseudo-chevrons to prevent duplication */
-.carousel-control-prev-icon::before,
-.carousel-control-prev-icon::after,
-.carousel-control-next-icon::before,
-.carousel-control-next-icon::after {
+.carousel-control-prev-icon::before.carousel-control-prev-icon::after.carousel-control-next-icon::before.carousel-control-next-icon::after {
   content: none !important;
 }
 
@@ -332,9 +328,7 @@
   .abs-custom-placeholder-slide h2 { font-size: clamp(22px, 3.6vw, 44px) !important; }
   .abs-custom-placeholder-slide p { font-size: clamp(14px, 1.5vw, 18px) !important; margin-bottom: 1rem !important; }
   .abs-custom-placeholder-slide form { padding: 1.25rem !important; border-radius: .75rem !important; }
-  .abs-custom-placeholder-slide .form-label,
-  .abs-custom-placeholder-slide .form-control-lg,
-  .abs-custom-placeholder-slide .form-select-lg { font-size: 15px !important; }
+  .abs-custom-placeholder-slide .form-label.abs-custom-placeholder-slide .form-control-lg.abs-custom-placeholder-slide .form-select-lg { font-size: 15px !important; }
   .abs-custom-placeholder-slide #signup-submit { font-size: 18px !important; padding-top: .75rem !important; padding-bottom: .75rem !important; }
   .abs-custom-placeholder-slide .mockup-body { min-height: 200px !important; }
   .abs-custom-placeholder-slide .badge-ribbon { width: 120px !important; }
@@ -352,8 +346,7 @@ html, body { overflow-x: hidden; }
   height: 100dvh !important;   /* dynamic: fills the visible screen, follows URL bar */
 }
 
-.carousel-inner,
-.carousel-item { height: 100% !important; }
+.carousel-inner.carousel-item { height: 100% !important; }
 
 /* tall slides scroll internally on phones */
 .carousel-item {
@@ -423,7 +416,7 @@ html, body { overflow-x: hidden; }
 }
 
 /* Blog-style slide layout */
-.abs-blog-slide{background:linear-gradient(rgba(245,247,249,.92),rgba(245,247,249,.92)),url("../assets/wmremove-transformed.jpeg") center center / cover no-repeat}
+.abs-blog-slide{background:linear-gradient(rgba(245,247,249.92),rgba(245,247,249.92)),url("../assets/wmremove-transformed.jpeg") center center / cover no-repeat}
 .blog-wrap{width:100%;max-width:none;margin:0;padding:clamp(48px,6vw,90px) clamp(32px,7vw,110px);display:flex;align-items:center;min-height:100vh}
 .blog-layout{display:grid;grid-template-columns:0.9fr 1.3fr 1fr;gap:clamp(40px,6vw,90px);align-items:center;width:100%;max-width:1500px;margin:0 auto}
 .blog-intro{display:grid;gap:18px}
@@ -440,4 +433,4 @@ html, body { overflow-x: hidden; }
 @media(max-width:820px){.blog-wrap{padding:28px 16px;min-height:auto}.blog-layout{grid-template-columns:1fr;gap:24px}.blog-media-main{height:260px}}
 
 /* blog slide photos */
-.blog-media-main img,.blog-media-float img{width:100%;height:100%;object-fit:cover;display:block}
+.blog-media-main img.blog-media-float img{width:100%;height:100%;object-fit:cover;display:block}

@@ -58,19 +58,19 @@
       return '<div class="muted">Unsupported YouTube link format.</div>';
     }
 
-    // TikTok — official blockquote + script
+    // TikTok, official blockquote + script
     if(/tiktok\.com/i.test(u)){
       ensureScripts();
       return '<blockquote class="tiktok-embed" cite="'+esc(u)+'" data-unique-id="'+esc(u)+'" data-embed-type="creator" style="max-width:325px;min-width:325px;margin-top:8px">'+esc(u)+'</blockquote>';
     }
 
-    // Instagram — official blockquote + script
+    // Instagram, official blockquote + script
     if(/instagram\.com|instagr\.am/i.test(u)){
       ensureScripts();
       return '<blockquote class="instagram-media" data-instgrm-permalink="'+esc(u)+'" data-instgrm-version="14" style="background:#fafafa;border:1px solid #dbdbdb;border-radius:8px;margin:8px auto 0;max-width:540px;padding:8px;line-height:1.5">'+esc(u)+'</blockquote>';
     }
 
-    // X / Twitter — official blockquote + widgets.js
+    // X / Twitter, official blockquote + widgets.js
     if(/twitter\.com|x\.com/i.test(u)){
       ensureScripts();
       var statusId = u.match(/(?:twitter\.com|x\.com)\/[^\/]+\/status\/(\d+)/);
@@ -78,18 +78,18 @@
       return '<blockquote class="twitter-tweet" cite="'+esc(u)+'"><a href="'+embedUrl+'"></a></blockquote>';
     }
 
-    // Facebook public post — post plugin iframe
+    // Facebook public post, post plugin iframe
     if(/facebook\.com|fb\.com/i.test(u)){
       return '<iframe src="https://www.facebook.com/plugins/post.php?href='+encodeURIComponent(u)+'&width=500&show_text=true" style="width:100%;max-width:500px;min-height:300px;border:0;border-radius:8px;margin-top:8px;overflow:hidden" scrolling="no" frameborder="0" allowfullscreen="true" allow="autoplay; clipboard-write; encrypted-media; picture-in-picture; web-share"></iframe>';
     }
 
-    // LinkedIn — not supported this stage
+    // LinkedIn, not supported this stage
     if(/linkedin\.com/i.test(u)){
-      return '<div class="muted" style="padding:10px;border:1px dashed rgba(147,188,94,.5);border-radius:8px;margin-top:8px">LinkedIn embeds aren\'t supported yet — paste the raw embed code instead.</div>';
+      return '<div class="muted" style="padding:10px;border:1px dashed rgba(147,188,94.5);border-radius:8px;margin-top:8px">LinkedIn embeds aren\'t supported yet, paste the raw embed code instead.</div>';
     }
 
     // Unknown
-    return '<div class="muted" style="padding:10px;border:1px dashed rgba(147,188,94,.5);border-radius:8px;margin-top:8px">Unsupported link format.</div>';
+    return '<div class="muted" style="padding:10px;border:1px dashed rgba(147,188,94.5);border-radius:8px;margin-top:8px">Unsupported link format.</div>';
   }
 
   window.getEmbedHTML = getEmbedHTML;

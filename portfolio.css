@@ -1,4 +1,4 @@
-/* Portfolio page — dark green, light green accents, clean cards */
+/* Portfolio page, dark green, light green accents, clean cards */
 :root {
   --pf-dark: #1b3f0c;
   --pf-accent: #93bc5e;
@@ -37,7 +37,7 @@ body {
 .portfolio-head p {
   max-width: 560px;
   margin: 0 auto;
-  color: rgba(255,255,255,.8);
+  color: rgba(255,255,255.8);
   font-size: 17px;
   line-height: 1.5;
 }
@@ -50,9 +50,9 @@ body {
 }
 .pf-dropdown { position: relative; }
 .pf-dropdown-toggle {
-  background: rgba(255,255,255,.06);
+  background: rgba(255,255,255.06);
   color: #dbe7d3;
-  border: 1px solid rgba(147,188,94,.4);
+  border: 1px solid rgba(147,188,94.4);
   border-radius: 999px;
   padding: 10px 20px;
   font-size: 14px;
@@ -67,7 +67,7 @@ body {
   left: 50%;
   transform: translateX(-50%);
   background: #224a0f;
-  border: 1px solid rgba(147,188,94,.4);
+  border: 1px solid rgba(147,188,94.4);
   border-radius: 12px;
   padding: 8px;
   min-width: 180px;
@@ -101,14 +101,14 @@ body {
 .pf-card {
   position: relative;
   background: #224a0f;
-  border: 1px solid rgba(147,188,94,.25);
+  border: 1px solid rgba(147,188,94.25);
   border-radius: 16px;
 /* overflow visible so dropdown   overflow: hidden; about popup show */
   transition: border-color .2s ease, box-shadow .2s ease, transform .2s ease;
 }
 .pf-card:hover {
   border-color: var(--pf-accent);
-  box-shadow: 0 12px 30px rgba(0,0,0,.35);
+  box-shadow: 0 12px 30px rgba(0,0,0.35);
   transform: translateY(-3px);
 }
 
@@ -144,8 +144,8 @@ body {
   right: 12px;
   bottom: calc(100% - 12px);
   margin-bottom: 10px;
-  background: rgba(11,32,4,.97);
-  border: 1px solid rgba(147,188,94,.5);
+  background: rgba(11,32,4.97);
+  border: 1px solid rgba(147,188,94.5);
   border-radius: 12px;
   padding: 14px 16px;
   color: #eef4e8;
@@ -157,15 +157,14 @@ body {
   transition: opacity .2s ease, transform .2s ease;
   z-index: 10;
 }
-.pf-card:hover .pf-about-pop,
-.pf-card.is-open .pf-about-pop { opacity: 1; transform: translateY(0); }
+.pf-card:hover .pf-about-pop.pf-card.is-open .pf-about-pop { opacity: 1; transform: translateY(0); }
 
 /* --- Actions dropdown on the card --- */
 .pf-menu { position: relative; margin-top: 14px; }
 .pf-menu-toggle {
   background: var(--pf-dark);
   color: var(--pf-accent);
-  border: 1px solid rgba(147,188,94,.5);
+  border: 1px solid rgba(147,188,94.5);
   border-radius: 999px;
   padding: 9px 18px;
   font-size: 13px;
@@ -176,14 +175,14 @@ body {
 .pf-menu-toggle:hover { background: var(--pf-accent); color: var(--pf-dark); }
 .pf-menu-list {
   background: #122d06;
-  border: 1px solid rgba(147,188,94,.4);
+  border: 1px solid rgba(147,188,94.4);
   border-radius: 10px;
   padding: 6px;
   min-width: 180px;
   max-width: calc(100vw - 24px);
 }
 /* Floating overlay (native Popover API): renders in the browser's top
-   layer, so it's never boxed in by, or painted behind, a sibling card —
+   layer, so it's never boxed in by, or painted behind, a sibling card,
    this is what stops it disappearing behind the next card in the grid.
    JS sets top/left next to the button that opened it. */
 .pf-menu-list[popover] {
@@ -193,7 +192,7 @@ body {
   z-index: 20;
 }
 /* Fallback for browsers without Popover API support (JS swaps to this
-   when unsupported) — original in-card dropdown behavior. */
+   when unsupported), original in-card dropdown behavior. */
 .pf-menu-list--fallback {
   position: absolute;
   top: calc(100% + 6px);
@@ -224,7 +223,7 @@ body {
 }
 .pf-menu-list button:hover { background: var(--pf-accent); color: var(--pf-dark); }
 
-/* About popup — moved ABOVE the card so it never covers the Actions dropdown */
+/* About popup, moved ABOVE the card so it never covers the Actions dropdown */
 .pf-about-pop {
   position: absolute;
   left: 12px;
@@ -233,8 +232,7 @@ body {
   transform: translateY(8px);
   margin-bottom: 10px;
 }
-.pf-card:hover .pf-about-pop,
-.pf-card.is-open .pf-about-pop { opacity: 1; transform: translateY(0); }
+.pf-card:hover .pf-about-pop.pf-card.is-open .pf-about-pop { opacity: 1; transform: translateY(0); }
 
 
 .pf-menu-list a { display:block; width:100%; text-align:left; background:none; border:0; color:#dbe7d3; padding:10px 14px; font-size:14px; border-radius:8px; cursor:pointer; text-decoration:none; box-sizing:border-box; }
