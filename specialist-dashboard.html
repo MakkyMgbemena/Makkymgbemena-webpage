@@ -35,6 +35,8 @@ button.ghost{background:#eef1ee;color:var(--dark)}
   .svc-filter .chip.active{background:#568c68;color:#fff;border-color:#568c68}
 .roles{display:grid;grid-template-columns:repeat(auto-fit,minmax(180px,1fr));gap:6px;margin:8px 0 14px}
 .roles label{font-size:14px;display:flex;gap:8px;align-items:center;font-weight:400}
+.owner-only{display:none}
+body.owner .owner-only{display:block}
 </style>
   <!-- Google tag (gtag.js) -->
   <script async src="https://www.googletagmanager.com/gtag/js?id=G-049MHJM2KP"></script>
@@ -65,6 +67,44 @@ button.ghost{background:#eef1ee;color:var(--dark)}
       <button type="button" class="chip" data-svc="operations">Operations</button>
     </div>
     <div id="clients"><p class="muted">Loading…</p></div>
+  </div>
+
+  <div class="card hidden" id="jobs-panel">
+    <h1>Jobs</h1>
+    <p class="muted">Deliverables and agreed fees. Track progress here &mdash; no timesheets.</p>
+    <div id="jobs-list"><p class="muted">Loading&hellip;</p></div>
+    <h2>Add job</h2>
+    <input id="j-partner" class="owner-only" placeholder="partner@email.com">
+    <input id="j-client" placeholder="client@email.com">
+    <input id="j-deliverable" placeholder="Deliverable (e.g. Menu redesign)">
+    <input id="j-fee" type="number" placeholder="Agreed fee (CAD)">
+    <button id="j-add">Add job</button>
+    <p class="muted" id="j-msg"></p>
+  </div>
+
+  <div class="card hidden" id="expenses-panel">
+    <h1>Expenses</h1>
+    <p class="muted">Submit costs you paid for a job. Reimbursed at cost once approved &mdash; no hours.</p>
+    <div id="expenses-list"><p class="muted">Loading&hellip;</p></div>
+    <h2>Submit expense</h2>
+    <input id="e-partner" class="owner-only" placeholder="partner@email.com">
+    <input id="e-client" placeholder="client@email.com (optional)">
+    <input id="e-amount" type="number" placeholder="Amount (CAD)">
+    <input id="e-category" placeholder="Category (e.g. Canva Pro asset)">
+    <input id="e-note" placeholder="Note (optional)">
+    <button id="e-add">Submit expense</button>
+    <p class="muted" id="e-msg"></p>
+  </div>
+
+  <div class="card hidden" id="invoices-panel">
+    <h1>Invoices</h1>
+    <p class="muted">Submit a month &mdash; the total is calculated from completed jobs + approved expenses.</p>
+    <div id="invoices-list"><p class="muted">Loading&hellip;</p></div>
+    <h2>Submit invoice</h2>
+    <input id="i-partner" class="owner-only" placeholder="partner@email.com">
+    <input id="i-period" placeholder="Period (e.g. 2026-09)">
+    <button id="i-add">Submit invoice</button>
+    <p class="muted" id="i-msg"></p>
   </div>
 
   <div class="card hidden" id="activity-panel">
@@ -194,8 +234,13 @@ button.ghost{background:#eef1ee;color:var(--dark)}
     clientsCache=data.clients;
     renderClients(data.clients);
     document.getElementById("clients-panel").classList.remove("hidden");
-    if(data.isOwner){ document.getElementById("team-panel").classList.remove("hidden"); await loadTeam();
+    if(data.isOwner){ document.body.classList.add("owner");
+      document.getElementById("team-panel").classList.remove("hidden"); await loadTeam();
       document.getElementById("activity-panel").classList.remove("hidden"); await loadActivity(); }
+    document.getElementById("jobs-panel").classList.remove("hidden");
+    document.getElementById("expenses-panel").classList.remove("hidden");
+    document.getElementById("invoices-panel").classList.remove("hidden");
+    await loadJobs(); await loadExpenses(); await loadInvoices();
     await loadAds();
     document.getElementById("login-modal").style.display="none";
   }
@@ -216,6 +261,73 @@ button.ghost{background:#eef1ee;color:var(--dark)}
       });
     }catch(e){ document.getElementById("team-list").innerHTML='<p class="muted">Could not load team.</p>'; }
   }
+  function money(n){ return "$" + (Number(n)||0).toFixed(2); }
+
+  async function loadJobs(){
+    try{
+      var d=await api("/listJobs",{});
+      var list=d.jobs||[];
+      document.getElementById("jobs-list").innerHTML = list.length ? list.map(function(j){
+        return '<div class="client"><div class="row"><strong>'+esc(j.deliverable)+'</strong><span class="muted">'+money(j.fee)+'</span></div><div class="muted">'+esc(j.client||"")+(j.partner?' &middot; '+esc(j.partner):'')+' &middot; '+esc(j.status||"active")+'</div>'+(j.status!=="done"?'<button data-jdone="'+esc(j.id)+'">Mark done</button>':'')+'</div>';
+      }).join("") : '<p class="muted">No jobs yet.</p>';
+      Array.prototype.forEach.call(document.querySelectorAll("[data-jdone]"),function(b){
+        b.addEventListener("click",async function(){ try{ await api("/updateJobStatus",{id:b.getAttribute("data-jdone"),status:"done"}); }catch(e){} loadJobs(); });
+      });
+    }catch(e){ document.getElementById("jobs-list").innerHTML='<p class="muted">Could not load jobs.</p>'; }
+  }
+  document.getElementById("j-add").addEventListener("click",async function(){
+    var body={partner:document.getElementById("j-partner").value.trim(),client:document.getElementById("j-client").value.trim(),deliverable:document.getElementById("j-deliverable").value.trim(),fee:Number(document.getElementById("j-fee").value)||0};
+    try{ await api("/addJob",body); show(document.getElementById("j-msg"),"Job added.",false); document.getElementById("j-deliverable").value=""; loadJobs(); }
+    catch(e){ show(document.getElementById("j-msg"),e.message,true); }
+  });
+
+  async function loadExpenses(){
+    try{
+      var d=await api("/listExpenses",{});
+      var list=d.expenses||[];
+      document.getElementById("expenses-list").innerHTML = list.length ? list.map(function(x){
+        var a = (d.isOwner && x.status==="submitted") ? '<button data-eok="'+esc(x.id)+'">Approve</button><button data-eno="'+esc(x.id)+'">Reject</button>' : '';
+        return '<div class="client"><div class="row"><strong>'+esc(x.category||"Expense")+'</strong><span class="muted">'+money(x.amount)+'</span></div><div class="muted">'+esc(x.client||"")+(x.partner?' &middot; '+esc(x.partner):'')+' &middot; '+esc(x.status||"")+'</div>'+a+'</div>';
+      }).join("") : '<p class="muted">No expenses yet.</p>';
+      Array.prototype.forEach.call(document.querySelectorAll("[data-eok],[data-eno]"),function(b){
+        b.addEventListener("click",async function(){
+          var id=b.getAttribute("data-eok")||b.getAttribute("data-eno");
+          try{ await api("/reviewExpense",{id:id,approve:!!b.getAttribute("data-eok")}); }catch(e){}
+          loadExpenses();
+        });
+      });
+    }catch(e){ document.getElementById("expenses-list").innerHTML='<p class="muted">Could not load expenses.</p>'; }
+  }
+  document.getElementById("e-add").addEventListener("click",async function(){
+    var body={partner:document.getElementById("e-partner").value.trim(),client:document.getElementById("e-client").value.trim(),amount:Number(document.getElementById("e-amount").value)||0,category:document.getElementById("e-category").value.trim(),note:document.getElementById("e-note").value.trim()};
+    try{ await api("/addExpense",body); show(document.getElementById("e-msg"),"Expense submitted.",false); document.getElementById("e-amount").value=""; document.getElementById("e-category").value=""; loadExpenses(); }
+    catch(e){ show(document.getElementById("e-msg"),e.message,true); }
+  });
+
+  async function loadInvoices(){
+    try{
+      var d=await api("/listInvoices",{});
+      var list=d.invoices||[];
+      document.getElementById("invoices-list").innerHTML = list.length ? list.map(function(v){
+        var a = (d.isOwner && v.status==="submitted") ? '<button data-vok="'+esc(v.id)+'">Approve</button>' : ((d.isOwner && v.status==="approved") ? '<button data-vpaid="'+esc(v.id)+'">Mark paid</button>' : '');
+        return '<div class="client"><div class="row"><strong>'+esc(v.period||"")+'</strong><span class="muted">'+money(v.total)+'</span></div><div class="muted">'+esc(v.partner||"")+' &middot; '+esc(v.status||"")+(v.paidAt?' &middot; paid '+new Date(v.paidAt).toLocaleDateString():'')+'</div>'+a+'</div>';
+      }).join("") : '<p class="muted">No invoices yet.</p>';
+      Array.prototype.forEach.call(document.querySelectorAll("[data-vok],[data-vpaid]"),function(b){
+        b.addEventListener("click",async function(){
+          var id=b.getAttribute("data-vok")||b.getAttribute("data-vpaid");
+          var status=b.getAttribute("data-vok")?"approved":"paid";
+          try{ await api("/reviewInvoice",{id:id,status:status}); }catch(e){}
+          loadInvoices();
+        });
+      });
+    }catch(e){ document.getElementById("invoices-list").innerHTML='<p class="muted">Could not load invoices.</p>'; }
+  }
+  document.getElementById("i-add").addEventListener("click",async function(){
+    var body={partner:document.getElementById("i-partner").value.trim(),period:document.getElementById("i-period").value.trim()};
+    try{ var r=await api("/addInvoice",body); show(document.getElementById("i-msg"),"Invoice submitted: "+money(r.total),false); loadInvoices(); }
+    catch(e){ show(document.getElementById("i-msg"),e.message,true); }
+  });
+
   async function loadActivity(){
     try{
       var data=await api("/listActivity",{});

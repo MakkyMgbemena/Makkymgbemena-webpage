@@ -201,6 +201,157 @@ exports.listSpecialists = onRequest({cors: true, invoker: "public"}, async (req,
   }
 });
 
+
+// ===== Partner workspace: jobs, expenses, invoices =====
+function periodKey(ts) {
+  const d = new Date(ts);
+  return d.getUTCFullYear() + "-" + String(d.getUTCMonth() + 1).padStart(2, "0");
+}
+function partnerOf(s, b) {
+  return String((s.isOwner ? (b || {}).partner : s.email) || "").toLowerCase();
+}
+
+exports.addJob = onRequest({cors: true, invoker: "public"}, async (req, res) => {
+  try {
+    const s = await requireSpecialist(req);
+    const b = req.body || {};
+    const partner = partnerOf(s, b);
+    if (!partner || !b.deliverable) return res.status(400).json({error: "partner and deliverable are required."});
+    const doc = await admin.firestore().collection("jobs").add({
+      partner,
+      client: String(b.client || "").toLowerCase(),
+      deliverable: String(b.deliverable),
+      fee: Number(b.fee) || 0,
+      status: "active",
+      period: periodKey(Date.now()),
+      createdAt: Date.now(),
+      createdBy: s.email,
+    });
+    await logActivity(s.email, "Created job: " + b.deliverable, partner);
+    res.json({ok: true, id: doc.id});
+  } catch (e) { logger.error("addJob error", e); res.status(401).json({error: "Not authorized."}); }
+});
+
+exports.listJobs = onRequest({cors: true, invoker: "public"}, async (req, res) => {
+  try {
+    const s = await requireSpecialist(req);
+    const snap = await admin.firestore().collection("jobs").orderBy("createdAt", "desc").limit(300).get();
+    let jobs = snap.docs.map(d => ({id: d.id, ...d.data()}));
+    if (!s.isOwner) jobs = jobs.filter(x => x.partner === s.email);
+    res.json({jobs, isOwner: s.isOwner});
+  } catch (e) { logger.error("listJobs error", e); res.status(401).json({error: "Not authorized."}); }
+});
+
+exports.updateJobStatus = onRequest({cors: true, invoker: "public"}, async (req, res) => {
+  try {
+    const s = await requireSpecialist(req);
+    const {id, status} = req.body || {};
+    if (!id || !status) return res.status(400).json({error: "id and status are required."});
+    const ref = admin.firestore().collection("jobs").doc(id);
+    const doc = await ref.get();
+    if (!doc.exists) return res.status(404).json({error: "Job not found."});
+    if (!s.isOwner && doc.data().partner !== s.email) return res.status(403).json({error: "Not your job."});
+    await ref.update({status, statusAt: Date.now()});
+    await logActivity(s.email, "Job marked " + status, doc.data().client || "");
+    res.json({ok: true});
+  } catch (e) { logger.error("updateJobStatus error", e); res.status(401).json({error: "Not authorized."}); }
+});
+
+exports.addExpense = onRequest({cors: true, invoker: "public"}, async (req, res) => {
+  try {
+    const s = await requireSpecialist(req);
+    const b = req.body || {};
+    const partner = partnerOf(s, b);
+    const amount = Number(b.amount) || 0;
+    if (!partner || amount <= 0) return res.status(400).json({error: "partner and a positive amount are required."});
+    const doc = await admin.firestore().collection("expenses").add({
+      partner,
+      client: String(b.client || "").toLowerCase(),
+      amount,
+      category: String(b.category || "Expense"),
+      note: String(b.note || ""),
+      receiptUrl: String(b.receiptUrl || ""),
+      status: "submitted",
+      period: periodKey(Date.now()),
+      createdAt: Date.now(),
+      createdBy: s.email,
+    });
+    await logActivity(s.email, "Submitted an expense ($" + amount + ")", partner);
+    res.json({ok: true, id: doc.id});
+  } catch (e) { logger.error("addExpense error", e); res.status(401).json({error: "Not authorized."}); }
+});
+
+exports.listExpenses = onRequest({cors: true, invoker: "public"}, async (req, res) => {
+  try {
+    const s = await requireSpecialist(req);
+    const snap = await admin.firestore().collection("expenses").orderBy("createdAt", "desc").limit(300).get();
+    let expenses = snap.docs.map(d => ({id: d.id, ...d.data()}));
+    if (!s.isOwner) expenses = expenses.filter(x => x.partner === s.email);
+    res.json({expenses, isOwner: s.isOwner});
+  } catch (e) { logger.error("listExpenses error", e); res.status(401).json({error: "Not authorized."}); }
+});
+
+exports.reviewExpense = onRequest({cors: true, invoker: "public"}, async (req, res) => {
+  try {
+    await requireOwner(req);
+    const {id, approve} = req.body || {};
+    if (!id) return res.status(400).json({error: "id is required."});
+    await admin.firestore().collection("expenses").doc(id).update({
+      status: approve ? "approved" : "rejected",
+      reviewedAt: Date.now(),
+    });
+    res.json({ok: true});
+  } catch (e) { logger.error("reviewExpense error", e); res.status(401).json({error: "Not authorized."}); }
+});
+
+exports.addInvoice = onRequest({cors: true, invoker: "public"}, async (req, res) => {
+  try {
+    const s = await requireSpecialist(req);
+    const b = req.body || {};
+    const partner = partnerOf(s, b);
+    if (!partner) return res.status(400).json({error: "partner is required."});
+    const period = String(b.period || periodKey(Date.now()));
+    const jobsSnap = await admin.firestore().collection("jobs").where("partner", "==", partner).get();
+    const expSnap = await admin.firestore().collection("expenses").where("partner", "==", partner).get();
+    const lines = []
+      .concat(jobsSnap.docs.map(d => ({id: d.id, ...d.data()}))
+        .filter(x => x.period === period && x.status === "done")
+        .map(x => ({type: "job", label: x.deliverable, amount: Number(x.fee) || 0})))
+      .concat(expSnap.docs.map(d => ({id: d.id, ...d.data()}))
+        .filter(x => x.period === period && x.status === "approved")
+        .map(x => ({type: "expense", label: x.category, amount: Number(x.amount) || 0})));
+    const total = lines.reduce((a, l) => a + (Number(l.amount) || 0), 0);
+    if (!total) return res.status(400).json({error: "Nothing to invoice for " + period + " (no completed jobs or approved expenses)."});
+    const doc = await admin.firestore().collection("invoices").add({
+      partner, period, lines, total, status: "submitted", createdAt: Date.now(),
+    });
+    await logActivity(s.email, "Submitted invoice " + period + " ($" + total + ")", partner);
+    res.json({ok: true, id: doc.id, total, lines});
+  } catch (e) { logger.error("addInvoice error", e); res.status(401).json({error: "Not authorized."}); }
+});
+
+exports.listInvoices = onRequest({cors: true, invoker: "public"}, async (req, res) => {
+  try {
+    const s = await requireSpecialist(req);
+    const snap = await admin.firestore().collection("invoices").orderBy("createdAt", "desc").limit(200).get();
+    let invoices = snap.docs.map(d => ({id: d.id, ...d.data()}));
+    if (!s.isOwner) invoices = invoices.filter(x => x.partner === s.email);
+    res.json({invoices, isOwner: s.isOwner});
+  } catch (e) { logger.error("listInvoices error", e); res.status(401).json({error: "Not authorized."}); }
+});
+
+exports.reviewInvoice = onRequest({cors: true, invoker: "public"}, async (req, res) => {
+  try {
+    await requireOwner(req);
+    const {id, status} = req.body || {};
+    if (!id || !status) return res.status(400).json({error: "id and status are required."});
+    const patch = {status};
+    if (status === "paid") patch.paidAt = Date.now();
+    await admin.firestore().collection("invoices").doc(id).update(patch);
+    res.json({ok: true});
+  } catch (e) { logger.error("reviewInvoice error", e); res.status(401).json({error: "Not authorized."}); }
+});
+
 exports.listActivity = onRequest({cors: true, invoker: "public"}, async (req, res) => {
   try {
     await requireOwner(req);
