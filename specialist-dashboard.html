@@ -67,6 +67,11 @@ button.ghost{background:#eef1ee;color:var(--dark)}
     <div id="clients"><p class="muted">Loading…</p></div>
   </div>
 
+  <div class="card hidden" id="activity-panel">
+    <h1>Recent activity</h1>
+    <p class="muted">Who did what, across every client — your oversight feed.</p>
+    <div id="activity-list"><p class="muted">Loading…</p></div>
+  </div>
   <div class="card hidden" id="team-panel">
     <h1>Team</h1>
     <p class="muted">Add specialists and choose which services they handle. They log in with their own email and see only their clients.</p>
@@ -189,7 +194,8 @@ button.ghost{background:#eef1ee;color:var(--dark)}
     clientsCache=data.clients;
     renderClients(data.clients);
     document.getElementById("clients-panel").classList.remove("hidden");
-    if(data.isOwner){ document.getElementById("team-panel").classList.remove("hidden"); await loadTeam(); }
+    if(data.isOwner){ document.getElementById("team-panel").classList.remove("hidden"); await loadTeam();
+      document.getElementById("activity-panel").classList.remove("hidden"); await loadActivity(); }
     await loadAds();
     document.getElementById("login-modal").style.display="none";
   }
@@ -209,6 +215,15 @@ button.ghost{background:#eef1ee;color:var(--dark)}
         });
       });
     }catch(e){ document.getElementById("team-list").innerHTML='<p class="muted">Could not load team.</p>'; }
+  }
+  async function loadActivity(){
+    try{
+      var data=await api("/listActivity",{});
+      var list=(data.activity||[]);
+      document.getElementById("activity-list").innerHTML = list.length ? list.map(function(a){
+        return '<div class="client"><div class="row"><strong>'+esc(a.by||"")+'</strong><span class="muted">'+esc(new Date(a.at).toLocaleString())+'</span></div><div>'+esc(a.action||"")+'</div><div class="muted">'+esc(a.client||"")+'</div></div>';
+      }).join("") : '<p class="muted">No activity yet.</p>';
+    }catch(e){ document.getElementById("activity-list").innerHTML='<p class="muted">Could not load activity.</p>'; }
   }
   document.getElementById("t-add").addEventListener("click",async function(){
     var email=document.getElementById("t-email").value.trim();

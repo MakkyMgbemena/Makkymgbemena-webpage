@@ -166,6 +166,17 @@ async function requireOwner(req) {
   return email;
 }
 
+async function logActivity(by, action, client) {
+  try {
+    await admin.firestore().collection("activity").add({
+      at: Date.now(),
+      by: String(by || "").toLowerCase(),
+      action: String(action || ""),
+      client: String(client || "").toLowerCase(),
+    });
+  } catch (e) { logger.error("logActivity error", e); }
+}
+
 exports.listClients = onRequest({cors: true, invoker: "public"}, async (req, res) => {
   try {
     const s = await requireSpecialist(req);
@@ -186,6 +197,17 @@ exports.listSpecialists = onRequest({cors: true, invoker: "public"}, async (req,
     res.json({specialists: snap.docs.map(d => ({email: d.id, ...d.data()})), owner: SPECIALIST_EMAIL});
   } catch (e) {
     logger.error("listSpecialists error", e);
+    res.status(401).json({error: "Not authorized."});
+  }
+});
+
+exports.listActivity = onRequest({cors: true, invoker: "public"}, async (req, res) => {
+  try {
+    await requireOwner(req);
+    const snap = await admin.firestore().collection("activity").orderBy("at", "desc").limit(40).get();
+    res.json({activity: snap.docs.map(d => d.data())});
+  } catch (e) {
+    logger.error("listActivity error", e);
     res.status(401).json({error: "Not authorized."});
   }
 });
@@ -229,10 +251,11 @@ exports.removeSpecialist = onRequest({cors: true, invoker: "public"}, async (req
 
 exports.updateClientStatus = onRequest({cors: true, invoker: "public"}, async (req, res) => {
   try {
-    await requireSpecialist(req);
+    const s = await requireSpecialist(req);
     const {email, status} = req.body || {};
     if (!email || !status) return res.status(400).json({error: "email and status are required."});
     await userDoc(email).update({status});
+    await logActivity(s.email, 'Set status to "' + status + '"', email);
     res.json({ok: true});
   } catch (e) {
     logger.error("updateClientStatus error", e);
@@ -242,10 +265,11 @@ exports.updateClientStatus = onRequest({cors: true, invoker: "public"}, async (r
 
 exports.updateClientWebsite = onRequest({cors: true, invoker: "public"}, async (req, res) => {
   try {
-    await requireSpecialist(req);
+    const s = await requireSpecialist(req);
     const {email, websiteUrl} = req.body || {};
     if (!email) return res.status(400).json({error: "email is required."});
     await userDoc(email).update({websiteUrl: String(websiteUrl || "").trim()});
+    await logActivity(s.email, "Updated the client website link", email);
     res.json({ok: true});
   } catch (e) {
     logger.error("updateClientWebsite error", e);
@@ -255,7 +279,7 @@ exports.updateClientWebsite = onRequest({cors: true, invoker: "public"}, async (
 
 exports.sendClientUpdate = onRequest({cors: true, invoker: "public"}, async (req, res) => {
   try {
-    await requireSpecialist(req);
+    const s = await requireSpecialist(req);
     const {email, text} = req.body || {};
     if (!email || !text) return res.status(400).json({error: "email and text are required."});
     const ref = userDoc(email);
@@ -263,8 +287,9 @@ exports.sendClientUpdate = onRequest({cors: true, invoker: "public"}, async (req
     if (!doc.exists) return res.status(404).json({error: "No project found."});
     const u = doc.data();
     const updates = Array.isArray(u.updates) ? u.updates : [];
-    updates.push({at: new Date().toISOString(), text});
+    updates.push({at: new Date().toISOString(), text, by: s.email});
     await ref.update({updates});
+    await logActivity(s.email, "Posted a project update", email);
     res.json({ok: true, updates});
   } catch (e) {
     logger.error("sendClientUpdate error", e);
@@ -274,7 +299,7 @@ exports.sendClientUpdate = onRequest({cors: true, invoker: "public"}, async (req
 
 exports.replyClientComment = onRequest({cors: true, invoker: "public"}, async (req, res) => {
   try {
-    await requireSpecialist(req);
+    const s = await requireSpecialist(req);
     const {email, text} = req.body || {};
     if (!email || !text) return res.status(400).json({error: "email and text are required."});
     const ref = userDoc(email);
@@ -282,8 +307,9 @@ exports.replyClientComment = onRequest({cors: true, invoker: "public"}, async (r
     if (!doc.exists) return res.status(404).json({error: "No project found."});
     const u = doc.data();
     const replies = Array.isArray(u.replies) ? u.replies : [];
-    replies.push({at: new Date().toISOString(), text});
+    replies.push({at: new Date().toISOString(), text, by: s.email});
     await ref.update({replies});
+    await logActivity(s.email, "Replied to a client comment", email);
     res.json({ok: true, replies});
   } catch (e) {
     logger.error("replyClientComment error", e);
@@ -399,13 +425,14 @@ exports.listAds = onRequest({cors: true, invoker: "public"}, async (req, res) =>
 
 exports.reviewAd = onRequest({cors: true, invoker: "public"}, async (req, res) => {
   try {
-    await requireSpecialist(req);
+    const s = await requireSpecialist(req);
     const {id, approve} = req.body || {};
     if (!id) return res.status(400).json({error: "id is required."});
     await admin.firestore().collection("ads").doc(id).update({
       status: approve ? "approved" : "rejected",
       reviewedAt: admin.firestore.FieldValue.serverTimestamp(),
     });
+    await logActivity(s.email, (approve ? "Approved" : "Rejected") + " an ad submission", id);
     res.json({ok: true});
   } catch (e) {
     logger.error("reviewAd error", e);
@@ -427,10 +454,11 @@ exports.getActiveAds = onRequest({cors: true, invoker: "public"}, async (req, re
 
 exports.deleteAd = onRequest({cors: true, invoker: "public"}, async (req, res) => {
   try {
-    await requireSpecialist(req);
+    const s = await requireSpecialist(req);
     const {id} = req.body || {};
     if (!id) return res.status(400).json({error: "id is required."});
     await admin.firestore().collection("ads").doc(id).delete();
+    await logActivity(s.email, "Deleted an ad submission", id);
     res.json({ok: true});
   } catch (e) {
     logger.error("deleteAd error", e);
