@@ -65,6 +65,9 @@ button.ghost{background:#eef1ee;color:var(--dark)}
     <label>Status</label>
     <input id="c-status">
     <button id="c-save-status">Save status</button>
+    <label>Website URL</label>
+    <input id="c-website" placeholder="https://client-site.com">
+    <button id="c-save-website">Save website</button>
     <div class="msg" id="c-status-msg"></div>
 
     <h2>Updates</h2><div id="c-updates"><p class="muted">None yet.</p></div>
@@ -127,6 +130,7 @@ button.ghost{background:#eef1ee;color:var(--dark)}
   function renderClient(c){
     document.getElementById("c-email").textContent=c.email;
     document.getElementById("c-status").value=c.status||"";
+    document.getElementById("c-website").value=c.websiteUrl||"";
     var ups=(c.updates||[]);
     document.getElementById("c-updates").innerHTML=ups.length?ups.map(function(u){return '<div class="update">'+esc(u.text)+'<div class="when">'+new Date(u.at).toLocaleString()+'</div></div>';}).join(""):'<p class="muted">None yet.</p>';
     var items=[];
@@ -172,6 +176,13 @@ button.ghost{background:#eef1ee;color:var(--dark)}
     var email=document.getElementById("c-email").textContent;
     var status=document.getElementById("c-status").value.trim();
     try{await api("/updateClientStatus",{email:email,status:status});show(document.getElementById("c-status-msg"),"Saved.",false);}
+    catch(e){show(document.getElementById("c-status-msg"),e.message,true);}
+  });
+
+  document.getElementById("c-save-website").addEventListener("click",async function(){
+    var email=document.getElementById("c-email").textContent;
+    var websiteUrl=document.getElementById("c-website").value.trim();
+    try{await api("/updateClientWebsite",{email:email,websiteUrl:websiteUrl});show(document.getElementById("c-status-msg"),"Website saved.",false);}
     catch(e){show(document.getElementById("c-status-msg"),e.message,true);}
   });
 

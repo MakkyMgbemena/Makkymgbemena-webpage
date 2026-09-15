@@ -95,7 +95,7 @@ exports.getProject = onRequest({cors: true, invoker: "public"}, async (req, res)
     const doc = await userDoc(email).get();
     if (!doc.exists) return res.status(404).json({error: "No project found."});
     const u = doc.data();
-    res.json({user: {email: u.email, firstName: u.firstName, lastName: u.lastName, service: u.service, status: u.status, updates: u.updates || [], comments: u.comments || []}});
+    res.json({user: {email: u.email, firstName: u.firstName, lastName: u.lastName, service: u.service, status: u.status, updates: u.updates || [], comments: u.comments || [], websiteUrl: u.websiteUrl || ""}});
   } catch (err) {
     logger.error("getProject error", err);
     res.status(401).json({error: "Please log in again."});
@@ -165,6 +165,19 @@ exports.updateClientStatus = onRequest({cors: true, invoker: "public"}, async (r
     res.json({ok: true});
   } catch (e) {
     logger.error("updateClientStatus error", e);
+    res.status(401).json({error: "Not authorized."});
+  }
+});
+
+exports.updateClientWebsite = onRequest({cors: true, invoker: "public"}, async (req, res) => {
+  try {
+    await requireSpecialist(req);
+    const {email, websiteUrl} = req.body || {};
+    if (!email) return res.status(400).json({error: "email is required."});
+    await userDoc(email).update({websiteUrl: String(websiteUrl || "").trim()});
+    res.json({ok: true});
+  } catch (e) {
+    logger.error("updateClientWebsite error", e);
     res.status(401).json({error: "Not authorized."});
   }
 });
