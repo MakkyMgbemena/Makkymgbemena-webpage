@@ -29,6 +29,15 @@
   .modal{position:fixed;inset:0;background:rgba(0,0,0,.6);display:flex;align-items:center;justify-content:center;z-index:50;padding:20px}
   .modal .box{background:#fff;color:#0b1710;border-radius:16px;padding:32px;max-width:420px;width:100%;box-shadow:0 20px 60px rgba(0,0,0,.5)}
   .modal a{color:var(--green)}
+  .widgets{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:14px;margin:22px 0 6px}
+  .widget{background:#f7f9f7;border:1px solid #e6e9e6;border-radius:12px;padding:16px}
+  .widget h3{margin:0 0 4px;font-size:15px}
+  .widget .src{color:#8a9a8a;font-size:12px;margin:0 0 12px}
+  .widget .metrics{display:flex;gap:12px;flex-wrap:wrap}
+  .widget .metrics div{flex:1 1 60px}
+  .widget .metrics span{display:block;font-size:22px;font-weight:800;color:#0b1710}
+  .widget .metrics small{color:#7a8a7a;font-size:11px}
+  .widget .connect{display:inline-block;margin-top:12px;font-size:12px;font-weight:700;color:var(--green);text-decoration:none}
 </style>
   <!-- Google tag (gtag.js) -->
   <script async src="https://www.googletagmanager.com/gtag/js?id=G-049MHJM2KP"></script>
@@ -48,7 +57,16 @@
   <!-- DASHBOARD (behind modal) -->
   <div class="card">
     <h1 id="hello">Hi</h1>
-    <p class="muted">Here's the current state of your project. Message your specialist below.</p>
+    <p class="muted">Your Business Command Centre &mdash; everything happening in your business, in one place.</p>
+
+    <div class="widgets">
+      <div class="widget"><h3>Sales &amp; Revenue</h3><p class="src">QuickBooks &middot; Shopify &middot; Stripe</p><div class="metrics"><div><span>&mdash;</span><small>Revenue</small></div><div><span>&mdash;</span><small>Expenses</small></div><div><span>&mdash;</span><small>Profit</small></div></div><a class="connect" href="index.html#contact">Connect a data source</a></div>
+      <div class="widget"><h3>Website Performance</h3><p class="src">Google Analytics 4 &middot; Search Console</p><div class="metrics"><div><span>&mdash;</span><small>Visitors</small></div><div><span>&mdash;</span><small>Search traffic</small></div><div><span>&mdash;</span><small>Conversion</small></div></div><a class="connect" href="index.html#contact">Connect a data source</a></div>
+      <div class="widget"><h3>Social Reach</h3><p class="src">Facebook &middot; Instagram &middot; TikTok &middot; LinkedIn</p><div class="metrics"><div><span>&mdash;</span><small>Reach</small></div><div><span>&mdash;</span><small>Engagement</small></div><div><span>&mdash;</span><small>Followers</small></div></div><a class="connect" href="index.html#contact">Connect a data source</a></div>
+      <div class="widget"><h3>Reviews &amp; Reputation</h3><p class="src">Google Business Profile &middot; Yelp</p><div class="metrics"><div><span>&mdash;</span><small>Views</small></div><div><span>&mdash;</span><small>Calls</small></div><div><span>&mdash;</span><small>Directions</small></div></div><a class="connect" href="index.html#contact">Connect a data source</a></div>
+      <div class="widget"><h3>Customer Engagement</h3><p class="src">Forms &middot; Calls &middot; Emails &middot; Bookings</p><div class="metrics"><div><span>&mdash;</span><small>New leads</small></div><div><span>&mdash;</span><small>Bookings</small></div></div><a class="connect" href="index.html#contact">Connect a data source</a></div>
+      <div class="widget"><h3>Operations</h3><p class="src">Custom reports &middot; Spreadsheets &middot; KPIs</p><div class="metrics"><div><span>&mdash;</span><small>Open items</small></div><div><span>&mdash;</span><small>KPIs tracked</small></div></div><a class="connect" href="index.html#contact">Connect a data source</a></div>
+    </div>
     <h2>Your project</h2>
     <p><span class="status" id="status">Loading…</span> &nbsp; <span id="service"></span></p>
     <h2>Updates</h2><div id="updates"><p class="muted">No updates yet.</p></div>
