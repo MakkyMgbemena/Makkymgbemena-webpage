@@ -74,7 +74,7 @@ body.owner .owner-only{display:block}
     <p class="muted">Deliverables and agreed fees. Track progress here &mdash; no timesheets.</p>
     <div id="jobs-list"><p class="muted">Loading&hellip;</p></div>
     <h2>Add job</h2>
-    <input id="j-partner" class="owner-only" placeholder="partner@email.com">
+    <label class="owner-only" style="display:block;font-size:13px;color:#6b7a6d;margin:6px 0 2px">For</label><select id="j-partner" class="owner-only"></select>
     <input id="j-client" placeholder="client@email.com">
     <input id="j-deliverable" placeholder="Deliverable (e.g. Menu redesign)">
     <input id="j-fee" type="number" placeholder="Agreed fee (CAD)">
@@ -87,7 +87,7 @@ body.owner .owner-only{display:block}
     <p class="muted">Submit costs you paid for a job. Reimbursed at cost once approved &mdash; no hours.</p>
     <div id="expenses-list"><p class="muted">Loading&hellip;</p></div>
     <h2>Submit expense</h2>
-    <input id="e-partner" class="owner-only" placeholder="partner@email.com">
+    <label class="owner-only" style="display:block;font-size:13px;color:#6b7a6d;margin:6px 0 2px">For</label><select id="e-partner" class="owner-only"></select>
     <input id="e-client" placeholder="client@email.com (optional)">
     <input id="e-amount" type="number" placeholder="Amount (CAD)">
     <input id="e-category" placeholder="Category (e.g. Canva Pro asset)">
@@ -101,7 +101,7 @@ body.owner .owner-only{display:block}
     <p class="muted">Submit a month &mdash; the total is calculated from completed jobs + approved expenses.</p>
     <div id="invoices-list"><p class="muted">Loading&hellip;</p></div>
     <h2>Submit invoice</h2>
-    <input id="i-partner" class="owner-only" placeholder="partner@email.com">
+    <label class="owner-only" style="display:block;font-size:13px;color:#6b7a6d;margin:6px 0 2px">For</label><select id="i-partner" class="owner-only"></select>
     <input id="i-period" placeholder="Period (e.g. 2026-09)">
     <button id="i-add">Submit invoice</button>
     <p class="muted" id="i-msg"></p>
@@ -250,8 +250,11 @@ body.owner .owner-only{display:block}
       var data=await api("/listSpecialists",{});
       var list=(data.specialists||[]);
       document.getElementById("team-list").innerHTML = list.length ? list.map(function(s){
-        return '<div class="client"><div class="row"><strong>'+esc(s.name||s.email)+'</strong><span class="muted">'+esc((s.roles||[]).join(", "))+'</span></div><div class="muted">'+esc(s.email)+'</div><button data-remove="'+esc(s.email)+'">Remove</button></div>';
+        return '<div class="client"><div class="row"><strong>'+esc(s.name||s.email)+'</strong><span class="muted">'+esc((s.roles||[]).join(", "))+'</span></div><div class="muted">'+esc(s.email)+'</div>'
+          +(s.isOwner?'':'<button data-remove="'+esc(s.email)+'">Remove</button>')+'</div>';
       }).join("") : '<p class="muted">No specialists yet.</p>';
+      var opts=list.map(function(s){return '<option value="'+esc(s.email)+'">'+esc(s.name||s.email)+'</option>';}).join("");
+      ["j-partner","e-partner","i-partner"].forEach(function(id){var el=document.getElementById(id); if(el) el.innerHTML=opts;});
       Array.prototype.forEach.call(document.querySelectorAll("[data-remove]"),function(b){
         b.addEventListener("click",async function(){
           if(!confirm("Remove this specialist?"))return;

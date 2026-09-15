@@ -194,7 +194,9 @@ exports.listSpecialists = onRequest({cors: true, invoker: "public"}, async (req,
   try {
     await requireOwner(req);
     const snap = await admin.firestore().collection("specialists").get();
-    res.json({specialists: snap.docs.map(d => ({email: d.id, ...d.data()})), owner: SPECIALIST_EMAIL});
+    const list = snap.docs.map(d => ({email: d.id, ...d.data()}));
+    list.unshift({email: SPECIALIST_EMAIL, name: "You (owner)", roles: ["all services"], isOwner: true});
+    res.json({specialists: list, owner: SPECIALIST_EMAIL});
   } catch (e) {
     logger.error("listSpecialists error", e);
     res.status(401).json({error: "Not authorized."});
