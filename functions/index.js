@@ -138,20 +138,91 @@ exports.setSpecialistRole = onRequest({cors: true, invoker: "public"}, async (re
   }
 });
 
-async function requireSpecialist(req) {
+async function resolveSpecialist(req) {
   const decoded = await admin.auth().verifyIdToken((req.body || {}).token);
-  if (decoded.email !== SPECIALIST_EMAIL && !decoded.specialist) throw new Error("Not specialist");
-  return decoded;
+  const email = String(decoded.email || "").toLowerCase();
+  const isOwner = email === SPECIALIST_EMAIL;
+  let roles = [];
+  if (!isOwner) {
+    const doc = await admin.firestore().collection("specialists").doc(email).get();
+    if (!doc.exists) throw new Error("Not specialist");
+    const d = doc.data() || {};
+    if (d.active === false) throw new Error("Inactive specialist");
+    roles = Array.isArray(d.roles) ? d.roles : [];
+  }
+  return {email, isOwner, roles};
+}
+
+async function requireSpecialist(req) {
+  const s = await resolveSpecialist(req);
+  if (!s.isOwner && !s.roles.length) throw new Error("No roles assigned");
+  return s;
+}
+
+async function requireOwner(req) {
+  const decoded = await admin.auth().verifyIdToken((req.body || {}).token);
+  const email = String(decoded.email || "").toLowerCase();
+  if (email !== SPECIALIST_EMAIL) throw new Error("Not owner");
+  return email;
 }
 
 exports.listClients = onRequest({cors: true, invoker: "public"}, async (req, res) => {
   try {
-    await requireSpecialist(req);
+    const s = await requireSpecialist(req);
     const snap = await admin.firestore().collection("users").get();
-    const clients = snap.docs.map(d => ({email: d.id, ...d.data()}));
-    res.json({clients});
+    let clients = snap.docs.map(d => ({email: d.id, ...d.data()}));
+    if (!s.isOwner) clients = clients.filter(c => s.roles.indexOf(String(c.service || "")) !== -1);
+    res.json({clients, isOwner: s.isOwner, roles: s.roles});
   } catch (e) {
     logger.error("listClients error", e);
+    res.status(401).json({error: "Not authorized."});
+  }
+});
+
+exports.listSpecialists = onRequest({cors: true, invoker: "public"}, async (req, res) => {
+  try {
+    await requireOwner(req);
+    const snap = await admin.firestore().collection("specialists").get();
+    res.json({specialists: snap.docs.map(d => ({email: d.id, ...d.data()})), owner: SPECIALIST_EMAIL});
+  } catch (e) {
+    logger.error("listSpecialists error", e);
+    res.status(401).json({error: "Not authorized."});
+  }
+});
+
+exports.addSpecialist = onRequest({cors: true, invoker: "public"}, async (req, res) => {
+  try {
+    await requireOwner(req);
+    const {email, name, roles} = req.body || {};
+    if (!email) return res.status(400).json({error: "email is required."});
+    const key = String(email).toLowerCase();
+    let setupLink = "";
+    try { await admin.auth().getUserByEmail(key); }
+    catch (e) { await admin.auth().createUser({email: key, displayName: String(name || "").trim() || undefined}); }
+    try { setupLink = await admin.auth().generatePasswordResetLink(key); } catch (e) { setupLink = ""; }
+    await admin.firestore().collection("specialists").doc(key).set({
+      email: key,
+      name: String(name || "").trim(),
+      roles: Array.isArray(roles) ? roles : [],
+      active: true,
+      updatedAt: Date.now(),
+    }, {merge: true});
+    res.json({ok: true, setupLink});
+  } catch (e) {
+    logger.error("addSpecialist error", e);
+    res.status(401).json({error: "Not authorized."});
+  }
+});
+
+exports.removeSpecialist = onRequest({cors: true, invoker: "public"}, async (req, res) => {
+  try {
+    await requireOwner(req);
+    const {email} = req.body || {};
+    if (!email) return res.status(400).json({error: "email is required."});
+    await admin.firestore().collection("specialists").doc(String(email).toLowerCase()).delete();
+    res.json({ok: true});
+  } catch (e) {
+    logger.error("removeSpecialist error", e);
     res.status(401).json({error: "Not authorized."});
   }
 });

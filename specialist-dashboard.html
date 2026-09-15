@@ -30,6 +30,11 @@ button.ghost{background:#eef1ee;color:var(--dark)}
 .badge{background:#eef4ef;color:#2e7d32;padding:4px 10px;border-radius:20px;font-size:13px;font-weight:700}
 .update,.comment{background:#f4f6f4;border-radius:8px;padding:10px;margin:8px 0;font-size:14px}
 .when{font-size:12px;color:#888;margin-top:3px}
+  .svc-filter{display:flex;gap:8px;flex-wrap:wrap;margin:6px 0 16px}
+  .svc-filter .chip{background:#eef1ee;color:#0b1710;border:1px solid #e0e5e0;border-radius:999px;padding:6px 14px;font-size:13px;font-weight:700;cursor:pointer;margin:0}
+  .svc-filter .chip.active{background:#568c68;color:#fff;border-color:#568c68}
+.roles{display:grid;grid-template-columns:repeat(auto-fit,minmax(180px,1fr));gap:6px;margin:8px 0 14px}
+.roles label{font-size:14px;display:flex;gap:8px;align-items:center;font-weight:400}
 </style>
   <!-- Google tag (gtag.js) -->
   <script async src="https://www.googletagmanager.com/gtag/js?id=G-049MHJM2KP"></script>
@@ -48,13 +53,44 @@ button.ghost{background:#eef1ee;color:var(--dark)}
   </div>
 
   <div class="card hidden" id="clients-panel">
-    <h1>Clients</h1>
-    <p class="muted">Manage client projects, statuses, and replies.</p>
+    <h1>Client projects</h1>
+    <p class="muted">Manage client projects, statuses, replies, and their live site.</p>
+    <div class="svc-filter" id="svc-filter">
+      <button type="button" class="chip active" data-svc="">All</button>
+      <button type="button" class="chip" data-svc="website">Website</button>
+      <button type="button" class="chip" data-svc="bookkeeping">Bookkeeping</button>
+      <button type="button" class="chip" data-svc="dashboards">Analytics &amp; Reporting</button>
+      <button type="button" class="chip" data-svc="growth">Growth &amp; Marketing</button>
+      <button type="button" class="chip" data-svc="automation">Automation</button>
+      <button type="button" class="chip" data-svc="operations">Operations</button>
+    </div>
     <div id="clients"><p class="muted">Loading…</p></div>
   </div>
 
+  <div class="card hidden" id="team-panel">
+    <h1>Team</h1>
+    <p class="muted">Add specialists and choose which services they handle. They log in with their own email and see only their clients.</p>
+    <div id="team-list"><p class="muted">Loading…</p></div>
+    <h2>Add specialist</h2>
+    <input id="t-email" placeholder="specialist@email.com">
+    <input id="t-name" placeholder="Name">
+    <div class="roles" id="t-roles">
+      <label><input type="checkbox" value="website"> Website builds</label>
+      <label><input type="checkbox" value="product"> Product presentation</label>
+      <label><input type="checkbox" value="bookkeeping"> Bookkeeping</label>
+      <label><input type="checkbox" value="dashboards"> Analytics &amp; Reporting</label>
+      <label><input type="checkbox" value="growth"> Growth &amp; Marketing</label>
+      <label><input type="checkbox" value="marketing"> Local SEO</label>
+      <label><input type="checkbox" value="brand"> Brand &amp; Design</label>
+      <label><input type="checkbox" value="automation"> Automation</label>
+      <label><input type="checkbox" value="operations"> Operations</label>
+      <label><input type="checkbox" value="ads"> Ad screen reviews</label>
+    </div>
+    <button id="t-add">Add specialist</button>
+    <p class="muted" id="t-msg"></p>
+  </div>
   <div class="card hidden" id="ads-panel">
-    <h1>Ad reviews</h1>
+    <h1>Ad screen reviews</h1>
     <p class="muted">Approve or reject Local Ad Screen submissions.</p>
     <div id="ads"><p class="muted">Loading…</p></div>
   </div>
@@ -117,11 +153,13 @@ button.ghost{background:#eef1ee;color:var(--dark)}
     return d;
   }
 
+  var activeSvc = "";
   function renderClients(list){
-    document.getElementById("clients").innerHTML = list.length ? list.map(function(c){
+    var shown = activeSvc ? list.filter(function(c){ return String(c.service||"") === activeSvc; }) : list;
+    document.getElementById("clients").innerHTML = shown.length ? shown.map(function(c){
       var name=(c.firstName||c.lastName)?((c.firstName||"")+" "+(c.lastName||"")).trim():c.email;
       var msgs=(c.comments||[]).concat(c.replies||[]);var last=msgs.length?msgs[msgs.length-1]:null;var lastTxt=last?('<div class="muted" style="margin-top:6px;padding:6px 8px;background:#f4f6f4;border-radius:6px">New message: '+esc(last.text)+'</div>'):'';return '<div class="client"><div class="row"><div><strong>'+esc(name)+'</strong><div class="muted">'+esc(c.service||"")+'</div></div><span class="badge">'+esc(c.status||"No status")+'</span></div>'+lastTxt+'<button class="ghost" data-open="'+esc(c.email)+'">Manage</button></div>';
-    }).join("") : '<p class="muted">No clients yet.</p>';
+    }).join("") : '<p class="muted">No clients in this category.</p>';
     Array.prototype.forEach.call(document.querySelectorAll("[data-open]"),function(b){
       b.addEventListener("click",function(){openClient(b.getAttribute("data-open"));});
     });
@@ -151,9 +189,40 @@ button.ghost{background:#eef1ee;color:var(--dark)}
     clientsCache=data.clients;
     renderClients(data.clients);
     document.getElementById("clients-panel").classList.remove("hidden");
+    if(data.isOwner){ document.getElementById("team-panel").classList.remove("hidden"); await loadTeam(); }
     await loadAds();
     document.getElementById("login-modal").style.display="none";
   }
+
+  async function loadTeam(){
+    try{
+      var data=await api("/listSpecialists",{});
+      var list=(data.specialists||[]);
+      document.getElementById("team-list").innerHTML = list.length ? list.map(function(s){
+        return '<div class="client"><div class="row"><strong>'+esc(s.name||s.email)+'</strong><span class="muted">'+esc((s.roles||[]).join(", "))+'</span></div><div class="muted">'+esc(s.email)+'</div><button data-remove="'+esc(s.email)+'">Remove</button></div>';
+      }).join("") : '<p class="muted">No specialists yet.</p>';
+      Array.prototype.forEach.call(document.querySelectorAll("[data-remove]"),function(b){
+        b.addEventListener("click",async function(){
+          if(!confirm("Remove this specialist?"))return;
+          try{await api("/removeSpecialist",{email:b.getAttribute("data-remove")});}catch(e){}
+          loadTeam();
+        });
+      });
+    }catch(e){ document.getElementById("team-list").innerHTML='<p class="muted">Could not load team.</p>'; }
+  }
+  document.getElementById("t-add").addEventListener("click",async function(){
+    var email=document.getElementById("t-email").value.trim();
+    var name=document.getElementById("t-name").value.trim();
+    var roles=Array.prototype.slice.call(document.querySelectorAll("#t-roles input:checked")).map(function(i){return i.value;});
+    if(!email){ show(document.getElementById("t-msg"),"Email is required.",true); return; }
+    try{
+      var r=await api("/addSpecialist",{email:email,name:name,roles:roles});
+      show(document.getElementById("t-msg"), r.setupLink ? ("Saved. Send them this link to set a password: "+r.setupLink) : "Specialist saved.", false);
+      document.getElementById("t-email").value=""; document.getElementById("t-name").value="";
+      Array.prototype.forEach.call(document.querySelectorAll("#t-roles input"),function(i){i.checked=false;});
+      loadTeam();
+    }catch(e){ show(document.getElementById("t-msg"),e.message,true); }
+  });
 
   document.getElementById("login-form").addEventListener("submit",async function(e){
     e.preventDefault();
@@ -240,6 +309,14 @@ button.ghost{background:#eef1ee;color:var(--dark)}
 
   document.getElementById("logout").addEventListener("click",function(){token="";localStorage.removeItem("tb_token");location.href="/specialist-dashboard.html";});
   window.addEventListener("focus",function(){ if(token) loadClients(); });
+  Array.prototype.forEach.call(document.querySelectorAll("#svc-filter .chip"), function(chip){
+    chip.addEventListener("click", function(){
+      Array.prototype.forEach.call(document.querySelectorAll("#svc-filter .chip"), function(x){ x.classList.remove("active"); });
+      chip.classList.add("active");
+      activeSvc = chip.getAttribute("data-svc") || "";
+      renderClients(clientsCache);
+    });
+  });
   setInterval(function(){ if(token) loadClients(); }, 30000);
   if(token){ api("/setSpecialistRole",{}).then(function(){return loadClients();}).catch(function(){ token=""; localStorage.removeItem("tb_token"); }); }
 })();
