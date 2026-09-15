@@ -254,5 +254,24 @@ document.querySelectorAll('[data-toggle-pass]').forEach(function(btn){
   });
 });
 </script>
+<div id="cookie-banner" style="position:fixed;left:0;right:0;bottom:0;z-index:99998;background:#0b1710;color:#e8efe9;padding:14px 18px;display:none;gap:14px;align-items:center;justify-content:center;flex-wrap:wrap;font-family:inherit;font-size:14px;box-shadow:0 -4px 20px rgba(0,0,0,.35);">
+  <span>We use cookies to improve your experience and analyse site traffic. See our <a href="privacy.html" style="color:#9fd0b0;text-decoration:underline;">Privacy Policy</a>.</span>
+  <span style="display:flex;gap:10px;">
+    <button id="cookie-accept" type="button" style="background:#568c68;color:#fff;border:0;border-radius:999px;padding:9px 18px;font-weight:700;cursor:pointer;">Accept</button>
+    <button id="cookie-reject" type="button" style="background:transparent;color:#cdd6cf;border:1px solid #4a5a4d;border-radius:999px;padding:9px 18px;font-weight:700;cursor:pointer;">Reject</button>
+  </span>
+</div>
+<script>
+(function(){
+  var KEY='tb_cookie_choice';
+  try{ if(localStorage.getItem(KEY)) return; }catch(e){}
+  var b=document.getElementById('cookie-banner'); if(!b) return;
+  b.style.display='flex';
+  function done(v){ try{ localStorage.setItem(KEY,v); }catch(e){} b.style.display='none'; }
+  var a=document.getElementById('cookie-accept'), r=document.getElementById('cookie-reject');
+  if(a) a.addEventListener('click', function(){ done('accepted'); });
+  if(r) r.addEventListener('click', function(){ done('rejected'); });
+})();
+</script>
 </body>
 </html>
