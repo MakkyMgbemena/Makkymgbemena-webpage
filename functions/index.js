@@ -216,7 +216,7 @@ exports.adCheckout = onRequest(
   async (req, res) => {
     try {
       const stripe = require("stripe")(stripeSecretKey.value());
-      const {email, business, imageUrl, videoUrl} = req.body || {};
+      const {email, business, city, imageUrl, videoUrl} = req.body || {};
       if (!email) return res.status(400).json({error: "Email is required."});
 
       const db = admin.firestore();
@@ -234,7 +234,7 @@ exports.adCheckout = onRequest(
         mode: "subscription",
         line_items: [{price: prices.data[0].id, quantity: 1}],
         customer_email: email,
-        metadata: {business: business || "", imageUrl: imageUrl || "", videoUrl: videoUrl || ""},
+        metadata: {business: business || "", city: city || "", imageUrl: imageUrl || "", videoUrl: videoUrl || ""},
         success_url: "https://travelbunny.services/ad-success.html",
         cancel_url: "https://travelbunny.services/ad-cancelled.html",
       });
@@ -273,6 +273,7 @@ exports.adWebhook = onRequest(
         business: meta.business || "",
         imageUrl: meta.imageUrl || "",
         videoUrl: meta.videoUrl || "",
+        city: meta.city || "",
         email: s.customer_email || "",
         stripeCustomer: s.customer,
         stripeSubId: s.subscription,

@@ -181,22 +181,32 @@ if (videoProjector) {
     renderVideoSlide();
   });
 
-  fetch(BASE + '/getActiveAds', {method:'POST', headers:{'Content-Type':'application/json'}, body:'{}'})
+  fetch('https://ipapi.co/json/')
     .then(function(r){ return r.json(); })
-    .then(function(d){
-      const ads = (d.ads || []).filter(function(a){ return a.status === 'approved'; });
-      if (ads.length) {
-                videoSlides = ads.map(function(a){
-          var mediaUrl = a.videoUrl || a.imageUrl || '';
-          var yt = youTubeEmbed(mediaUrl);
-          var isImage = /\.(png|jpe?g|webp|gif)(\?|$)/i.test(a.imageUrl || '');
-          var isVideo = /\.(mp4|webm|ogg|mov|m4v)(\?|$)/i.test(mediaUrl);
-          var isEmbed = !yt && !isImage && !isVideo;
-          return { title: a.business || 'Your business here', sub: (mediaUrl || a.email || ''), image: isImage ? a.imageUrl : '', src: (!isImage && !yt && isVideo) ? mediaUrl : '', youtube: yt, embed: isEmbed ? mediaUrl : '' };
+    .then(function(g){ return (g && g.city) ? String(g.city).toLowerCase() : ''; })
+    .catch(function(){ return ''; })
+    .then(function(city){
+      return fetch(BASE + '/getActiveAds', {method:'POST', headers:{'Content-Type':'application/json'}, body:'{}'})
+        .then(function(r){ return r.json(); })
+        .then(function(d){
+          var ads = (d.ads || []).filter(function(a){ return a.status === 'approved'; });
+          if (city) {
+            var near = ads.filter(function(a){ return String(a.city || '').toLowerCase() === city; });
+            if (near.length) ads = near;
+          }
+          if (ads.length) {
+            videoSlides = ads.map(function(a){
+              var mediaUrl = a.videoUrl || a.imageUrl || '';
+              var yt = youTubeEmbed(mediaUrl);
+              var isImage = /\.(png|jpe?g|webp|gif)(\?|$)/i.test(a.imageUrl || '');
+              var isVideo = /\.(mp4|webm|ogg|mov|m4v)(\?|$)/i.test(mediaUrl);
+              var isEmbed = !yt && !isImage && !isVideo;
+              return { title: a.business || 'Your business here', sub: (mediaUrl || a.email || ''), image: isImage ? a.imageUrl : '', src: (!isImage && !yt && isVideo) ? mediaUrl : '', youtube: yt, embed: isEmbed ? mediaUrl : '' };
+            });
+            currentSlide = 0;
+          }
+          renderVideoSlide();
         });
-        currentSlide = 0;
-      }
-      renderVideoSlide();
     })
     .catch(function(){ renderVideoSlide(); });
 
