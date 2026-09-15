@@ -16,6 +16,9 @@ const PRICE_LOOKUP_KEYS = {
   product: "product-presentation-starter-deposit",
   operations: "operations-setup-starter-deposit",
   growth: "growth-strategy-deposit",
+  bookkeeping: "bookkeeping-setup-deposit",
+  "growth-monthly": "growth-strategy-monthly",
+  "bookkeeping-monthly": "bookkeeping-monthly",
 };
 
 const userDoc = (email) => admin.firestore().collection("users").doc(String(email).toLowerCase());
@@ -65,7 +68,7 @@ exports.createCheckoutSession = onRequest(
         return res.status(404).json({error: `Price not found for "${lookupKey}".`});
       }
       const session = await stripe.checkout.sessions.create({
-        mode: "payment",
+        mode: prices.data[0].recurring ? "subscription" : "payment",
         line_items: [{price: prices.data[0].id, quantity: 1}],
         customer_email: email || undefined,
         success_url: "https://travelbunny.services/booking-success.html?session_id={CHECKOUT_SESSION_ID}",
