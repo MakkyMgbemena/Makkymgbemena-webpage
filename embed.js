@@ -85,11 +85,11 @@
 
     // LinkedIn, not supported this stage
     if(/linkedin\.com/i.test(u)){
-      return '<div class="muted" style="padding:10px;border:1px dashed rgba(147,188,94.5);border-radius:8px;margin-top:8px">LinkedIn embeds aren\'t supported yet, paste the raw embed code instead.</div>';
+      return '<div class="muted" style="padding:10px;border:1px dashed rgba(147,188,94,.5);border-radius:8px;margin-top:8px">LinkedIn embeds aren\'t supported yet, paste the raw embed code instead.</div>';
     }
 
     // Unknown
-    return '<div class="muted" style="padding:10px;border:1px dashed rgba(147,188,94.5);border-radius:8px;margin-top:8px">Unsupported link format.</div>';
+    return '<div class="muted" style="padding:10px;border:1px dashed rgba(147,188,94,.5);border-radius:8px;margin-top:8px">Unsupported link format.</div>';
   }
 
   window.getEmbedHTML = getEmbedHTML;
