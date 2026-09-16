@@ -30,6 +30,13 @@ button.ghost{background:#eef1ee;color:var(--dark)}
 .badge{background:#eef4ef;color:#2e7d32;padding:4px 10px;border-radius:20px;font-size:13px;font-weight:700}
 .update,.comment{background:#f4f6f4;border-radius:8px;padding:10px;margin:8px 0;font-size:14px}
 .when{font-size:12px;color:#888;margin-top:3px}
+  .svc-filter{display:flex;gap:8px;flex-wrap:wrap;margin:6px 0 16px}
+  .svc-filter .chip{background:#eef1ee;color:#0b1710;border:1px solid #e0e5e0;border-radius:999px;padding:6px 14px;font-size:13px;font-weight:700;cursor:pointer;margin:0}
+  .svc-filter .chip.active{background:#568c68;color:#fff;border-color:#568c68}
+.roles{display:grid;grid-template-columns:repeat(auto-fit,minmax(180px,1fr));gap:6px;margin:8px 0 14px}
+.roles label{font-size:14px;display:flex;gap:8px;align-items:center;font-weight:400}
+.owner-only{display:none}
+body.owner .owner-only{display:block}
 </style>
   <!-- Google tag (gtag.js) -->
   <script async src="https://www.googletagmanager.com/gtag/js?id=G-049MHJM2KP"></script>
@@ -48,13 +55,87 @@ button.ghost{background:#eef1ee;color:var(--dark)}
   </div>
 
   <div class="card hidden" id="clients-panel">
-    <h1>Clients</h1>
-    <p class="muted">Manage client projects, statuses, and replies.</p>
+    <h1>Client projects</h1>
+    <p class="muted">Manage client projects, statuses, replies, and their live site.</p>
+    <div class="svc-filter" id="svc-filter">
+      <button type="button" class="chip active" data-svc="">All</button>
+      <button type="button" class="chip" data-svc="website">Website</button>
+      <button type="button" class="chip" data-svc="bookkeeping">Bookkeeping</button>
+      <button type="button" class="chip" data-svc="dashboards">Analytics &amp; Reporting</button>
+      <button type="button" class="chip" data-svc="growth">Growth &amp; Marketing</button>
+      <button type="button" class="chip" data-svc="automation">Automation</button>
+      <button type="button" class="chip" data-svc="operations">Operations</button>
+    </div>
     <div id="clients"><p class="muted">Loading…</p></div>
   </div>
 
+  <div class="card hidden" id="jobs-panel">
+    <h1>Jobs</h1>
+    <p class="muted">Deliverables and agreed fees. Track progress here, no timesheets.</p>
+    <div id="jobs-list"><p class="muted">Loading&hellip;</p></div>
+    <h2>Add job</h2>
+    <label class="owner-only" style="display:block;font-size:13px;color:#6b7a6d;margin:6px 0 2px">For</label><select id="j-partner" class="owner-only"></select>
+    <input id="j-client" placeholder="client@email.com">
+    <input id="j-deliverable" placeholder="Deliverable (e.g. Menu redesign)">
+    <input id="j-fee" type="number" placeholder="Agreed fee (CAD)">
+    <button id="j-add">Add job</button>
+    <p class="muted" id="j-msg"></p>
+  </div>
+
+  <div class="card hidden" id="expenses-panel">
+    <h1>Expenses</h1>
+    <p class="muted">Submit costs you paid for a job. Reimbursed at cost once approved, no hours.</p>
+    <div id="expenses-list"><p class="muted">Loading&hellip;</p></div>
+    <h2>Submit expense</h2>
+    <label class="owner-only" style="display:block;font-size:13px;color:#6b7a6d;margin:6px 0 2px">For</label><select id="e-partner" class="owner-only"></select>
+    <input id="e-client" placeholder="client@email.com (optional)">
+    <input id="e-amount" type="number" placeholder="Amount (CAD)">
+    <input id="e-category" placeholder="Category (e.g. Canva Pro asset)">
+    <input id="e-note" placeholder="Note (optional)">
+    <button id="e-add">Submit expense</button>
+    <p class="muted" id="e-msg"></p>
+  </div>
+
+  <div class="card hidden" id="invoices-panel">
+    <h1>Invoices</h1>
+    <p class="muted">Submit a month, the total is calculated from completed jobs + approved expenses.</p>
+    <div id="invoices-list"><p class="muted">Loading&hellip;</p></div>
+    <h2>Submit invoice</h2>
+    <label class="owner-only" style="display:block;font-size:13px;color:#6b7a6d;margin:6px 0 2px">For</label><select id="i-partner" class="owner-only"></select>
+    <input id="i-period" placeholder="Period (e.g. 2026-09)">
+    <button id="i-add">Submit invoice</button>
+    <p class="muted" id="i-msg"></p>
+  </div>
+
+  <div class="card hidden" id="activity-panel">
+    <h1>Recent activity</h1>
+    <p class="muted">Who did what, across every client, your oversight feed.</p>
+    <div id="activity-list"><p class="muted">Loading…</p></div>
+  </div>
+  <div class="card hidden" id="team-panel">
+    <h1>Team</h1>
+    <p class="muted">Add specialists and choose which services they handle. They log in with their own email and see only their clients.</p>
+    <div id="team-list"><p class="muted">Loading…</p></div>
+    <h2>Add specialist</h2>
+    <input id="t-email" placeholder="specialist@email.com">
+    <input id="t-name" placeholder="Name">
+    <div class="roles" id="t-roles">
+      <label><input type="checkbox" value="website"> Website builds</label>
+      <label><input type="checkbox" value="product"> Product presentation</label>
+      <label><input type="checkbox" value="bookkeeping"> Bookkeeping</label>
+      <label><input type="checkbox" value="dashboards"> Analytics &amp; Reporting</label>
+      <label><input type="checkbox" value="growth"> Growth &amp; Marketing</label>
+      <label><input type="checkbox" value="marketing"> Local SEO</label>
+      <label><input type="checkbox" value="brand"> Brand &amp; Design</label>
+      <label><input type="checkbox" value="automation"> Automation</label>
+      <label><input type="checkbox" value="operations"> Operations</label>
+      <label><input type="checkbox" value="ads"> Ad screen reviews</label>
+    </div>
+    <button id="t-add">Add specialist</button>
+    <p class="muted" id="t-msg"></p>
+  </div>
   <div class="card hidden" id="ads-panel">
-    <h1>Ad reviews</h1>
+    <h1>Ad screen reviews</h1>
     <p class="muted">Approve or reject Local Ad Screen submissions.</p>
     <div id="ads"><p class="muted">Loading…</p></div>
   </div>
@@ -65,6 +146,9 @@ button.ghost{background:#eef1ee;color:var(--dark)}
     <label>Status</label>
     <input id="c-status">
     <button id="c-save-status">Save status</button>
+    <label>Website URL</label>
+    <input id="c-website" placeholder="https://client-site.com">
+    <button id="c-save-website">Save website</button>
     <div class="msg" id="c-status-msg"></div>
 
     <h2>Updates</h2><div id="c-updates"><p class="muted">None yet.</p></div>
@@ -114,11 +198,13 @@ button.ghost{background:#eef1ee;color:var(--dark)}
     return d;
   }
 
+  var activeSvc = "";
   function renderClients(list){
-    document.getElementById("clients").innerHTML = list.length ? list.map(function(c){
+    var shown = activeSvc ? list.filter(function(c){ return String(c.service||"") === activeSvc; }) : list;
+    document.getElementById("clients").innerHTML = shown.length ? shown.map(function(c){
       var name=(c.firstName||c.lastName)?((c.firstName||"")+" "+(c.lastName||"")).trim():c.email;
       var msgs=(c.comments||[]).concat(c.replies||[]);var last=msgs.length?msgs[msgs.length-1]:null;var lastTxt=last?('<div class="muted" style="margin-top:6px;padding:6px 8px;background:#f4f6f4;border-radius:6px">New message: '+esc(last.text)+'</div>'):'';return '<div class="client"><div class="row"><div><strong>'+esc(name)+'</strong><div class="muted">'+esc(c.service||"")+'</div></div><span class="badge">'+esc(c.status||"No status")+'</span></div>'+lastTxt+'<button class="ghost" data-open="'+esc(c.email)+'">Manage</button></div>';
-    }).join("") : '<p class="muted">No clients yet.</p>';
+    }).join("") : '<p class="muted">No clients in this category.</p>';
     Array.prototype.forEach.call(document.querySelectorAll("[data-open]"),function(b){
       b.addEventListener("click",function(){openClient(b.getAttribute("data-open"));});
     });
@@ -127,6 +213,7 @@ button.ghost{background:#eef1ee;color:var(--dark)}
   function renderClient(c){
     document.getElementById("c-email").textContent=c.email;
     document.getElementById("c-status").value=c.status||"";
+    document.getElementById("c-website").value=c.websiteUrl||"";
     var ups=(c.updates||[]);
     document.getElementById("c-updates").innerHTML=ups.length?ups.map(function(u){return '<div class="update">'+esc(u.text)+'<div class="when">'+new Date(u.at).toLocaleString()+'</div></div>';}).join(""):'<p class="muted">None yet.</p>';
     var items=[];
@@ -147,9 +234,125 @@ button.ghost{background:#eef1ee;color:var(--dark)}
     clientsCache=data.clients;
     renderClients(data.clients);
     document.getElementById("clients-panel").classList.remove("hidden");
+    if(data.isOwner){ document.body.classList.add("owner");
+      document.getElementById("team-panel").classList.remove("hidden"); await loadTeam();
+      document.getElementById("activity-panel").classList.remove("hidden"); await loadActivity(); }
+    document.getElementById("jobs-panel").classList.remove("hidden");
+    document.getElementById("expenses-panel").classList.remove("hidden");
+    document.getElementById("invoices-panel").classList.remove("hidden");
+    await loadJobs(); await loadExpenses(); await loadInvoices();
     await loadAds();
     document.getElementById("login-modal").style.display="none";
   }
+
+  async function loadTeam(){
+    try{
+      var data=await api("/listSpecialists",{});
+      var list=(data.specialists||[]);
+      document.getElementById("team-list").innerHTML = list.length ? list.map(function(s){
+        return '<div class="client"><div class="row"><strong>'+esc(s.name||s.email)+'</strong><span class="muted">'+esc((s.roles||[]).join(", "))+'</span></div><div class="muted">'+esc(s.email)+'</div>'
+          +(s.isOwner?'':'<button data-remove="'+esc(s.email)+'">Remove</button>')+'</div>';
+      }).join("") : '<p class="muted">No specialists yet.</p>';
+      var opts=list.map(function(s){return '<option value="'+esc(s.email)+'">'+esc(s.name||s.email)+'</option>';}).join("");
+      ["j-partner","e-partner","i-partner"].forEach(function(id){var el=document.getElementById(id); if(el) el.innerHTML=opts;});
+      Array.prototype.forEach.call(document.querySelectorAll("[data-remove]"),function(b){
+        b.addEventListener("click",async function(){
+          if(!confirm("Remove this specialist?"))return;
+          try{await api("/removeSpecialist",{email:b.getAttribute("data-remove")});}catch(e){}
+          loadTeam();
+        });
+      });
+    }catch(e){ document.getElementById("team-list").innerHTML='<p class="muted">Could not load team.</p>'; }
+  }
+  function money(n){ return "$" + (Number(n)||0).toFixed(2); }
+
+  async function loadJobs(){
+    try{
+      var d=await api("/listJobs",{});
+      var list=d.jobs||[];
+      document.getElementById("jobs-list").innerHTML = list.length ? list.map(function(j){
+        return '<div class="client"><div class="row"><strong>'+esc(j.deliverable)+'</strong><span class="muted">'+money(j.fee)+'</span></div><div class="muted">'+esc(j.client||"")+(j.partner?' &middot; '+esc(j.partner):'')+' &middot; '+esc(j.status||"active")+'</div>'+(j.status!=="done"?'<button data-jdone="'+esc(j.id)+'">Mark done</button>':'')+'</div>';
+      }).join("") : '<p class="muted">No jobs yet.</p>';
+      Array.prototype.forEach.call(document.querySelectorAll("[data-jdone]"),function(b){
+        b.addEventListener("click",async function(){ try{ await api("/updateJobStatus",{id:b.getAttribute("data-jdone"),status:"done"}); }catch(e){} loadJobs(); });
+      });
+    }catch(e){ document.getElementById("jobs-list").innerHTML='<p class="muted">Could not load jobs.</p>'; }
+  }
+  document.getElementById("j-add").addEventListener("click",async function(){
+    var body={partner:document.getElementById("j-partner").value.trim(),client:document.getElementById("j-client").value.trim(),deliverable:document.getElementById("j-deliverable").value.trim(),fee:Number(document.getElementById("j-fee").value)||0};
+    try{ await api("/addJob",body); show(document.getElementById("j-msg"),"Job added.",false); document.getElementById("j-deliverable").value=""; loadJobs(); }
+    catch(e){ show(document.getElementById("j-msg"),e.message,true); }
+  });
+
+  async function loadExpenses(){
+    try{
+      var d=await api("/listExpenses",{});
+      var list=d.expenses||[];
+      document.getElementById("expenses-list").innerHTML = list.length ? list.map(function(x){
+        var a = (d.isOwner && x.status==="submitted") ? '<button data-eok="'+esc(x.id)+'">Approve</button><button data-eno="'+esc(x.id)+'">Reject</button>' : '';
+        return '<div class="client"><div class="row"><strong>'+esc(x.category||"Expense")+'</strong><span class="muted">'+money(x.amount)+'</span></div><div class="muted">'+esc(x.client||"")+(x.partner?' &middot; '+esc(x.partner):'')+' &middot; '+esc(x.status||"")+'</div>'+a+'</div>';
+      }).join("") : '<p class="muted">No expenses yet.</p>';
+      Array.prototype.forEach.call(document.querySelectorAll("[data-eok],[data-eno]"),function(b){
+        b.addEventListener("click",async function(){
+          var id=b.getAttribute("data-eok")||b.getAttribute("data-eno");
+          try{ await api("/reviewExpense",{id:id,approve:!!b.getAttribute("data-eok")}); }catch(e){}
+          loadExpenses();
+        });
+      });
+    }catch(e){ document.getElementById("expenses-list").innerHTML='<p class="muted">Could not load expenses.</p>'; }
+  }
+  document.getElementById("e-add").addEventListener("click",async function(){
+    var body={partner:document.getElementById("e-partner").value.trim(),client:document.getElementById("e-client").value.trim(),amount:Number(document.getElementById("e-amount").value)||0,category:document.getElementById("e-category").value.trim(),note:document.getElementById("e-note").value.trim()};
+    try{ await api("/addExpense",body); show(document.getElementById("e-msg"),"Expense submitted.",false); document.getElementById("e-amount").value=""; document.getElementById("e-category").value=""; loadExpenses(); }
+    catch(e){ show(document.getElementById("e-msg"),e.message,true); }
+  });
+
+  async function loadInvoices(){
+    try{
+      var d=await api("/listInvoices",{});
+      var list=d.invoices||[];
+      document.getElementById("invoices-list").innerHTML = list.length ? list.map(function(v){
+        var a = (d.isOwner && v.status==="submitted") ? '<button data-vok="'+esc(v.id)+'">Approve</button>' : ((d.isOwner && v.status==="approved") ? '<button data-vpaid="'+esc(v.id)+'">Mark paid</button>' : '');
+        return '<div class="client"><div class="row"><strong>'+esc(v.period||"")+'</strong><span class="muted">'+money(v.total)+'</span></div><div class="muted">'+esc(v.partner||"")+' &middot; '+esc(v.status||"")+(v.paidAt?' &middot; paid '+new Date(v.paidAt).toLocaleDateString():'')+'</div>'+a+'</div>';
+      }).join("") : '<p class="muted">No invoices yet.</p>';
+      Array.prototype.forEach.call(document.querySelectorAll("[data-vok],[data-vpaid]"),function(b){
+        b.addEventListener("click",async function(){
+          var id=b.getAttribute("data-vok")||b.getAttribute("data-vpaid");
+          var status=b.getAttribute("data-vok")?"approved":"paid";
+          try{ await api("/reviewInvoice",{id:id,status:status}); }catch(e){}
+          loadInvoices();
+        });
+      });
+    }catch(e){ document.getElementById("invoices-list").innerHTML='<p class="muted">Could not load invoices.</p>'; }
+  }
+  document.getElementById("i-add").addEventListener("click",async function(){
+    var body={partner:document.getElementById("i-partner").value.trim(),period:document.getElementById("i-period").value.trim()};
+    try{ var r=await api("/addInvoice",body); show(document.getElementById("i-msg"),"Invoice submitted: "+money(r.total),false); loadInvoices(); }
+    catch(e){ show(document.getElementById("i-msg"),e.message,true); }
+  });
+
+  async function loadActivity(){
+    try{
+      var data=await api("/listActivity",{});
+      var list=(data.activity||[]);
+      document.getElementById("activity-list").innerHTML = list.length ? list.map(function(a){
+        return '<div class="client"><div class="row"><strong>'+esc(a.by||"")+'</strong><span class="muted">'+esc(new Date(a.at).toLocaleString())+'</span></div><div>'+esc(a.action||"")+'</div><div class="muted">'+esc(a.client||"")+'</div></div>';
+      }).join("") : '<p class="muted">No activity yet.</p>';
+    }catch(e){ document.getElementById("activity-list").innerHTML='<p class="muted">Could not load activity.</p>'; }
+  }
+  document.getElementById("t-add").addEventListener("click",async function(){
+    var email=document.getElementById("t-email").value.trim();
+    var name=document.getElementById("t-name").value.trim();
+    var roles=Array.prototype.slice.call(document.querySelectorAll("#t-roles input:checked")).map(function(i){return i.value;});
+    if(!email){ show(document.getElementById("t-msg"),"Email is required.",true); return; }
+    try{
+      var r=await api("/addSpecialist",{email:email,name:name,roles:roles});
+      show(document.getElementById("t-msg"), r.setupLink ? ("Saved. Send them this link to set a password: "+r.setupLink) : "Specialist saved.", false);
+      document.getElementById("t-email").value=""; document.getElementById("t-name").value="";
+      Array.prototype.forEach.call(document.querySelectorAll("#t-roles input"),function(i){i.checked=false;});
+      loadTeam();
+    }catch(e){ show(document.getElementById("t-msg"),e.message,true); }
+  });
 
   document.getElementById("login-form").addEventListener("submit",async function(e){
     e.preventDefault();
@@ -172,6 +375,13 @@ button.ghost{background:#eef1ee;color:var(--dark)}
     var email=document.getElementById("c-email").textContent;
     var status=document.getElementById("c-status").value.trim();
     try{await api("/updateClientStatus",{email:email,status:status});show(document.getElementById("c-status-msg"),"Saved.",false);}
+    catch(e){show(document.getElementById("c-status-msg"),e.message,true);}
+  });
+
+  document.getElementById("c-save-website").addEventListener("click",async function(){
+    var email=document.getElementById("c-email").textContent;
+    var websiteUrl=document.getElementById("c-website").value.trim();
+    try{await api("/updateClientWebsite",{email:email,websiteUrl:websiteUrl});show(document.getElementById("c-status-msg"),"Website saved.",false);}
     catch(e){show(document.getElementById("c-status-msg"),e.message,true);}
   });
 
@@ -229,6 +439,14 @@ button.ghost{background:#eef1ee;color:var(--dark)}
 
   document.getElementById("logout").addEventListener("click",function(){token="";localStorage.removeItem("tb_token");location.href="/specialist-dashboard.html";});
   window.addEventListener("focus",function(){ if(token) loadClients(); });
+  Array.prototype.forEach.call(document.querySelectorAll("#svc-filter .chip"), function(chip){
+    chip.addEventListener("click", function(){
+      Array.prototype.forEach.call(document.querySelectorAll("#svc-filter .chip"), function(x){ x.classList.remove("active"); });
+      chip.classList.add("active");
+      activeSvc = chip.getAttribute("data-svc") || "";
+      renderClients(clientsCache);
+    });
+  });
   setInterval(function(){ if(token) loadClients(); }, 30000);
   if(token){ api("/setSpecialistRole",{}).then(function(){return loadClients();}).catch(function(){ token=""; localStorage.removeItem("tb_token"); }); }
 })();
@@ -253,6 +471,25 @@ document.querySelectorAll('[data-toggle-pass]').forEach(function(btn){
     btn.setAttribute('aria-label', show?'Hide password':'Show password');
   });
 });
+</script>
+<div id="cookie-banner" style="position:fixed;left:0;right:0;bottom:0;z-index:99998;background:#0b1710;color:#e8efe9;padding:14px 18px;display:none;gap:14px;align-items:center;justify-content:center;flex-wrap:wrap;font-family:inherit;font-size:14px;box-shadow:0 -4px 20px rgba(0,0,0,.35);">
+  <span>We use cookies to improve your experience and analyse site traffic. See our <a href="privacy.html" style="color:#9fd0b0;text-decoration:underline;">Privacy Policy</a>.</span>
+  <span style="display:flex;gap:10px;">
+    <button id="cookie-accept" type="button" style="background:#568c68;color:#fff;border:0;border-radius:999px;padding:9px 18px;font-weight:700;cursor:pointer;">Accept</button>
+    <button id="cookie-reject" type="button" style="background:transparent;color:#cdd6cf;border:1px solid #4a5a4d;border-radius:999px;padding:9px 18px;font-weight:700;cursor:pointer;">Reject</button>
+  </span>
+</div>
+<script>
+(function(){
+  var KEY='tb_cookie_choice';
+  try{ if(localStorage.getItem(KEY)) return; }catch(e){}
+  var b=document.getElementById('cookie-banner'); if(!b) return;
+  b.style.display='flex';
+  function done(v){ try{ localStorage.setItem(KEY,v); }catch(e){} b.style.display='none'; }
+  var a=document.getElementById('cookie-accept'), r=document.getElementById('cookie-reject');
+  if(a) a.addEventListener('click', function(){ done('accepted'); });
+  if(r) r.addEventListener('click', function(){ done('rejected'); });
+})();
 </script>
 </body>
 </html>
