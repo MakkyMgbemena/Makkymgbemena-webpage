@@ -107,6 +107,14 @@ body.owner .owner-only{display:block}
     <p class="muted" id="i-msg"></p>
   </div>
 
+  <div class="card hidden" id="payments-panel">
+    <h1>Payments</h1>
+    <p class="muted">Live from your Stripe: recent payments and subscriptions.</p>
+    <h2>Subscriptions</h2>
+    <div id="subs-list"><p class="muted">Loading&hellip;</p></div>
+    <h2>Recent payments</h2>
+    <div id="payments-list"><p class="muted">Loading&hellip;</p></div>
+  </div>
   <div class="card hidden" id="activity-panel">
     <h1>Recent activity</h1>
     <p class="muted">Who did what, across every client, your oversight feed.</p>
@@ -235,6 +243,7 @@ body.owner .owner-only{display:block}
     renderClients(data.clients);
     document.getElementById("clients-panel").classList.remove("hidden");
     if(data.isOwner){ document.body.classList.add("owner");
+      document.getElementById("payments-panel").classList.remove("hidden"); await loadPayments();
       document.getElementById("team-panel").classList.remove("hidden"); await loadTeam();
       document.getElementById("activity-panel").classList.remove("hidden"); await loadActivity(); }
     document.getElementById("jobs-panel").classList.remove("hidden");
@@ -330,6 +339,24 @@ body.owner .owner-only{display:block}
     try{ var r=await api("/addInvoice",body); show(document.getElementById("i-msg"),"Invoice submitted: "+money(r.total),false); loadInvoices(); }
     catch(e){ show(document.getElementById("i-msg"),e.message,true); }
   });
+
+  async function loadPayments(){
+    try{
+      var d = await api("/listPayments", {});
+      var subs = d.subscriptions || [];
+      var pays = d.payments || [];
+      document.getElementById("subs-list").innerHTML = subs.length ? subs.map(function(s){
+        var when = s.renews ? new Date(s.renews).toLocaleDateString() : "";
+        return '<div class="client"><div class="row"><strong>$' + Number(s.amount || 0).toFixed(2) + (s.interval ? "/" + s.interval : "") + '</strong><span class="muted">' + esc(s.status || "") + '</span></div><div class="muted">' + (s.cancelAtPeriodEnd ? "cancels at period end" : ("renews " + when)) + '</div></div>';
+      }).join("") : '<p class="muted">No subscriptions yet.</p>';
+      document.getElementById("payments-list").innerHTML = pays.length ? pays.map(function(p){
+        return '<div class="client"><div class="row"><strong>$' + Number(p.amount || 0).toFixed(2) + '</strong><span class="muted">' + esc(p.status || "") + '</span></div><div class="muted">' + esc(p.email || "") + ' &middot; ' + (p.created ? new Date(p.created).toLocaleDateString() : "") + '</div></div>';
+      }).join("") : '<p class="muted">No payments yet.</p>';
+    }catch(e){
+      document.getElementById("subs-list").innerHTML = '<p class="muted">Could not load payments.</p>';
+      document.getElementById("payments-list").innerHTML = '';
+    }
+  }
 
   async function loadActivity(){
     try{

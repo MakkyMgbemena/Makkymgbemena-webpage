@@ -481,6 +481,48 @@ exports.getMetrics = onRequest({cors: true, invoker: "public"}, async (req, res)
   }
 });
 
+
+// ===== Owner console: payments + subscriptions from Stripe =====
+exports.listPayments = onRequest(
+  {cors: true, invoker: "public", secrets: [stripeSecretKey]},
+  async (req, res) => {
+    try {
+      await requireOwner(req);
+      const stripe = require("stripe")(stripeSecretKey.value());
+      const [payments, subs] = await Promise.all([
+        stripe.paymentIntents.list({limit: 25}),
+        stripe.subscriptions.list({limit: 25, status: "all"}),
+      ]);
+      res.json({
+        payments: payments.data.map((p) => ({
+          id: p.id,
+          amount: (Number(p.amount_received) || 0) / 100,
+          currency: p.currency,
+          status: p.status,
+          created: p.created * 1000,
+          email: p.receipt_email || "",
+        })),
+        subscriptions: subs.data.map((s) => {
+          const item = (s.items && s.items.data && s.items.data[0]) || {};
+          const price = item.price || {};
+          return {
+            id: s.id,
+            status: s.status,
+            amount: (Number(price.unit_amount) || 0) / 100,
+            currency: price.currency || "cad",
+            interval: (price.recurring && price.recurring.interval) || "",
+            renews: (s.current_period_end || item.current_period_end || 0) * 1000,
+            cancelAtPeriodEnd: !!s.cancel_at_period_end,
+          };
+        }),
+      });
+    } catch (e) {
+      logger.error("listPayments error", e);
+      res.status(401).json({error: "Not authorized."});
+    }
+  }
+);
+
 exports.listActivity = onRequest({cors: true, invoker: "public"}, async (req, res) => {
   try {
     await requireOwner(req);
