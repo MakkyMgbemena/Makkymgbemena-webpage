@@ -2,10 +2,18 @@ const {onRequest} = require("firebase-functions/v2/https");
 const {defineSecret} = require("firebase-functions/params");
 const logger = require("firebase-functions/logger");
 const admin = require("firebase-admin");
+const {onSchedule} = require("firebase-functions/v2/scheduler");
+const {google} = require("googleapis");
 
 admin.initializeApp();
 
 const stripeSecretKey = defineSecret("STRIPE_SECRET_KEY");
+const gaServiceAccount = defineSecret("GA_SERVICE_ACCOUNT");
+
+// Command Centre pilot config (move to Firestore when you add more clients)
+const PILOT_CLIENT = "makky@travelbunny.services";
+const GA4_PROPERTY_ID = "524226537";
+const SEARCH_CONSOLE_SITE = "sc-domain:travelbunny.services";
 
 const PRICE_LOOKUP_KEYS = {
   website: "website-starter-deposit",
@@ -352,6 +360,105 @@ exports.reviewInvoice = onRequest({cors: true, invoker: "public"}, async (req, r
     await admin.firestore().collection("invoices").doc(id).update(patch);
     res.json({ok: true});
   } catch (e) { logger.error("reviewInvoice error", e); res.status(401).json({error: "Not authorized."}); }
+});
+
+
+// ===== Command Centre: GA4 + Search Console -> metrics snapshot =====
+function gaAuth(scopes) {
+  const credentials = JSON.parse(gaServiceAccount.value());
+  return new google.auth.GoogleAuth({credentials, scopes});
+}
+
+function pctChange(current, previous) {
+  const cur = Number(current) || 0;
+  const prev = Number(previous) || 0;
+  if (!prev) return null;
+  return ((cur - prev) / prev) * 100;
+}
+
+function isoDay(ts) {
+  return new Date(ts).toISOString().slice(0, 10);
+}
+
+exports.refreshMetrics = onSchedule(
+  {schedule: "every 4 hours", timeZone: "America/Toronto", secrets: [gaServiceAccount]},
+  async () => {
+    const cards = {};
+    const DAY = 24 * 60 * 60 * 1000;
+    const now = Date.now();
+
+    // GA4: active users, last 28 days vs the 28 before
+    try {
+      const analytics = google.analyticsdata({
+        version: "v1beta",
+        auth: gaAuth(["https://www.googleapis.com/auth/analytics.readonly"]),
+      });
+      const [ga] = await analytics.properties.runReport({
+        property: `properties/${GA4_PROPERTY_ID}`,
+        requestBody: {
+          dateRanges: [
+            {startDate: "28daysAgo", endDate: "today"},
+            {startDate: "56daysAgo", endDate: "29daysAgo"},
+          ],
+          metrics: [{name: "activeUsers"}],
+        },
+      });
+      const row = (ga.rows || [])[0];
+      const cur = row ? Number(row.metricValues[0].value) : 0;
+      const prev = row ? Number(row.metricValues[1].value) : 0;
+      cards.website = {label: "Visitors", value: cur, delta: pctChange(cur, prev)};
+      logger.info("GA4 ok", {cur, prev});
+    } catch (e) {
+      logger.error("GA4 connector failed", e);
+    }
+
+    // Search Console: clicks, last 28 days vs the 28 before
+    try {
+      const sc = google.searchconsole({
+        version: "v1",
+        auth: gaAuth(["https://www.googleapis.com/auth/webmasters.readonly"]),
+      });
+      const query = (start, end) => sc.searchanalytics.query({
+        siteUrl: SEARCH_CONSOLE_SITE,
+        requestBody: {
+          startDate: isoDay(start),
+          endDate: isoDay(end),
+          dimensions: ["date"],
+          rowLimit: 100,
+        },
+      });
+      const [curRes, prevRes] = await Promise.all([
+        query(now - 28 * DAY, now),
+        query(now - 56 * DAY, now - 29 * DAY),
+      ]);
+      const sum = (r) => (r.data.rows || []).reduce((a, x) => a + (Number(x.clicks) || 0), 0);
+      const cur = sum(curRes);
+      const prev = sum(prevRes);
+      cards.search = {label: "Clicks", value: cur, delta: pctChange(cur, prev)};
+      logger.info("GSC ok", {cur, prev});
+    } catch (e) {
+      logger.error("Search Console connector failed", e);
+    }
+
+    await admin.firestore().collection("metrics").doc(PILOT_CLIENT).set({
+      updatedAt: Date.now(),
+      cards,
+      sources: ["ga4", "searchconsole"],
+    }, {merge: true});
+    await logActivity("system", "Refreshed Command Centre metrics", PILOT_CLIENT);
+  }
+);
+
+exports.getMetrics = onRequest({cors: true, invoker: "public"}, async (req, res) => {
+  try {
+    const email = await authedEmail(req);
+    let doc = await admin.firestore().collection("metrics").doc(email).get();
+    if (!doc.exists) doc = await admin.firestore().collection("metrics").doc(PILOT_CLIENT).get();
+    res.json({metrics: doc.exists ? doc.data() : null});
+  } catch (e) {
+    logger.error("getMetrics error", e);
+    res.status(401).json({error: "Please log in again."});
+  }
 });
 
 exports.listActivity = onRequest({cors: true, invoker: "public"}, async (req, res) => {
