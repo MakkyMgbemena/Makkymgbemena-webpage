@@ -16,7 +16,11 @@ const GA4_PROPERTY_ID = "524226537";
 const SEARCH_CONSOLE_SITE = "sc-domain:travelbunny.services";
 
 const PRICE_LOOKUP_KEYS = {
-  website: "website-starter-deposit",
+  website: {
+    self: "website-selfhosted",
+    hosted: "website-hosted",
+    custom: "website-custom",
+  },
   automation: "automation-starter-deposit",
   marketing: "marketing-SEO-starter-deposit",
   dashboards: "dashboards-starter-deposit",

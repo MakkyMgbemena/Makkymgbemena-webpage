@@ -124,24 +124,40 @@
 
   const status = document.getElementById("signup-status");
   var SERVICE_TIERS = {
-    "bookkeeping-monthly": [
-      {id: "starter",  label: "Starter, up to 50 transactions/month, $150 CAD/month"},
-      {id: "standard", label: "Standard, up to 150 transactions/month, $300 CAD/month"},
-      {id: "growth",   label: "Growth, up to 300 transactions/month, $450 CAD/month"}
-    ],
-    "cleanup": [
-      {id: "lite",     label: "Lite, up to 3 months behind, $150 CAD"},
-      {id: "standard", label: "Standard, up to 6 months behind, $300 CAD"},
-      {id: "deep",     label: "Deep, up to 12 months behind, $500 CAD"}
-    ]
+    "website": {
+      note: "Not sure which fits? <a href=\"https://cal.com/makky-travelbunny/consultation\" target=\"_blank\" rel=\"noopener\">Book a consultation</a>.",
+      tiers: [
+        {id: "self",   label: "Self-hosted, you host, we build on your existing site, $150 CAD"},
+        {id: "hosted", label: "Hosted by us, hosting + backlinks + SEO updates + Google indexing, $450 CAD"},
+        {id: "custom", label: "Custom build, custom-coded, no page builder, $1,200 CAD"}
+      ]
+    },
+    "bookkeeping-monthly": {
+      note: "More than 300 transactions a month? <a href=\"https://cal.com/makky-travelbunny/consultation\" target=\"_blank\" rel=\"noopener\">Book a consultation</a> for a custom quote.",
+      tiers: [
+        {id: "starter",  label: "Starter, up to 50 transactions/month, $150 CAD/month"},
+        {id: "standard", label: "Standard, up to 150 transactions/month, $300 CAD/month"},
+        {id: "growth",   label: "Growth, up to 300 transactions/month, $450 CAD/month"}
+      ]
+    },
+    "cleanup": {
+      note: "",
+      tiers: [
+        {id: "lite",     label: "Lite, up to 3 months behind, $150 CAD"},
+        {id: "standard", label: "Standard, up to 6 months behind, $300 CAD"},
+        {id: "deep",     label: "Deep, up to 12 months behind, $500 CAD"}
+      ]
+    }
   };
   var tbServiceEl = document.getElementById("service");
   var tbTierWrap = document.getElementById("tier-wrap");
   var tbTierEl = document.getElementById("tier");
+  var tbTierNote = document.getElementById("tier-note");
   function tbSyncTiers() {
-    var list = SERVICE_TIERS[tbServiceEl.value];
-    if (!list) { tbTierWrap.style.display = "none"; tbTierEl.required = false; tbTierEl.innerHTML = ""; return; }
-    tbTierEl.innerHTML = list.map(function (t) { return '<option value="' + t.id + '">' + t.label + '</option>'; }).join("");
+    var cfg = SERVICE_TIERS[tbServiceEl.value];
+    if (!cfg) { tbTierWrap.style.display = "none"; tbTierEl.required = false; tbTierEl.innerHTML = ""; return; }
+    tbTierEl.innerHTML = cfg.tiers.map(function (t) { return '<option value="' + t.id + '">' + t.label + '</option>'; }).join("");
+    if (tbTierNote) tbTierNote.innerHTML = cfg.note || "";
     tbTierWrap.style.display = "";
     tbTierEl.required = true;
   }
