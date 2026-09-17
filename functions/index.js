@@ -381,7 +381,7 @@ function isoDay(ts) {
 }
 
 exports.refreshMetrics = onSchedule(
-  {schedule: "every 4 hours", timeZone: "America/Toronto", secrets: [gaServiceAccount]},
+  {schedule: "every 4 hours", timeZone: "America/Toronto", secrets: [gaServiceAccount, stripeSecretKey]},
   async () => {
     const cards = {};
     const DAY = 24 * 60 * 60 * 1000;
@@ -438,6 +438,26 @@ exports.refreshMetrics = onSchedule(
       logger.info("GSC ok", {cur, prev});
     } catch (e) {
       logger.error("Search Console connector failed", e);
+    }
+
+    // Stripe: revenue collected, last 28 days vs the 28 before
+    try {
+      const stripe = require("stripe")(stripeSecretKey.value());
+      const nowSec = Math.floor(now / 1000);
+      const span = DAY / 1000;
+      const [curPi, prevPi] = await Promise.all([
+        stripe.paymentIntents.list({limit: 100, created: {gte: nowSec - span}}),
+        stripe.paymentIntents.list({limit: 100, created: {gte: nowSec - 2 * span, lt: nowSec - span}}),
+      ]);
+      const total = (res) => res.data
+          .filter((p) => p.status === "succeeded")
+          .reduce((a, p) => a + (Number(p.amount_received) || 0), 0) / 100;
+      const curRev = total(curPi);
+      const prevRev = total(prevPi);
+      cards.revenue = {label: "Revenue", value: curRev, delta: pctChange(curRev, prevRev), money: true};
+      logger.info("Stripe ok", {curRev, prevRev});
+    } catch (e) {
+      logger.error("Stripe connector failed", e);
     }
 
     await admin.firestore().collection("metrics").doc(PILOT_CLIENT).set({

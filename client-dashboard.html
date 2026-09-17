@@ -220,7 +220,7 @@
         card.classList.add("live");
         var d = card.querySelector(".dot"); if(d) d.className = "dot live";
         var val = card.querySelector(".val");
-        if(val && cards[key].value !== undefined) val.textContent = cards[key].value;
+        if(val && cards[key].value !== undefined){ var _v = cards[key].value; val.textContent = (cards[key].money ? "$" : "") + (typeof _v === "number" ? _v.toLocaleString() : _v); }
         var dl = card.querySelector(".delta");
         if(dl && cards[key].delta !== undefined && cards[key].delta !== null){
           var n = Number(cards[key].delta);
