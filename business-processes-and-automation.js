@@ -130,9 +130,9 @@
       {id: "growth",   label: "Growth, up to 300 transactions/month, $450 CAD/month"}
     ],
     "cleanup": [
-      {id: "lite",     label: "Lite, up to 3 months behind, $150 CAD deposit"},
-      {id: "standard", label: "Standard, up to 6 months behind, $300 CAD deposit"},
-      {id: "deep",     label: "Deep, up to 12 months behind, $500 CAD deposit"}
+      {id: "lite",     label: "Lite, up to 3 months behind, $150 CAD"},
+      {id: "standard", label: "Standard, up to 6 months behind, $300 CAD"},
+      {id: "deep",     label: "Deep, up to 12 months behind, $500 CAD"}
     ]
   };
   var tbServiceEl = document.getElementById("service");

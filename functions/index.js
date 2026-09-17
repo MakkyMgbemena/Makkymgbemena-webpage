@@ -73,8 +73,8 @@ exports.createCheckoutSession = onRequest(
             lastName: lastName || "",
             email: String(email).toLowerCase(),
             service: service || "",
-            status: "Deposit started",
-            updates: [{at: new Date().toISOString(), text: "Your deposit has been started."}],
+            status: "Project started",
+            updates: [{at: new Date().toISOString(), text: "Your project has been started."}],
             comments: [],
             createdAt: admin.firestore.FieldValue.serverTimestamp(),
           }, {merge: true});
