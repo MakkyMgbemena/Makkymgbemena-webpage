@@ -26,7 +26,11 @@ const PRICE_LOOKUP_KEYS = {
   growth: "growth-strategy-deposit",
   bookkeeping: "bookkeeping-setup-deposit",
   "growth-monthly": "growth-strategy-monthly",
-  "bookkeeping-monthly": "bookkeeping-monthly",
+  "bookkeeping-monthly": {
+    starter: "bookkeeping-starter-monthly",
+    standard: "bookkeeping-monthly",
+    growth: "bookkeeping-growth-monthly",
+  },
 };
 
 const userDoc = (email) => admin.firestore().collection("users").doc(String(email).toLowerCase());
@@ -36,8 +40,11 @@ exports.createCheckoutSession = onRequest(
   async (req, res) => {
     try {
       const stripe = require("stripe")(stripeSecretKey.value());
-      const {firstName, lastName, email, password, service} = req.body || {};
-      const lookupKey = PRICE_LOOKUP_KEYS[service];
+      const {firstName, lastName, email, password, service, tier} = req.body || {};
+      const _tiers = PRICE_LOOKUP_KEYS[service];
+      const lookupKey = (_tiers && typeof _tiers === "object")
+        ? (_tiers[String(tier || "").toLowerCase()] || _tiers.default || null)
+        : _tiers;
       if (!lookupKey) {
         return res.status(400).json({error: "Unknown service selected."});
       }

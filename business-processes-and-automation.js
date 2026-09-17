@@ -123,6 +123,26 @@
   if (!form) return;
 
   const status = document.getElementById("signup-status");
+  var SERVICE_TIERS = {
+    "bookkeeping-monthly": [
+      {id: "starter",  label: "Starter, up to 50 transactions/month, $150 CAD/month"},
+      {id: "standard", label: "Standard, up to 150 transactions/month, $300 CAD/month"},
+      {id: "growth",   label: "Growth, up to 300 transactions/month, $450 CAD/month"}
+    ]
+  };
+  var tbServiceEl = document.getElementById("service");
+  var tbTierWrap = document.getElementById("tier-wrap");
+  var tbTierEl = document.getElementById("tier");
+  function tbSyncTiers() {
+    var list = SERVICE_TIERS[tbServiceEl.value];
+    if (!list) { tbTierWrap.style.display = "none"; tbTierEl.required = false; tbTierEl.innerHTML = ""; return; }
+    tbTierEl.innerHTML = list.map(function (t) { return '<option value="' + t.id + '">' + t.label + '</option>'; }).join("");
+    tbTierWrap.style.display = "";
+    tbTierEl.required = true;
+  }
+  tbServiceEl.addEventListener("change", tbSyncTiers);
+  tbSyncTiers();
+
   const submitBtn = document.getElementById("signup-submit");
   const toggle = document.getElementById("toggle-password");
   const passwordInput = document.getElementById("password");
@@ -153,6 +173,7 @@
     const email = document.getElementById("work-email").value.trim();
     const password = document.getElementById("password").value;
     const service = document.getElementById("service").value;
+    const tier = SERVICE_TIERS[service] ? document.getElementById("tier").value : "";
 
     submitBtn.disabled = true;
     setStatus("Creating your account…", false);
@@ -163,7 +184,7 @@
         {
           method: "POST",
           headers: { "Content-Type": "application/json" },
-          body: JSON.stringify({ firstName, lastName, email, customerEmail: email, password, service }),
+          body: JSON.stringify({ firstName, lastName, email, customerEmail: email, password, service, tier }),
         }
       );
       const data = await response.json();
