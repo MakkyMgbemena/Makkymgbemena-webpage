@@ -31,6 +31,11 @@ const PRICE_LOOKUP_KEYS = {
     standard: "bookkeeping-monthly",
     growth: "bookkeeping-growth-monthly",
   },
+  cleanup: {
+    lite: "cleanup-lite-deposit",
+    standard: "cleanup-standard-deposit",
+    deep: "cleanup-deep-deposit",
+  },
 };
 
 const userDoc = (email) => admin.firestore().collection("users").doc(String(email).toLowerCase());
