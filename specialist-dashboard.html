@@ -4,39 +4,94 @@
 <meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>TravelBunny specialist</title>
 <style>
-:root{--green:#568c68;--dark:#0b1710}
+:root{
+  --green:#568c68;--green-dark:#3f6b4e;--ink:#0b1710;--bg:#0b1710;
+  --rail:#0e1a13;--rail-line:rgba(255,255,255,.09);--rail-text:#c6d1c8;
+  --muted:#6b7a6d;--line:#e5e8e5;--surface:#fff;
+}
 *{box-sizing:border-box}
-body{margin:0;font-family:system-ui,-apple-system,Segoe UI,Roboto,Arial,sans-serif;background:var(--dark);color:#fff;min-height:100vh}
-.wrap{max-width:860px;margin:0 auto;padding:40px 20px}
-.brand{font-weight:800;letter-spacing:-.02em;margin-bottom:20px;font-size:20px}
-.brand strong{color:var(--green)}
-.card{background:#fff;color:var(--dark);border-radius:16px;padding:28px;box-shadow:0 20px 60px rgba(0,0,0,.4);margin-bottom:20px}
-h1{font-size:22px;margin:0 0 12px}
-h2{font-size:17px;margin:18px 0 8px}
-.muted{color:#666;font-size:14px}
-label{font-weight:600;font-size:14px;display:block;margin:12px 0 6px}
-input,textarea,select{width:100%;padding:11px;font-size:15px;border:1px solid #ddd;border-radius:8px}
-textarea{min-height:66px;font-family:inherit}
-button{background:var(--green);color:#fff;border:0;border-radius:8px;padding:11px 16px;font-size:15px;font-weight:700;cursor:pointer;margin-top:10px}
-button.ghost{background:#eef1ee;color:var(--dark)}
-.logout{float:right;background:transparent;color:#888;margin-top:-6px}
+body{margin:0;font-family:system-ui,-apple-system,"Segoe UI",Roboto,Arial,sans-serif;background:var(--bg);color:#fff;min-height:100vh}
+
+/* ---------- shell ---------- */
+.app{display:grid;grid-template-columns:252px minmax(0,1fr);min-height:100vh}
+
+/* ---------- left rail ---------- */
+.rail{background:var(--rail);border-right:1px solid var(--rail-line);padding:22px 14px 18px;display:flex;flex-direction:column;gap:2px;position:sticky;top:0;height:100vh;overflow-y:auto}
+.rail-brand{font-weight:800;font-size:19px;letter-spacing:-.02em;padding:2px 10px 6px}
+.rail-brand strong{color:var(--green)}
+.rail-sub{display:block;font-size:10.5px;font-weight:700;letter-spacing:.16em;text-transform:uppercase;color:#7d8d82;margin-top:3px}
+.rail-label{font-size:10px;font-weight:700;letter-spacing:.16em;text-transform:uppercase;color:#617066;margin:18px 12px 6px}
+.rail-item{display:flex;align-items:center;gap:11px;width:100%;background:transparent;color:var(--rail-text);border:0;border-radius:11px;padding:11px 12px;font:inherit;font-size:14.5px;font-weight:600;text-align:left;cursor:pointer;margin:0}
+.rail-item:hover{background:rgba(255,255,255,.07);color:#fff}
+.rail-item.active{background:var(--green);color:#fff}
+.rail-item.active:hover{background:var(--green)}
+.rail-item svg{flex:0 0 auto;opacity:.85}
+.rail-item.active svg{opacity:1}
+.rail-foot{margin-top:auto;padding-top:14px;border-top:1px solid var(--rail-line)}
+
+/* ---------- main ---------- */
+.main{padding:28px 34px 70px;min-width:0}
+.page-head{margin:0 0 20px}
+.page-head h1{font-size:25px;letter-spacing:-.01em;margin:0 0 5px}
+.page-head p{margin:0;color:#9db0a2;font-size:14.5px}
+
+/* ---------- panels ---------- */
+.panel{background:var(--surface);color:var(--ink);border-radius:20px;padding:28px;max-width:1120px;box-shadow:0 24px 70px rgba(0,0,0,.38)}
+.hidden{display:none !important}
+
+h2{font-size:16px;margin:22px 0 8px}
+.muted{color:var(--muted);font-size:14px}
+label{font-weight:600;font-size:13.5px;display:block;margin:14px 0 6px;color:#33463a}
+input,textarea,select{width:100%;padding:11px 12px;font-size:15px;border:1px solid var(--line);border-radius:10px;background:#fbfcfb;font-family:inherit}
+input:focus,textarea:focus,select:focus{outline:2px solid rgba(86,140,104,.35);border-color:var(--green)}
+textarea{min-height:70px}
+button{background:var(--green);color:#fff;border:0;border-radius:10px;padding:11px 17px;font-size:14.5px;font-weight:700;cursor:pointer;margin-top:10px}
+button:hover{background:var(--green-dark)}
+button.ghost{background:#eef1ee;color:var(--ink)}
+button.ghost:hover{background:#e2e7e2}
+button:disabled{opacity:.6;cursor:default}
 .msg{min-height:20px;font-size:14px;margin-top:10px}
 .msg.err{color:#b00020}.msg.ok{color:#2e7d32}
-.hidden{display:none}
-.modal{position:fixed;inset:0;background:rgba(0,0,0,.6);display:grid;place-items:center;z-index:50;padding:20px}
-.modal .box{background:#fff;color:#0b1710;border-radius:16px;padding:28px;width:min(420px,100%);max-width:420px;min-width:300px;flex:0 0 auto}
-.client{border:1px solid #e5e8e5;border-radius:10px;padding:14px;margin:10px 0}
-.client .row{display:flex;justify-content:space-between;align-items:center;gap:12px;flex-wrap:wrap}
-.badge{background:#eef4ef;color:#2e7d32;padding:4px 10px;border-radius:20px;font-size:13px;font-weight:700}
-.update,.comment{background:#f4f6f4;border-radius:8px;padding:10px;margin:8px 0;font-size:14px}
-.when{font-size:12px;color:#888;margin-top:3px}
-  .svc-filter{display:flex;gap:8px;flex-wrap:wrap;margin:6px 0 16px}
-  .svc-filter .chip{background:#eef1ee;color:#0b1710;border:1px solid #e0e5e0;border-radius:999px;padding:6px 14px;font-size:13px;font-weight:700;cursor:pointer;margin:0}
-  .svc-filter .chip.active{background:#568c68;color:#fff;border-color:#568c68}
-.roles{display:grid;grid-template-columns:repeat(auto-fit,minmax(180px,1fr));gap:6px;margin:8px 0 14px}
-.roles label{font-size:14px;display:flex;gap:8px;align-items:center;font-weight:400}
-.owner-only{display:none}
-body.owner .owner-only{display:block}
+
+.client{border:1px solid var(--line);border-radius:12px;padding:15px;margin:10px 0;background:#fff}
+.client .row{display:flex;justify-content:space-between;align-items:flex-start;gap:14px;flex-wrap:wrap}
+.badge{background:#eef4ef;color:#2e7d32;padding:4px 11px;border-radius:20px;font-size:12.5px;font-weight:700;white-space:nowrap}
+.update,.comment{background:#f5f7f5;border-radius:10px;padding:11px;margin:9px 0;font-size:14px}
+.when{font-size:12px;color:#8b9a8e;margin-top:4px}
+
+.svc-filter{display:flex;gap:8px;flex-wrap:wrap;margin:4px 0 18px}
+.svc-filter .chip{background:#eef1ee;color:var(--ink);border:1px solid #e0e5e0;border-radius:999px;padding:7px 15px;font-size:13px;font-weight:700;cursor:pointer;margin:0;width:auto}
+.svc-filter .chip:hover{background:#e4e9e4}
+.svc-filter .chip.active{background:var(--green);color:#fff;border-color:var(--green)}
+.svc-filter .chip.active:hover{background:var(--green-dark)}
+
+.roles{display:grid;grid-template-columns:repeat(auto-fit,minmax(190px,1fr));gap:6px;margin:8px 0 14px}
+.roles label{font-size:14px;display:flex;gap:9px;align-items:center;font-weight:400;margin:0;color:var(--ink)}
+
+.owner-only{display:none !important}
+body.owner .owner-only{display:block !important}
+body.owner .rail-item.owner-only{display:flex !important}
+
+.back-link{background:transparent;color:var(--muted);padding:0;margin:0 0 14px;font-size:14px;font-weight:600}
+.back-link:hover{background:transparent;color:var(--ink)}
+.client-email{font-size:20px;font-weight:800;margin:0 0 6px;word-break:break-all}
+
+/* ---------- modal ---------- */
+.modal{position:fixed;inset:0;background:rgba(0,0,0,.65);display:grid;place-items:center;z-index:50;padding:20px}
+.modal .box{background:#fff;color:var(--ink);border-radius:18px;padding:30px;width:min(430px,100%);max-width:430px;min-width:300px;box-shadow:0 30px 80px rgba(0,0,0,.5)}
+.modal .box h1{font-size:22px;margin:0 0 6px}
+
+/* ---------- responsive ---------- */
+@media (max-width:860px){
+  .app{grid-template-columns:1fr}
+  .rail{position:static;height:auto;border-right:0;border-bottom:1px solid var(--rail-line);padding:16px 14px}
+  .rail-nav{display:flex;gap:8px;overflow-x:auto;padding-bottom:4px}
+  .rail-label{display:none}
+  .rail-item{width:auto;white-space:nowrap;flex:0 0 auto}
+  .rail-foot{margin-top:12px;border-top:0;padding-top:0}
+  .main{padding:20px 16px 60px}
+  .panel{padding:20px;border-radius:16px}
+}
 </style>
   <!-- Google tag (gtag.js) -->
   <script async src="https://www.googletagmanager.com/gtag/js?id=G-049MHJM2KP"></script>
@@ -49,135 +104,185 @@ body.owner .owner-only{display:block}
   <meta name="robots" content="noindex, nofollow">
 </head>
 <body>
-<div class="wrap">
-  <div class="brand">travel<strong>Bunny</strong><span>.</span> <span style="margin-left:8px;font-weight:400;color:#a9b3ab">Specialist</span>
-    <button class="logout" id="logout">Log out</button>
-  </div>
+<div class="app">
 
-  <div class="card hidden" id="clients-panel">
-    <h1>Client projects</h1>
-    <p class="muted">Manage client projects, statuses, replies, and their live site.</p>
-    <div class="svc-filter" id="svc-filter">
-      <button type="button" class="chip active" data-svc="">All</button>
-      <button type="button" class="chip" data-svc="website">Website</button>
-      <button type="button" class="chip" data-svc="bookkeeping">Bookkeeping</button>
-      <button type="button" class="chip" data-svc="dashboards">Analytics &amp; Reporting</button>
-      <button type="button" class="chip" data-svc="growth">Growth &amp; Marketing</button>
-      <button type="button" class="chip" data-svc="automation">Automation</button>
-      <button type="button" class="chip" data-svc="operations">Operations</button>
+  <!-- ============ rail ============ -->
+  <aside class="rail">
+    <div class="rail-brand">travel<strong>Bunny</strong>.<span class="rail-sub">Specialist</span></div>
+
+    <nav class="rail-nav" id="rail-nav">
+      <p class="rail-label">Main</p>
+      <button type="button" class="rail-item active" data-panel="clients-panel"
+        data-title="Client projects" data-sub="Manage client projects, statuses, replies, and their live site.">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3" y="3" width="7" height="7" rx="1.5"/><rect x="14" y="3" width="7" height="7" rx="1.5"/><rect x="3" y="14" width="7" height="7" rx="1.5"/><rect x="14" y="14" width="7" height="7" rx="1.5"/></svg>
+        Clients
+      </button>
+      <button type="button" class="rail-item" data-panel="jobs-panel"
+        data-title="Jobs" data-sub="Deliverables and agreed fees. Track progress here, no timesheets.">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="2.5" y="7" width="19" height="13" rx="2"/><path d="M8.5 7V5.5A2 2 0 0 1 10.5 3.5h3a2 2 0 0 1 2 2V7"/><path d="M2.5 12h19"/></svg>
+        Jobs
+      </button>
+      <button type="button" class="rail-item" data-panel="expenses-panel"
+        data-title="Expenses" data-sub="Costs you paid for a job. Reimbursed at cost once approved, no hours.">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M6 2.5h12v19l-2.5-1.6L13 21.5l-1-1.6-1 1.6-2.5-1.6L6 21.5z"/><path d="M9.5 8h5M9.5 12h5"/></svg>
+        Expenses
+      </button>
+      <button type="button" class="rail-item" data-panel="invoices-panel"
+        data-title="Invoices" data-sub="Submit a month; the total comes from completed jobs plus approved expenses.">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M14 2.5H7a2 2 0 0 0-2 2v15a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2V7.5z"/><path d="M14 2.5v5h5"/><path d="M9 13h6M9 17h4"/></svg>
+        Invoices
+      </button>
+      <button type="button" class="rail-item" data-panel="ads-panel"
+        data-title="Ad screen reviews" data-sub="Approve, reject, or upload Local Ad Screen submissions.">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="2.5" y="4" width="19" height="13" rx="2"/><path d="M8 20.5h8"/><path d="M10.5 8.8l4 2.2-4 2.2z"/></svg>
+        Ad screen
+      </button>
+
+      <p class="rail-label owner-only">Owner</p>
+      <button type="button" class="rail-item owner-only" data-panel="payments-panel"
+        data-title="Payments" data-sub="Live from your Stripe: recent payments and subscriptions.">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="2.5" y="5" width="19" height="14" rx="2"/><path d="M2.5 10h19"/></svg>
+        Payments
+      </button>
+      <button type="button" class="rail-item owner-only" data-panel="team-panel"
+        data-title="Team" data-sub="Add specialists and choose which services they handle.">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="9" cy="8" r="3.2"/><path d="M2.8 20a6.2 6.2 0 0 1 12.4 0"/><path d="M16 5.2A3.2 3.2 0 0 1 16 11"/><path d="M17.5 14.2A5.6 5.6 0 0 1 21.2 20"/></svg>
+        Team
+      </button>
+      <button type="button" class="rail-item owner-only" data-panel="activity-panel"
+        data-title="Recent activity" data-sub="Who did what, across every client — your oversight feed.">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M2.5 12h4l2.5-6 3.5 12 2.5-6h6"/></svg>
+        Activity
+      </button>
+    </nav>
+
+    <div class="rail-foot">
+      <button type="button" class="rail-item" id="logout">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"/><path d="M16 17l5-5-5-5"/><path d="M21 12H9"/></svg>
+        Log out
+      </button>
     </div>
-    <div id="clients"><p class="muted">Loading…</p></div>
-  </div>
+  </aside>
 
-  <div class="card hidden" id="jobs-panel">
-    <h1>Jobs</h1>
-    <p class="muted">Deliverables and agreed fees. Track progress here, no timesheets.</p>
-    <div id="jobs-list"><p class="muted">Loading&hellip;</p></div>
-    <h2>Add job</h2>
-    <label class="owner-only" style="display:block;font-size:13px;color:#6b7a6d;margin:6px 0 2px">For</label><select id="j-partner" class="owner-only"></select>
-    <input id="j-client" placeholder="client@email.com">
-    <input id="j-deliverable" placeholder="Deliverable (e.g. Menu redesign)">
-    <input id="j-fee" type="number" placeholder="Agreed fee (CAD)">
-    <button id="j-add">Add job</button>
-    <p class="muted" id="j-msg"></p>
-  </div>
-
-  <div class="card hidden" id="expenses-panel">
-    <h1>Expenses</h1>
-    <p class="muted">Submit costs you paid for a job. Reimbursed at cost once approved, no hours.</p>
-    <div id="expenses-list"><p class="muted">Loading&hellip;</p></div>
-    <h2>Submit expense</h2>
-    <label class="owner-only" style="display:block;font-size:13px;color:#6b7a6d;margin:6px 0 2px">For</label><select id="e-partner" class="owner-only"></select>
-    <input id="e-client" placeholder="client@email.com (optional)">
-    <input id="e-amount" type="number" placeholder="Amount (CAD)">
-    <input id="e-category" placeholder="Category (e.g. Canva Pro asset)">
-    <input id="e-note" placeholder="Note (optional)">
-    <button id="e-add">Submit expense</button>
-    <p class="muted" id="e-msg"></p>
-  </div>
-
-  <div class="card hidden" id="invoices-panel">
-    <h1>Invoices</h1>
-    <p class="muted">Submit a month, the total is calculated from completed jobs + approved expenses.</p>
-    <div id="invoices-list"><p class="muted">Loading&hellip;</p></div>
-    <h2>Submit invoice</h2>
-    <label class="owner-only" style="display:block;font-size:13px;color:#6b7a6d;margin:6px 0 2px">For</label><select id="i-partner" class="owner-only"></select>
-    <input id="i-period" placeholder="Period (e.g. 2026-09)">
-    <button id="i-add">Submit invoice</button>
-    <p class="muted" id="i-msg"></p>
-  </div>
-
-  <div class="card hidden" id="payments-panel">
-    <h1>Payments</h1>
-    <p class="muted">Live from your Stripe: recent payments and subscriptions.</p>
-    <h2>Subscriptions</h2>
-    <div id="subs-list"><p class="muted">Loading&hellip;</p></div>
-    <h2>Recent payments</h2>
-    <div id="payments-list"><p class="muted">Loading&hellip;</p></div>
-  </div>
-  <div class="card hidden" id="activity-panel">
-    <h1>Recent activity</h1>
-    <p class="muted">Who did what, across every client, your oversight feed.</p>
-    <div id="activity-list"><p class="muted">Loading…</p></div>
-  </div>
-  <div class="card hidden" id="team-panel">
-    <h1>Team</h1>
-    <p class="muted">Add specialists and choose which services they handle. They log in with their own email and see only their clients.</p>
-    <div id="team-list"><p class="muted">Loading…</p></div>
-    <h2>Add specialist</h2>
-    <input id="t-email" placeholder="specialist@email.com">
-    <input id="t-name" placeholder="Name">
-    <div class="roles" id="t-roles">
-      <label><input type="checkbox" value="website"> Website builds</label>
-      <label><input type="checkbox" value="product"> Product presentation</label>
-      <label><input type="checkbox" value="bookkeeping"> Bookkeeping</label>
-      <label><input type="checkbox" value="dashboards"> Analytics &amp; Reporting</label>
-      <label><input type="checkbox" value="growth"> Growth &amp; Marketing</label>
-      <label><input type="checkbox" value="marketing"> Local SEO</label>
-      <label><input type="checkbox" value="brand"> Brand &amp; Design</label>
-      <label><input type="checkbox" value="automation"> Automation</label>
-      <label><input type="checkbox" value="operations"> Operations</label>
-      <label><input type="checkbox" value="ads"> Ad screen reviews</label>
+  <!-- ============ main ============ -->
+  <main class="main">
+    <div class="page-head">
+      <h1 id="page-title">Client projects</h1>
+      <p id="page-sub">Manage client projects, statuses, replies, and their live site.</p>
     </div>
-    <button id="t-add">Add specialist</button>
-    <p class="muted" id="t-msg"></p>
-  </div>
-  <div class="card hidden" id="ads-panel">
-    <h1>Ad screen reviews</h1>
-    <p class="muted">Approve or reject Local Ad Screen submissions.</p>
-    <div id="ads"><p class="muted">Loading…</p></div>
 
-    <h2>Add a video manually</h2>
-    <p class="muted">Uploads as approved and goes straight to the screen. Client submissions are untouched.</p>
-    <label>Business name<input id="ad-new-business" type="text"></label>
-    <label>City / Area<input id="ad-new-city" type="text" placeholder="e.g. Toronto"></label>
-    <label>Email (optional)<input id="ad-new-email" type="email"></label>
-    <label>Image or video URL (optional)<input id="ad-new-url" type="text" placeholder="https://..."></label>
-    <label>Upload image or video (mp4 / webm)<input id="ad-new-file" type="file" accept="image/*,video/mp4,video/webm"></label>
-    <button id="ad-new-submit" type="button">Upload &amp; publish</button>
-    <p class="msg" id="ad-new-msg"></p>
-  </div>
+    <section class="panel hidden" id="clients-panel">
+      <div class="svc-filter" id="svc-filter">
+        <button type="button" class="chip active" data-svc="">All</button>
+        <button type="button" class="chip" data-svc="website">Website</button>
+        <button type="button" class="chip" data-svc="bookkeeping">Bookkeeping</button>
+        <button type="button" class="chip" data-svc="dashboards">Analytics &amp; Reporting</button>
+        <button type="button" class="chip" data-svc="growth">Growth &amp; Marketing</button>
+        <button type="button" class="chip" data-svc="automation">Automation</button>
+        <button type="button" class="chip" data-svc="operations">Operations</button>
+      </div>
+      <div id="clients"><p class="muted">Loading…</p></div>
+    </section>
 
-  <div class="card hidden" id="client-panel">
-    <button class="ghost" id="back">← Back to clients</button>
-    <h1 id="c-email"></h1>
-    <label>Status</label>
-    <input id="c-status">
-    <button id="c-save-status">Save status</button>
-    <label>Website URL</label>
-    <input id="c-website" placeholder="https://client-site.com">
-    <button id="c-save-website">Save website</button>
-    <div class="msg" id="c-status-msg"></div>
+    <section class="panel hidden" id="jobs-panel">
+      <div id="jobs-list"><p class="muted">Loading&hellip;</p></div>
+      <h2>Add job</h2>
+      <label class="owner-only">For</label><select id="j-partner" class="owner-only"></select>
+      <input id="j-client" placeholder="client@email.com">
+      <input id="j-deliverable" placeholder="Deliverable (e.g. Menu redesign)">
+      <input id="j-fee" type="number" placeholder="Agreed fee (CAD)">
+      <button id="j-add">Add job</button>
+      <p class="msg" id="j-msg"></p>
+    </section>
 
-    <h2>Updates</h2><div id="c-updates"><p class="muted">None yet.</p></div>
-    <textarea id="c-update-text" placeholder="Add an update for this client…"></textarea>
-    <button id="c-add-update">Send update</button>
+    <section class="panel hidden" id="expenses-panel">
+      <div id="expenses-list"><p class="muted">Loading&hellip;</p></div>
+      <h2>Submit expense</h2>
+      <label class="owner-only">For</label><select id="e-partner" class="owner-only"></select>
+      <input id="e-client" placeholder="client@email.com (optional)">
+      <input id="e-amount" type="number" placeholder="Amount (CAD)">
+      <input id="e-category" placeholder="Category (e.g. Canva Pro asset)">
+      <input id="e-note" placeholder="Note (optional)">
+      <button id="e-add">Submit expense</button>
+      <p class="msg" id="e-msg"></p>
+    </section>
 
-    <h2>Comments &amp; replies</h2><div id="c-comments"><p class="muted">None yet.</p></div>
-    <textarea id="c-reply-text" placeholder="Reply to the client…"></textarea>
-    <button id="c-send-reply">Send reply</button>
-    <div class="msg" id="c-action-msg"></div>
-  </div>
+    <section class="panel hidden" id="invoices-panel">
+      <div id="invoices-list"><p class="muted">Loading&hellip;</p></div>
+      <h2>Submit invoice</h2>
+      <label class="owner-only">For</label><select id="i-partner" class="owner-only"></select>
+      <input id="i-period" placeholder="Period (e.g. 2026-09)">
+      <button id="i-add">Submit invoice</button>
+      <p class="msg" id="i-msg"></p>
+    </section>
+
+    <section class="panel hidden" id="ads-panel">
+      <div id="ads"><p class="muted">Loading…</p></div>
+
+      <h2>Add a video manually</h2>
+      <p class="muted">Uploads as approved and goes straight to the screen. Client submissions are untouched.</p>
+      <label>Business name<input id="ad-new-business" type="text"></label>
+      <label>City / Area<input id="ad-new-city" type="text" placeholder="e.g. Toronto"></label>
+      <label>Email (optional)<input id="ad-new-email" type="email"></label>
+      <label>Image or video URL (optional)<input id="ad-new-url" type="text" placeholder="https://..."></label>
+      <label>Upload image or video (mp4 / webm)<input id="ad-new-file" type="file" accept="image/*,video/mp4,video/webm"></label>
+      <button id="ad-new-submit" type="button">Upload &amp; publish</button>
+      <p class="msg" id="ad-new-msg"></p>
+    </section>
+
+    <section class="panel hidden" id="payments-panel">
+      <h2>Subscriptions</h2>
+      <div id="subs-list"><p class="muted">Loading&hellip;</p></div>
+      <h2>Recent payments</h2>
+      <div id="payments-list"><p class="muted">Loading&hellip;</p></div>
+    </section>
+
+    <section class="panel hidden" id="activity-panel">
+      <div id="activity-list"><p class="muted">Loading…</p></div>
+    </section>
+
+    <section class="panel hidden" id="team-panel">
+      <div id="team-list"><p class="muted">Loading…</p></div>
+      <h2>Add specialist</h2>
+      <input id="t-email" placeholder="specialist@email.com">
+      <input id="t-name" placeholder="Name">
+      <div class="roles" id="t-roles">
+        <label><input type="checkbox" value="website"> Website builds</label>
+        <label><input type="checkbox" value="product"> Product presentation</label>
+        <label><input type="checkbox" value="bookkeeping"> Bookkeeping</label>
+        <label><input type="checkbox" value="dashboards"> Analytics &amp; Reporting</label>
+        <label><input type="checkbox" value="growth"> Growth &amp; Marketing</label>
+        <label><input type="checkbox" value="marketing"> Local SEO</label>
+        <label><input type="checkbox" value="brand"> Brand &amp; Design</label>
+        <label><input type="checkbox" value="automation"> Automation</label>
+        <label><input type="checkbox" value="operations"> Operations</label>
+        <label><input type="checkbox" value="ads"> Ad screen reviews</label>
+      </div>
+      <button id="t-add">Add specialist</button>
+      <p class="msg" id="t-msg"></p>
+    </section>
+
+    <section class="panel hidden" id="client-panel">
+      <button class="ghost back-link" id="back">← Back to clients</button>
+      <div class="client-email" id="c-email"></div>
+      <label>Status</label>
+      <input id="c-status">
+      <button id="c-save-status">Save status</button>
+      <label>Website URL</label>
+      <input id="c-website" placeholder="https://client-site.com">
+      <button id="c-save-website">Save website</button>
+      <div class="msg" id="c-status-msg"></div>
+
+      <h2>Updates</h2><div id="c-updates"><p class="muted">None yet.</p></div>
+      <textarea id="c-update-text" placeholder="Add an update for this client…"></textarea>
+      <button id="c-add-update">Send update</button>
+
+      <h2>Comments &amp; replies</h2><div id="c-comments"><p class="muted">None yet.</p></div>
+      <textarea id="c-reply-text" placeholder="Reply to the client…"></textarea>
+      <button id="c-send-reply">Send reply</button>
+      <div class="msg" id="c-action-msg"></div>
+    </section>
+  </main>
 </div>
 
 <div class="modal" id="login-modal">
@@ -191,8 +296,8 @@ body.owner .owner-only{display:block}
         <input id="pass" type="password" autocomplete="current-password" required style="padding-right:48px;">
         <button type="button" data-toggle-pass data-target="pass" aria-label="Show password" style="position:absolute;right:0;top:0;height:100%;width:44px;margin:0;display:flex;align-items:center;justify-content:center;background:transparent;border:0;border-radius:0 8px 8px 0;cursor:pointer;color:#8a9a8a;"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg></button>
       </div>
-      <button type="submit" style="width:100%">Log in</button>
-      <div class="msg" id="login-status"></div>
+      <button type="submit" style="width:100%;margin-top:16px;">Log in</button>
+      <p class="msg" id="login-status"></p>
     </form>
   </div>
 </div>
@@ -208,8 +313,30 @@ body.owner .owner-only{display:block}
   var SPECIALIST_EMAIL="makky@travelbunny.services";
   var token=localStorage.getItem("tb_token")||""; var clientsCache=[];
 
+  var PANEL_META={
+    "clients-panel":["Client projects","Manage client projects, statuses, replies, and their live site."],
+    "jobs-panel":["Jobs","Deliverables and agreed fees. Track progress here, no timesheets."],
+    "expenses-panel":["Expenses","Costs you paid for a job. Reimbursed at cost once approved, no hours."],
+    "invoices-panel":["Invoices","Submit a month; the total comes from completed jobs plus approved expenses."],
+    "ads-panel":["Ad screen reviews","Approve, reject, or upload Local Ad Screen submissions."],
+    "payments-panel":["Payments","Live from your Stripe: recent payments and subscriptions."],
+    "activity-panel":["Recent activity","Who did what, across every client — your oversight feed."],
+    "team-panel":["Team","Add specialists and choose which services they handle."]
+  };
+
   function esc(s){var d=document.createElement("div");d.textContent=s||"";return d.innerHTML;}
   function show(el,m,err){el.textContent=m||"";el.className="msg"+(err?" err":" ok");}
+  function setHead(title,sub){
+    document.getElementById("page-title").textContent=title||"";
+    document.getElementById("page-sub").textContent=sub||"";
+  }
+  function showPanel(id){
+    Array.prototype.forEach.call(document.querySelectorAll(".panel"),function(p){ p.classList.toggle("hidden", p.id!==id); });
+    var navId=(id==="client-panel")?"clients-panel":id;
+    Array.prototype.forEach.call(document.querySelectorAll(".rail-item[data-panel]"),function(b){ b.classList.toggle("active", b.getAttribute("data-panel")===navId); });
+    var meta=PANEL_META[id]; if(meta) setHead(meta[0],meta[1]);
+    window.scrollTo(0,0);
+  }
 
   async function api(path,body){
     var r=await fetch(BASE+path,{method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify(Object.assign({token:token},body||{}))});
@@ -245,24 +372,16 @@ body.owner .owner-only{display:block}
   function openClient(email){
     var c=clientsCache.filter(function(x){return x.email===email;})[0];
     if(c) renderClient(c);
-    document.getElementById("clients-panel").classList.add("hidden");
-    document.getElementById("client-panel").classList.remove("hidden");
+    showPanel("client-panel");
+    var name=(c&&((c.firstName||c.lastName)?((c.firstName||"")+" "+(c.lastName||"")).trim():c.email))||"Client";
+    setHead(name,email||"");
   }
 
   async function loadClients(){
     var data=await api("/listClients",{});
     clientsCache=data.clients;
     renderClients(data.clients);
-    document.getElementById("clients-panel").classList.remove("hidden");
-    if(data.isOwner){ document.body.classList.add("owner");
-      document.getElementById("payments-panel").classList.remove("hidden"); await loadPayments();
-      document.getElementById("team-panel").classList.remove("hidden"); await loadTeam();
-      document.getElementById("activity-panel").classList.remove("hidden"); await loadActivity(); }
-    document.getElementById("jobs-panel").classList.remove("hidden");
-    document.getElementById("expenses-panel").classList.remove("hidden");
-    document.getElementById("invoices-panel").classList.remove("hidden");
-    await loadJobs(); await loadExpenses(); await loadInvoices();
-    await loadAds();
+    if(data.isOwner){ document.body.classList.add("owner"); }
     document.getElementById("login-modal").style.display="none";
   }
 
@@ -407,21 +526,24 @@ body.owner .owner-only{display:block}
       token=d.idToken; localStorage.setItem("tb_token",token);
       await api("/setSpecialistRole",{});
       await loadClients();
+      showPanel("clients-panel");
     }catch(err){show(s,err.message,true);}
   });
 
   document.getElementById("c-save-status").addEventListener("click",async function(){
     var email=document.getElementById("c-email").textContent;
     var status=document.getElementById("c-status").value.trim();
-    try{await api("/updateClientStatus",{email:email,status:status});show(document.getElementById("c-status-msg"),"Saved.",false);}
-    catch(e){show(document.getElementById("c-status-msg"),e.message,true);}
+    var m=document.getElementById("c-status-msg");
+    try{ await api("/setClientStatus",{email:email,status:status}); show(m,"Status saved.",false); }
+    catch(e){ show(m,e.message,true); }
   });
 
   document.getElementById("c-save-website").addEventListener("click",async function(){
     var email=document.getElementById("c-email").textContent;
-    var websiteUrl=document.getElementById("c-website").value.trim();
-    try{await api("/updateClientWebsite",{email:email,websiteUrl:websiteUrl});show(document.getElementById("c-status-msg"),"Website saved.",false);}
-    catch(e){show(document.getElementById("c-status-msg"),e.message,true);}
+    var url=document.getElementById("c-website").value.trim();
+    var m=document.getElementById("c-status-msg");
+    try{ await api("/setClientWebsite",{email:email,url:url}); show(m,"Website saved.",false); }
+    catch(e){ show(m,e.message,true); }
   });
 
   document.getElementById("c-add-update").addEventListener("click",async function(){
@@ -440,15 +562,11 @@ body.owner .owner-only{display:block}
     catch(e){show(m,e.message,true);}
   });
 
-  document.getElementById("back").addEventListener("click",function(){
-    document.getElementById("client-panel").classList.add("hidden");
-    document.getElementById("clients-panel").classList.remove("hidden");
-  });
+  document.getElementById("back").addEventListener("click",function(){ showPanel("clients-panel"); });
 
   async function loadAds(){
     var data = await api("/listAds",{});
     renderAds(data.ads);
-    document.getElementById("ads-panel").classList.remove("hidden");
   }
   async function reviewAd(id, approve){
     await api("/reviewAd",{id:id, approve:approve});
@@ -512,7 +630,7 @@ body.owner .owner-only{display:block}
   });
 
   document.getElementById("logout").addEventListener("click",function(){token="";localStorage.removeItem("tb_token");location.href="/specialist-dashboard.html";});
-  window.addEventListener("focus",function(){ if(token) loadClients(); });
+
   Array.prototype.forEach.call(document.querySelectorAll("#svc-filter .chip"), function(chip){
     chip.addEventListener("click", function(){
       Array.prototype.forEach.call(document.querySelectorAll("#svc-filter .chip"), function(x){ x.classList.remove("active"); });
@@ -521,8 +639,28 @@ body.owner .owner-only{display:block}
       renderClients(clientsCache);
     });
   });
-  setInterval(function(){ if(token) loadClients(); }, 30000);
-  if(token){ api("/setSpecialistRole",{}).then(function(){return loadClients();}).catch(function(){ token=""; localStorage.removeItem("tb_token"); }); }
+
+  // One panel at a time, loaded when you open it - nothing polls in the background.
+  var LOADERS={
+    "clients-panel":function(){ loadClients().catch(function(){}); },
+    "jobs-panel":loadJobs,
+    "expenses-panel":loadExpenses,
+    "invoices-panel":loadInvoices,
+    "ads-panel":loadAds,
+    "payments-panel":loadPayments,
+    "activity-panel":loadActivity,
+    "team-panel":loadTeam
+  };
+  Array.prototype.forEach.call(document.querySelectorAll(".rail-item[data-panel]"), function(btn){
+    btn.addEventListener("click", function(){
+      var id=btn.getAttribute("data-panel");
+      showPanel(id);
+      var loader=LOADERS[id];
+      if(loader){ try{ loader(); }catch(e){} }
+    });
+  });
+
+  if(token){ api("/setSpecialistRole",{}).then(function(){return loadClients();}).then(function(){showPanel("clients-panel");}).catch(function(){ token=""; localStorage.removeItem("tb_token"); }); }
 })();
 </script>
 <footer class="legal-footer" style="position:relative;z-index:1;padding:32px 24px;text-align:center;font-family:-apple-system,'Segoe UI',Roboto,Arial,sans-serif;font-size:13px;background:#0b1710;color:#cfd8cf;line-height:1.6;">
