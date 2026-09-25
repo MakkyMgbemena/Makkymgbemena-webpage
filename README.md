@@ -1,99 +1,233 @@
-Travel Bunny — Bookkeeping, Business Setup & Web Design in Toronto
-The source for travelbunny.services — the working website and client platform for Travel Bunny, a Toronto practice offering bookkeeping, financial organization, reporting, business setup, websites and automation for small businesses.
+Travel Bunny
+**Book their online presence, and manage essential business activities from one connected system.Bookkeeping, business setup, web design, reporting, and automation for Toronto small businesses.
 
-Owner and sole builder: Makuochukwu Annastecia Mgbemena — "Makky" on the site.
+Built and Maintained by the Owner
+Travel Bunny was designed, written, developed, deployed, and maintained by Makuochukwu Annastecia Mgbemena, known as Makky on the website.
 
-Built end-to-end by the owner
-Every part of this project was designed, written, deployed and is maintained by Makuochukwu Annastecia Mgbemena. That includes the brand and visual design, all copy, the page layouts, the hand-written HTML, CSS and JavaScript, the Vite build, the Firebase Hosting setup, the Cloud Functions and Firestore backend, the Stripe checkout, the cal.com booking flow, the Google Analytics tracking, and the marketing fliers, QR codes and share cards.
+The project includes:
 
-There is no template, no agency and no handoff. The same person who keeps the books built and runs the site that sells them.
+Brand and visual design
+Website copy and information architecture
+Hand-written HTML, CSS, and JavaScript
+Multi-page Vite build configuration
+Firebase Hosting
+Firebase Cloud Functions
+Firestore database architecture
+Cloud Storage rules
+Stripe Checkout
+Cal.com booking
+Client and internal dashboards
+Google Analytics 4 event tracking
+Marketing materials, QR codes, and social share cards
+Deployment and ongoing maintenance
+The project demonstrates full ownership of the development lifecycle, from business planning and user experience to backend implementation, deployment, analytics, and maintenance.
 
-Hire Travel Bunny
-For small business owners who need their books, numbers, or online presence in order — without hiring a full internal team.
+The Value of the Build
+Travel Bunny is more than a promotional website. It is a working business platform designed to support customer acquisition, service delivery, payments, administration, and reporting.
 
-Service	What it covers
-Bookkeeping & financial organization	Day-to-day recording, cleanup and catch-up, reconciliations, monthly close, and books kept current in QuickBooks, Excel or Google Sheets
-Reporting & business intelligence	Dashboards and plain-language reporting so you can see revenue, costs and trends and actually use them
-Business processes & automation	Removing repetitive admin — forms, approvals, connected tools, less copy-paste
-Websites & search visibility	New sites or rebuilds, plus local SEO so nearby customers find you
-Brand & marketing design	Fliers, social assets, share cards and the visual pieces a small business actually needs
-Operations setup & consultation	Mapping how the business runs today and putting the right systems in place
-Who this is for: Toronto small businesses — retail, food, beauty, trades, administration and consulting — that need systems, reporting, a website, bookkeeping or marketing support.
+Complete Business System
+The platform connects the public website with booking, payment, client-management, reporting, and internal operational tools.
 
-How it works: a free 30-minute consultation to look at the current setup, then a clear recommendation, timeline and price before any work starts. Fixed pricing for clearly scoped work, hourly for small fixes, and monthly retainers for ongoing bookkeeping, reporting or maintenance.
+Direct Customer Actions
+Visitors can:
 
-How to start
+Review services
+Book a consultation
+Submit enquiries
+Select service options
+Complete Stripe Checkout
+Access relevant account and payment information
+Client and Internal Operations
+The platform includes tools for:
 
-Book a free consultation — cal.com/makky-travelbunny/consultation
-Email — Makky@travelbunny.services
-Call or WhatsApp — +1 647 808 3432
-Serving Toronto and the surrounding area [confirm: remote across Canada?]
-What this project demonstrates
-For recruiters, hiring managers and anyone assessing the work behind the site.
+Client accounts
+Reporting widgets
+Payments and invoices
+Project and job tracking
+Expense management
+Internal specialist workflows
+Scheduled metrics updates
+Search and Measurement
+The website includes:
 
-This is a live, maintained, end-to-end build by one person, not a course project or a theme:
+Semantic multi-page HTML
+Page-specific metadata
+Search-friendly URLs
+Sitemap and robots configuration
+Google Analytics 4
+Conversion tracking for bookings, forms, phone calls, emails, and outbound links
+Campaign-tagged marketing links
+Ownership and Maintainability
+The source code, business logic, design system, content, and deployment process are controlled within the project.
 
-Multi-page front end written by hand — no framework, no page builder. Fifteen pages of semantic HTML and CSS with vanilla JavaScript for navigation, carousels and the checkout funnel.
-A real payment flow — Stripe Checkout sessions created server-side by a Cloud Function, with tiered service selection and success/cancel return pages.
-A serverless backend — Firebase Cloud Functions v2 (Node 24) covering checkout, a client portal, an internal specialist console, project and job tracking, expenses, invoices and a scheduled metrics refresh.
-Data layer with rules and indexes — Firestore collections plus Storage rules and composite indexes, with secrets held server-side only.
-Analytics and measurement — GA4 event tracking for bookings, form submits, phone, email and outbound clicks, wired to campaign-tagged links.
-Marketing assets produced in-repo — UTM conventions, fliers in three sizes, QR codes and Open Graph cards generated by scripts rather than by hand each time.
-Ownership of the whole lifecycle — information architecture, copy, design, implementation, deployment and ongoing maintenance.
-Areas of work: bookkeeping and financial administration · business analysis and reporting · web development · process automation · analytics and tracking.
+The platform can be updated, expanded, or moved without rebuilding the business around a page-builder template or closed website system.
 
-Background: media, business analysis, financial administration and international business.
+Services
+Travel Bunny supports small businesses with the following services:
 
-Open to: [confirm: contract projects / full-time roles / both — and the roles you want to be considered for]
+Bookkeeping and Financial Organisation
+Day-to-day transaction recording
+Bookkeeping cleanup and catch-up
+Account reconciliations
+Monthly close
+QuickBooks, Excel, and Google Sheets support
+Ongoing financial record management
+Reporting and Business Intelligence
+Business dashboards
+Revenue and cost reporting
+Trend analysis
+Plain-language financial reporting
+Decision-support tools
+Business Processes and Automation
+Workflow mapping
+Forms and approval processes
+Connected business tools
+Repetitive-task reduction
+Administrative automation
+Websites and Search Visibility
+New website development
+Website rebuilds
+Responsive design
+Technical search optimisation
+Local search visibility
+Analytics and conversion tracking
+Brand and Marketing Design
+Flyers
+Social media assets
+Share cards
+QR codes
+Campaign materials
+Supporting business visuals
+Operations Setup and Consultation
+Review of current business operations
+Process and system recommendations
+Technology planning
+Implementation support
+Ongoing maintenance options
+Who Travel Bunny Serves
+Travel Bunny works with small businesses in Toronto and the surrounding area, including businesses in:
 
-What's live
+Retail
+Food services
+Beauty
+Trades
+Administration
+Consulting
+Professional services
+The platform and services are designed for businesses that need stronger bookkeeping, reporting, operational systems, websites, automation, or marketing support without building a full internal team.
+
+How It Works
+The process begins with a free 30-minute consultation to review the business’s current setup, challenges, and priorities.
+
+The client then receives a clear recommendation covering:
+
+Proposed work
+Project scope
+Timeline
+Pricing
+Required systems or integrations
+Clearly defined projects can use fixed pricing. Smaller updates may be billed hourly, while ongoing bookkeeping, reporting, website maintenance, or operational support may be provided through a monthly service arrangement.
+
+Start Here
+Book a free consultation
+Email: Makky@travelbunny.services
+Call or WhatsApp: +1 647 808 3432
+Website: travelbunny.services
+Technical Highlights
+This is a live, maintained, end-to-end build completed by one developer.
+
+Front End
+Fifteen-page website
+Hand-written semantic HTML
+Responsive CSS
+Vanilla JavaScript
+Custom navigation and carousel behaviour
+Multi-step service and checkout flows
+No front-end framework
+No page builder
+Backend
+Firebase Cloud Functions v2
+Node.js 24 runtime
+Server-side Stripe Checkout session creation
+Client portal functionality
+Internal specialist console
+Project and job tracking
+Expense and invoice management
+Scheduled metrics refresh
+Data and Security
+Firestore database
+Firestore security rules
+Composite indexes
+Cloud Storage rules
+Server-side secret management
+Separated public and private functionality
+Payments
+Stripe Checkout
+Server-side checkout-session creation
+Service-tier selection
+Success and cancellation return pages
+Payment-related client records
+Booking
+Cal.com consultation scheduling
+Booking conversion tracking
+Direct booking links from service pages
+Analytics
+Google Analytics 4
+Booking events
+Form-submission events
+Phone-click tracking
+Email-click tracking
+Outbound-link tracking
+Campaign-tagged links
+Marketing Assets
+Reusable UTM conventions
+Flyers in multiple sizes
+Generated QR codes
+Open Graph share cards
+Script-based asset production
+Live Pages
 Page	Purpose
-index.html	Home — services, featured work, tools, FAQ, booking
-about.html	The owner, background and working approach
+index.html	Home page, services, featured work, tools, FAQs, and booking
+about.html	Owner background, experience, and working approach
 portfolio.html	Selected work and industries served
-business-processes-and-automation.html	Automation service page, signup and checkout funnel
-business-intelligence.html	Reporting and dashboards service page
-blog-post.html	Article on choosing a website platform
-client-dashboard.html	Client account — reporting widgets, payments, invoices
-specialist-dashboard.html	Internal console — jobs, expenses, invoices
-booking-success.html, booking-cancelled.html	Stripe Checkout return pages
-ad-success.html, ad-cancelled.html	Local Ad Screen reservation pages
-privacy.html, terms.html	Privacy policy and terms of service
-404.html	Not found
-Stack
-Layer	Detail
-Front end	Hand-written HTML, CSS and vanilla JavaScript — no framework
-Build	Vite (vite.config.mjs) with explicit multi-page inputs, output to dist/
-Hosting	Firebase Hosting, serving dist/ with no-cache HTML and immutable asset headers
-Backend	Firebase Cloud Functions v2 (functions/index.js, Node 24)
-Data	Firestore (firestore.rules, firestore.indexes.json) and Cloud Storage (storage.rules)
-Payments	Stripe Checkout, created server-side by createCheckoutSession
-Booking	cal.com consultation scheduling
-Analytics	Google Analytics 4 (G-049MHJM2KP) with custom events
-Repository layout
-text
-Copy
+business-processes-and-automation.html	Automation services, signup, and checkout
+business-intelligence.html	Reporting and dashboard services
+blog-post.html	Website-platform guidance
+client-dashboard.html	Client reporting, payments, and invoices
+specialist-dashboard.html	Internal jobs, expenses, and invoice management
+booking-success.html	Successful Stripe Checkout return page
+booking-cancelled.html	Cancelled Stripe Checkout return page
+ad-success.html	Successful Local Ad Screen reservation
+ad-cancelled.html	Cancelled Local Ad Screen reservation
+privacy.html	Privacy policy
+terms.html	Terms of service
+404.html	Not-found page
+Technology Stack
+Layer	Technology
+Front end	HTML, CSS, and vanilla JavaScript
+Build system	Vite
+Hosting	Firebase Hosting
+Backend	Firebase Cloud Functions v2
+Runtime	Node.js 24
+Database	Firestore
+File storage	Cloud Storage
+Payments	Stripe Checkout
+Booking	Cal.com
+Analytics	Google Analytics 4
+Deployment	Firebase CLI and GitHub Actions
+Repository Structure
 .
-├── *.html, *.css, *.js      # pages and their styles and scripts
-├── assets/                  # page imagery
-├── public/                  # copied verbatim to the site root (favicons, logo, robots.txt, sitemap.xml)
-├── functions/               # Cloud Functions: checkout, portals, jobs, expenses, invoices, metrics
-├── dist/                    # committed Vite build (what Hosting serves)
-├── firestore.rules, firestore.indexes.json, storage.rules
-├── deploy.sh                # commit, push, deploy rules and functions
-└── .github/workflows/       # CI: build and deploy Hosting on merge
-Run it locally
-bash
-Copy
-npm ci
-npm run dev        # dev server on http://localhost:4174
-npm run build      # production build into dist/
-npm run preview    # serve the built output
-Deploy
-./deploy.sh is the release path: commits the change, pushes to main (which triggers the GitHub Action that builds and deploys Hosting), then deploys Storage rules and Cloud Functions with the Firebase CLI. Hosting on its own:
-
-Ownership
-© 2026 Makuochukwu Annastecia Mgbemena — Travel Bunny. All rights reserved. Brand, copy, design and source in this repository are not licensed for reuse.
-
-Contact
-Makuochukwu Annastecia Mgbemena ("Makky") · Toronto, Canada Makky@travelbunny.services · +1 647 808 3432 travelbunny.services · LinkedIn · Instagram
+├── *.html
+├── *.css
+├── *.js
+├── assets/
+├── public/
+├── functions/
+├── dist/
+├── firestore.rules
+├── firestore.indexes.json
+├── storage.rules
+├── vite.config.mjs
+├── deploy.sh
+└── .github/
+    └── workflows/
