@@ -146,6 +146,16 @@ body.owner .owner-only{display:block}
     <h1>Ad screen reviews</h1>
     <p class="muted">Approve or reject Local Ad Screen submissions.</p>
     <div id="ads"><p class="muted">Loading…</p></div>
+
+    <h2>Add a video manually</h2>
+    <p class="muted">Uploads as approved and goes straight to the screen. Client submissions are untouched.</p>
+    <label>Business name<input id="ad-new-business" type="text"></label>
+    <label>City / Area<input id="ad-new-city" type="text" placeholder="e.g. Toronto"></label>
+    <label>Email (optional)<input id="ad-new-email" type="email"></label>
+    <label>Image or video URL (optional)<input id="ad-new-url" type="text" placeholder="https://..."></label>
+    <label>Upload image or video (mp4 / webm)<input id="ad-new-file" type="file" accept="image/*,video/mp4,video/webm"></label>
+    <button id="ad-new-submit" type="button">Upload &amp; publish</button>
+    <p class="msg" id="ad-new-msg"></p>
   </div>
 
   <div class="card hidden" id="client-panel">
@@ -187,6 +197,8 @@ body.owner .owner-only{display:block}
   </div>
 </div>
 
+  <script src="https://www.gstatic.com/firebasejs/10.12.0/firebase-app-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/10.12.0/firebase-storage-compat.js"></script>
   <script src="embed.js"></script>
 <script>
 (function(){
@@ -463,6 +475,41 @@ body.owner .owner-only{display:block}
     Array.prototype.forEach.call(document.querySelectorAll("[data-reject]"),function(b){b.addEventListener("click",function(){reviewAd(b.getAttribute("data-reject"),false);});});
     Array.prototype.forEach.call(document.querySelectorAll("[data-delete]"),function(b){b.addEventListener("click",function(){deleteAd(b.getAttribute("data-delete"));});});
   }
+
+  var FB_CONFIG={apiKey:"AIzaSyAqbMu6_vNoZIGrU7Unl3wAYtDYDZ7CFAk",authDomain:"makkymgbemena-webpage.firebaseapp.com",projectId:"makkymgbemena-webpage",storageBucket:"makkymgbemena-webpage.firebasestorage.app"};
+  function adStorage(){ if(!firebase.apps.length){ firebase.initializeApp(FB_CONFIG); } return firebase.storage(); }
+  function uploadAdFile(file){
+    var path="ads/manual_"+Date.now()+"_"+String(file.name||"upload").replace(/[^a-zA-Z0-9._-]/g,"_");
+    var ref=adStorage().ref(path);
+    return ref.put(file).then(function(){ return ref.getDownloadURL(); });
+  }
+  document.getElementById("ad-new-submit").addEventListener("click",async function(){
+    var btn=this, msg=document.getElementById("ad-new-msg");
+    var business=document.getElementById("ad-new-business").value.trim();
+    var city=document.getElementById("ad-new-city").value.trim();
+    var email=document.getElementById("ad-new-email").value.trim();
+    var url=document.getElementById("ad-new-url").value.trim();
+    var input=document.getElementById("ad-new-file");
+    var file=input&&input.files&&input.files[0];
+    try{
+      if(!business) throw new Error("Enter a business name.");
+      if(!file&&!url) throw new Error("Choose a file or paste a media URL.");
+      btn.disabled=true;
+      var media=url;
+      if(file){ show(msg,"Uploading…",false); media=await uploadAdFile(file); }
+      var imageOnly=file?/^image\//.test(file.type||""):/\.(png|jpe?g|webp|gif|avif)(\?|$)/i.test(media);
+      show(msg,"Publishing…",false);
+      await api("/createAd",{business:business,city:city,email:email,imageUrl:imageOnly?media:"",videoUrl:imageOnly?"":media});
+      input.value="";
+      document.getElementById("ad-new-business").value="";
+      document.getElementById("ad-new-city").value="";
+      document.getElementById("ad-new-email").value="";
+      document.getElementById("ad-new-url").value="";
+      show(msg,"Published to the ad screen.",false);
+      await loadAds();
+    }catch(e){ show(msg,e.message,true); }
+    finally{ btn.disabled=false; }
+  });
 
   document.getElementById("logout").addEventListener("click",function(){token="";localStorage.removeItem("tb_token");location.href="/specialist-dashboard.html";});
   window.addEventListener("focus",function(){ if(token) loadClients(); });

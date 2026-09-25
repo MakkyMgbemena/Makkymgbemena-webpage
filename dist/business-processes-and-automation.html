@@ -32,7 +32,7 @@
   <meta name="twitter:title" content="Business Processes &amp; Automation | Travel Bunny">
   <meta name="twitter:description" content="Travel Bunny maps and automates your business processes, workflows, reporting, and integrations, so operations run smoothly. Based in Toronto.">
   <meta name="twitter:image" content="https://travelbunny.services/logo.png">
-  <script type="module" crossorigin src="/assets/automationPage-DCCVEqFK.js"></script>
+  <script type="module" crossorigin src="/assets/automationPage-CsYl73zO.js"></script>
   <link rel="modulepreload" crossorigin href="/assets/modulepreload-polyfill-P2Xu9kJm.js">
   <link rel="stylesheet" crossorigin href="/assets/automationPage-DP-9RPYW.css">
 </head>
@@ -91,9 +91,9 @@
         <div class="container h-100 d-flex align-items-center">
           <div class="row w-100 align-items-center g-5">
             <div class="col-lg-6 text-white">
-              <h2 class="mb-3 fw-bold" style="font-size: clamp(38px, 8vw, 86px); line-height: 1.1; letter-spacing: -0.02em;">Start your TravelBunny project<br> half now, half on delivery</h2>
+              <h2 class="mb-3 fw-bold" style="font-size: clamp(38px, 8vw, 86px); line-height: 1.1; letter-spacing: -0.02em;">Start your TravelBunny project<br> today</h2>
               <p class="mb-5 opacity-90" style="font-size: clamp(18px, 2.5vw, 26px); line-height: 1.4; max-width: 600px;">
-                From websites and automation to dashboards, marketing and operations, pay a 50% deposit to begin, and we invoice the balance on delivery. <span class="text-success fw-bold" style="color:#568c68 !important;">No tech expertise needed.</span>
+                From websites and automation to dashboards, marketing and operations, one clear price, paid up front, and we get straight to work. <span class="text-success fw-bold" style="color:#568c68 !important;">No tech expertise needed.</span>
               </p>
               <form class="bg-white p-5 rounded-4 shadow-lg text-dark border border-4 border-success border-opacity-25" id="trial-signup-form" novalidate>
   <div class="row g-4">
@@ -114,25 +114,31 @@
       <label class="form-label fw-bold mb-2" style="font-size: 18px;" for="service">Which service would you like to start?</label>
       <select id="service" class="form-select form-select-lg bg-light py-3 border-2" style="font-size: 18px;" required>
         <option value="" selected disabled>Select a service</option>
-        <option value="website">Website Build, $300 CAD deposit</option>
-        <option value="automation">Automation Setup, $250 CAD deposit</option>
-        <option value="marketing">Local SEO &amp; Search Visibility Setup, $275 CAD deposit</option>
-        <option value="dashboards">Business Intelligence &amp; Reporting, $200 CAD deposit</option>
-        <option value="brand">Brand &amp; Marketing Design, $175 CAD deposit</option>
-        <option value="product">Product Presentation, $150 CAD deposit</option>
-        <option value="operations">Operations Setup &amp; Consultation, $200 CAD deposit</option>
-        <option value="growth">Growth Strategy &amp; Marketing Coordination, $200 CAD deposit</option>
-        <option value="bookkeeping">Bookkeeping Setup &amp; Onboarding, $200 CAD deposit</option>
+        <option value="website">Website Build, from $150 CAD</option>
+        <option value="automation">Automation Setup, $250 CAD</option>
+        <option value="marketing">Local SEO &amp; Search Visibility Setup, $275 CAD</option>
+        <option value="dashboards">Business Intelligence &amp; Reporting, $200 CAD</option>
+        <option value="brand">Brand &amp; Marketing Design, $175 CAD</option>
+        <option value="product">Product Presentation, $150 CAD</option>
+        <option value="operations">Operations Setup &amp; Consultation, $200 CAD</option>
+        <option value="growth">Growth Strategy &amp; Marketing Coordination, $200 CAD</option>
+        <option value="bookkeeping">Bookkeeping Setup &amp; Onboarding, $200 CAD</option>
+        <option value="cleanup">Cleanup &amp; Catch-up (one-time), from $150 CAD</option>
         <option value="growth-monthly">Growth Strategy &amp; Marketing Coordination, $175 CAD/month</option>
-        <option value="bookkeeping-monthly">Bookkeeping, $200 CAD/month</option>
+        <option value="bookkeeping-monthly">Bookkeeping (monthly), from $150 CAD/month</option>
       </select>
-      <div class="form-text text-muted" style="font-size: 14px;">This is a 50% deposit. We invoice the remaining balance on delivery.</div>
+      <div class="form-text text-muted" style="font-size: 14px;">One-time payment. You'll be redirected to Stripe to pay securely.</div>
+    </div>
+    <div class="col-12 text-start" id="tier-wrap" style="display:none;">
+      <label class="form-label fw-bold mb-2" style="font-size: 18px;" for="tier">Choose your monthly volume</label>
+      <select id="tier" class="form-select form-select-lg bg-light py-3 border-2" style="font-size: 18px;"></select>
+      <div class="form-text text-muted" style="font-size: 14px;" id="tier-note"></div>
     </div>
   </div>
   <div class="mt-4 p-3 rounded-3 bg-light text-muted" style="font-size: 14px;">
-    By continuing you agree to our <a href="#terms" target="_blank" rel="noopener">Terms</a> and <a href="#privacy" target="_blank" rel="noopener">Privacy Policy</a>. You'll be redirected to Stripe to pay your deposit securely.
+    By continuing you agree to our <a href="#terms" target="_blank" rel="noopener">Terms</a> and <a href="#privacy" target="_blank" rel="noopener">Privacy Policy</a>. You'll be redirected to Stripe to pay securely.
   </div>
-  <button type="submit" id="signup-submit" class="btn w-100 mt-4 py-4 fw-bold shadow" style="background: #568c68; color: white; font-size: 22px; border-radius: 12px;">Pay Deposit &amp; Continue</button>
+  <button type="submit" id="signup-submit" class="btn w-100 mt-4 py-4 fw-bold shadow" style="background: #568c68; color: white; font-size: 22px; border-radius: 12px;">Pay &amp; Continue</button>
   <div id="signup-status" class="text-center mt-3" style="font-size: 15px; min-height: 22px;" role="status" aria-live="polite"></div>
 </form>
             </div>
@@ -140,10 +146,10 @@
             <div class="col-lg-6 text-center">
               <div class="dashboard-mockup rounded-4 shadow-lg p-3 mb-5 border border-4" style="background: #0b1710; border-color: rgba(86, 140, 104, 0.5);">
                 <div class="mockup-body border border-success border-opacity-25 rounded-3 p-4 text-white shadow-sm" style="background: #000; min-height: 300px;">
-                  <h4 class="fw-bold mb-4 text-center" style="font-size: 24px; color: #568c68;">Project deposits</h4>
+                  <h4 class="fw-bold mb-4 text-center" style="font-size: 24px; color: #568c68;">Project pricing</h4>
                   <div class="table-responsive">
                     <table class="table table-dark table-borderless align-middle mb-0" style="font-size: 14px; --bs-table-bg: transparent;">
-                      <thead><tr style="color: rgba(86, 140, 104, 0.8); font-size: 12px; text-transform: uppercase;"><th>Service</th><th>Deposit</th></tr></thead>
+                      <thead><tr style="color: rgba(86, 140, 104, 0.8); font-size: 12px; text-transform: uppercase;"><th>Service</th><th>Price</th></tr></thead>
                       <tbody>
                         <tr><td><div class="border border-success border-opacity-25 rounded p-2 bg-dark text-white">Website Build</div></td><td><div class="border border-success border-opacity-25 rounded p-2 bg-dark text-white">$300 CAD</div></td></tr>
                         <tr><td><div class="border border-success border-opacity-25 rounded p-2 bg-dark text-white">Automation Setup</div></td><td><div class="border border-success border-opacity-25 rounded p-2 bg-dark text-white">$250 CAD</div></td></tr>

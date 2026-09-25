@@ -107,6 +107,14 @@ body.owner .owner-only{display:block}
     <p class="muted" id="i-msg"></p>
   </div>
 
+  <div class="card hidden" id="payments-panel">
+    <h1>Payments</h1>
+    <p class="muted">Live from your Stripe: recent payments and subscriptions.</p>
+    <h2>Subscriptions</h2>
+    <div id="subs-list"><p class="muted">Loading&hellip;</p></div>
+    <h2>Recent payments</h2>
+    <div id="payments-list"><p class="muted">Loading&hellip;</p></div>
+  </div>
   <div class="card hidden" id="activity-panel">
     <h1>Recent activity</h1>
     <p class="muted">Who did what, across every client, your oversight feed.</p>
@@ -138,6 +146,16 @@ body.owner .owner-only{display:block}
     <h1>Ad screen reviews</h1>
     <p class="muted">Approve or reject Local Ad Screen submissions.</p>
     <div id="ads"><p class="muted">Loading…</p></div>
+
+    <h2>Add a video manually</h2>
+    <p class="muted">Uploads as approved and goes straight to the screen. Client submissions are untouched.</p>
+    <label>Business name<input id="ad-new-business" type="text"></label>
+    <label>City / Area<input id="ad-new-city" type="text" placeholder="e.g. Toronto"></label>
+    <label>Email (optional)<input id="ad-new-email" type="email"></label>
+    <label>Image or video URL (optional)<input id="ad-new-url" type="text" placeholder="https://..."></label>
+    <label>Upload image or video (mp4 / webm)<input id="ad-new-file" type="file" accept="image/*,video/mp4,video/webm"></label>
+    <button id="ad-new-submit" type="button">Upload &amp; publish</button>
+    <p class="msg" id="ad-new-msg"></p>
   </div>
 
   <div class="card hidden" id="client-panel">
@@ -179,6 +197,8 @@ body.owner .owner-only{display:block}
   </div>
 </div>
 
+  <script src="https://www.gstatic.com/firebasejs/10.12.0/firebase-app-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/10.12.0/firebase-storage-compat.js"></script>
   <script src="embed.js"></script>
 <script>
 (function(){
@@ -235,6 +255,7 @@ body.owner .owner-only{display:block}
     renderClients(data.clients);
     document.getElementById("clients-panel").classList.remove("hidden");
     if(data.isOwner){ document.body.classList.add("owner");
+      document.getElementById("payments-panel").classList.remove("hidden"); await loadPayments();
       document.getElementById("team-panel").classList.remove("hidden"); await loadTeam();
       document.getElementById("activity-panel").classList.remove("hidden"); await loadActivity(); }
     document.getElementById("jobs-panel").classList.remove("hidden");
@@ -330,6 +351,24 @@ body.owner .owner-only{display:block}
     try{ var r=await api("/addInvoice",body); show(document.getElementById("i-msg"),"Invoice submitted: "+money(r.total),false); loadInvoices(); }
     catch(e){ show(document.getElementById("i-msg"),e.message,true); }
   });
+
+  async function loadPayments(){
+    try{
+      var d = await api("/listPayments", {});
+      var subs = d.subscriptions || [];
+      var pays = d.payments || [];
+      document.getElementById("subs-list").innerHTML = subs.length ? subs.map(function(s){
+        var when = s.renews ? new Date(s.renews).toLocaleDateString() : "";
+        return '<div class="client"><div class="row"><strong>$' + Number(s.amount || 0).toFixed(2) + (s.interval ? "/" + s.interval : "") + '</strong><span class="muted">' + esc(s.status || "") + '</span></div><div class="muted">' + (s.cancelAtPeriodEnd ? "cancels at period end" : ("renews " + when)) + '</div></div>';
+      }).join("") : '<p class="muted">No subscriptions yet.</p>';
+      document.getElementById("payments-list").innerHTML = pays.length ? pays.map(function(p){
+        return '<div class="client"><div class="row"><strong>$' + Number(p.amount || 0).toFixed(2) + '</strong><span class="muted">' + esc(p.status || "") + '</span></div><div class="muted">' + esc(p.email || "") + ' &middot; ' + (p.created ? new Date(p.created).toLocaleDateString() : "") + '</div></div>';
+      }).join("") : '<p class="muted">No payments yet.</p>';
+    }catch(e){
+      document.getElementById("subs-list").innerHTML = '<p class="muted">Could not load payments.</p>';
+      document.getElementById("payments-list").innerHTML = '';
+    }
+  }
 
   async function loadActivity(){
     try{
@@ -436,6 +475,41 @@ body.owner .owner-only{display:block}
     Array.prototype.forEach.call(document.querySelectorAll("[data-reject]"),function(b){b.addEventListener("click",function(){reviewAd(b.getAttribute("data-reject"),false);});});
     Array.prototype.forEach.call(document.querySelectorAll("[data-delete]"),function(b){b.addEventListener("click",function(){deleteAd(b.getAttribute("data-delete"));});});
   }
+
+  var FB_CONFIG={apiKey:"AIzaSyAqbMu6_vNoZIGrU7Unl3wAYtDYDZ7CFAk",authDomain:"makkymgbemena-webpage.firebaseapp.com",projectId:"makkymgbemena-webpage",storageBucket:"makkymgbemena-webpage.firebasestorage.app"};
+  function adStorage(){ if(!firebase.apps.length){ firebase.initializeApp(FB_CONFIG); } return firebase.storage(); }
+  function uploadAdFile(file){
+    var path="ads/manual_"+Date.now()+"_"+String(file.name||"upload").replace(/[^a-zA-Z0-9._-]/g,"_");
+    var ref=adStorage().ref(path);
+    return ref.put(file).then(function(){ return ref.getDownloadURL(); });
+  }
+  document.getElementById("ad-new-submit").addEventListener("click",async function(){
+    var btn=this, msg=document.getElementById("ad-new-msg");
+    var business=document.getElementById("ad-new-business").value.trim();
+    var city=document.getElementById("ad-new-city").value.trim();
+    var email=document.getElementById("ad-new-email").value.trim();
+    var url=document.getElementById("ad-new-url").value.trim();
+    var input=document.getElementById("ad-new-file");
+    var file=input&&input.files&&input.files[0];
+    try{
+      if(!business) throw new Error("Enter a business name.");
+      if(!file&&!url) throw new Error("Choose a file or paste a media URL.");
+      btn.disabled=true;
+      var media=url;
+      if(file){ show(msg,"Uploading…",false); media=await uploadAdFile(file); }
+      var imageOnly=file?/^image\//.test(file.type||""):/\.(png|jpe?g|webp|gif|avif)(\?|$)/i.test(media);
+      show(msg,"Publishing…",false);
+      await api("/createAd",{business:business,city:city,email:email,imageUrl:imageOnly?media:"",videoUrl:imageOnly?"":media});
+      input.value="";
+      document.getElementById("ad-new-business").value="";
+      document.getElementById("ad-new-city").value="";
+      document.getElementById("ad-new-email").value="";
+      document.getElementById("ad-new-url").value="";
+      show(msg,"Published to the ad screen.",false);
+      await loadAds();
+    }catch(e){ show(msg,e.message,true); }
+    finally{ btn.disabled=false; }
+  });
 
   document.getElementById("logout").addEventListener("click",function(){token="";localStorage.removeItem("tb_token");location.href="/specialist-dashboard.html";});
   window.addEventListener("focus",function(){ if(token) loadClients(); });

@@ -29,15 +29,30 @@
   .modal{position:fixed;inset:0;background:rgba(0,0,0,.6);display:flex;align-items:center;justify-content:center;z-index:50;padding:20px}
   .modal .box{background:#fff;color:#0b1710;border-radius:16px;padding:32px;max-width:420px;width:100%;box-shadow:0 20px 60px rgba(0,0,0,.5)}
   .modal a{color:var(--green)}
-  .widgets{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:14px;margin:22px 0 6px}
-  .widget{background:#f7f9f7;border:1px solid #e6e9e6;border-radius:12px;padding:16px}
-  .widget h3{margin:0 0 4px;font-size:15px}
-  .widget .src{color:#8a9a8a;font-size:12px;margin:0 0 12px}
-  .widget .metrics{display:flex;gap:12px;flex-wrap:wrap}
-  .widget .metrics div{flex:1 1 60px}
-  .widget .metrics span{display:block;font-size:22px;font-weight:800;color:#0b1710}
-  .widget .metrics small{color:#7a8a7a;font-size:11px}
-  .widget .connect{display:inline-block;margin-top:12px;font-size:12px;font-weight:700;color:var(--green);text-decoration:none}
+  .cc-bar{display:flex;justify-content:space-between;align-items:center;gap:12px;flex-wrap:wrap;margin:14px 0 2px}
+  .cc-live{display:flex;align-items:center;gap:8px;font-size:13px;color:#7a8a7a}
+  .cc-ranges{display:flex;gap:6px}
+  .cc-chip{background:#eef1ee;border:1px solid #e0e5e0;border-radius:999px;padding:5px 12px;font-size:12px;font-weight:700;color:#0b1710;cursor:pointer;margin:0}
+  .cc-chip.active{background:#568c68;color:#fff;border-color:#568c68}
+  .widgets{display:grid;grid-template-columns:repeat(auto-fit,minmax(240px,1fr));gap:14px;margin:16px 0 6px}
+  .widget{background:#fff;border:1px solid #e6e9e6;border-radius:14px;padding:16px}
+  .w-head{display:flex;justify-content:space-between;align-items:center}
+  .w-head h3{margin:0;font-size:15px}
+  .widget .src{color:#8a9a8a;font-size:12px;margin:4px 0 12px}
+  .w-num{display:flex;align-items:baseline;gap:8px}
+  .w-num .val{font-size:26px;font-weight:800;color:#0b1710}
+  .w-num .delta{font-size:12px;font-weight:700;color:#8a9a8a}
+  .delta.up{color:#2e7d4f}
+  .delta.down{color:#b3403a}
+  .w-label{font-size:11px;color:#7a8a7a;margin-top:2px}
+  .spark{width:100%;height:26px;margin:10px 0 4px;display:block}
+  .spark polyline{fill:none;stroke:#cdd8ce;stroke-width:2;stroke-linecap:round;stroke-linejoin:round}
+  .widget.live .spark polyline{stroke:#568c68}
+  .widget .connect{display:inline-block;margin-top:8px;font-size:12px;font-weight:700;color:var(--green);text-decoration:none}
+  .dot{width:9px;height:9px;border-radius:50%;display:inline-block;background:#ccd3cc;flex:0 0 auto}
+  .dot.live{background:#2e9e5b;box-shadow:0 0 0 3px rgba(46,158,91,.16)}
+  .dot.warn{background:#d9a441}
+  .widget:not(.live) .w-num .val,.widget:not(.live) .spark{opacity:.45}
 </style>
   <!-- Google tag (gtag.js) -->
   <script async src="https://www.googletagmanager.com/gtag/js?id=G-049MHJM2KP"></script>
@@ -59,13 +74,72 @@
     <h1 id="hello">Hi</h1>
     <p class="muted">Your Business Command Centre, everything happening in your business, in one place.</p>
 
+    <div class="cc-bar">
+      <span class="cc-live"><span class="dot" id="cc-dot"></span> <span id="cc-updated">Not connected yet</span></span>
+      <span class="cc-ranges" id="cc-ranges">
+        <button type="button" class="cc-chip" data-range="7">7d</button>
+        <button type="button" class="cc-chip active" data-range="28">28d</button>
+        <button type="button" class="cc-chip" data-range="90">90d</button>
+      </span>
+    </div>
+
     <div class="widgets">
-      <div class="widget"><h3>Sales &amp; Revenue</h3><p class="src">QuickBooks &middot; Shopify &middot; Stripe</p><div class="metrics"><div><small>Revenue</small></div><div><small>Expenses</small></div><div><small>Profit</small></div></div><a class="connect" href="index.html#contact">Connect a data source</a></div>
-      <div class="widget"><h3>Website Performance</h3><p class="src">Google Analytics 4 &middot; Search Console</p><div class="metrics"><div><small>Visitors</small></div><div><small>Search traffic</small></div><div><small>Conversion</small></div></div><a class="connect" href="index.html#contact">Connect a data source</a></div>
-      <div class="widget"><h3>Social Reach</h3><p class="src">Facebook &middot; Instagram &middot; TikTok &middot; LinkedIn</p><div class="metrics"><div><small>Reach</small></div><div><small>Engagement</small></div><div><small>Followers</small></div></div><a class="connect" href="index.html#contact">Connect a data source</a></div>
-      <div class="widget"><h3>Reviews &amp; Reputation</h3><p class="src">Google Business Profile &middot; Yelp</p><div class="metrics"><div><small>Views</small></div><div><small>Calls</small></div><div><small>Directions</small></div></div><a class="connect" href="index.html#contact">Connect a data source</a></div>
-      <div class="widget"><h3>Customer Engagement</h3><p class="src">Forms &middot; Calls &middot; Emails &middot; Bookings</p><div class="metrics"><div><small>New leads</small></div><div><small>Bookings</small></div></div><a class="connect" href="index.html#contact">Connect a data source</a></div>
-      <div class="widget"><h3>Operations</h3><p class="src">Custom reports &middot; Spreadsheets &middot; KPIs</p><div class="metrics"><div><small>Open items</small></div><div><small>KPIs tracked</small></div></div><a class="connect" href="index.html#contact">Connect a data source</a></div>
+      <div class="widget" data-widget="revenue">
+        <div class="w-head"><h3>Sales &amp; Revenue</h3><span class="dot"></span></div>
+        <p class="src">QuickBooks &middot; Shopify &middot; Stripe</p>
+        <div class="w-num"><span class="val" data-field="revenue">&mdash;</span><span class="delta"></span></div>
+        <div class="w-label">Revenue &middot; last 28d</div>
+        <svg class="spark" viewBox="0 0 100 24" preserveAspectRatio="none" aria-hidden="true"><polyline points="0,19 12,17 24,18 36,13 48,14 60,10 72,11 84,7 100,5"/></svg>
+        <a class="connect" href="business-intelligence.html">Connect QuickBooks / Shopify / Stripe</a>
+      </div>
+      <div class="widget" data-widget="website">
+        <div class="w-head"><h3>Website Performance</h3><span class="dot"></span></div>
+        <p class="src">Google Analytics 4</p>
+        <div class="w-num"><span class="val" data-field="visitors">&mdash;</span><span class="delta"></span></div>
+        <div class="w-label">Visitors &middot; last 28d</div>
+        <svg class="spark" viewBox="0 0 100 24" preserveAspectRatio="none" aria-hidden="true"><polyline points="0,19 12,17 24,18 36,13 48,14 60,10 72,11 84,7 100,5"/></svg>
+        <a class="connect" href="business-intelligence.html">Connect Google Analytics 4</a>
+      </div>
+      <div class="widget" data-widget="search">
+        <div class="w-head"><h3>Search Visibility</h3><span class="dot"></span></div>
+        <p class="src">Search Console</p>
+        <div class="w-num"><span class="val" data-field="clicks">&mdash;</span><span class="delta"></span></div>
+        <div class="w-label">Clicks &middot; last 28d</div>
+        <svg class="spark" viewBox="0 0 100 24" preserveAspectRatio="none" aria-hidden="true"><polyline points="0,19 12,17 24,18 36,13 48,14 60,10 72,11 84,7 100,5"/></svg>
+        <a class="connect" href="business-intelligence.html">Connect Search Console</a>
+      </div>
+      <div class="widget" data-widget="social">
+        <div class="w-head"><h3>Social Reach</h3><span class="dot"></span></div>
+        <p class="src">Facebook &middot; Instagram &middot; TikTok &middot; LinkedIn</p>
+        <div class="w-num"><span class="val" data-field="reach">&mdash;</span><span class="delta"></span></div>
+        <div class="w-label">Reach &middot; last 28d</div>
+        <svg class="spark" viewBox="0 0 100 24" preserveAspectRatio="none" aria-hidden="true"><polyline points="0,19 12,17 24,18 36,13 48,14 60,10 72,11 84,7 100,5"/></svg>
+        <a class="connect" href="business-intelligence.html">Connect social accounts</a>
+      </div>
+      <div class="widget" data-widget="reviews">
+        <div class="w-head"><h3>Reviews &amp; Reputation</h3><span class="dot"></span></div>
+        <p class="src">Google Business Profile &middot; Yelp</p>
+        <div class="w-num"><span class="val" data-field="views">&mdash;</span><span class="delta"></span></div>
+        <div class="w-label">Profile views &middot; last 28d</div>
+        <svg class="spark" viewBox="0 0 100 24" preserveAspectRatio="none" aria-hidden="true"><polyline points="0,19 12,17 24,18 36,13 48,14 60,10 72,11 84,7 100,5"/></svg>
+        <a class="connect" href="business-intelligence.html">Connect Google Business Profile</a>
+      </div>
+      <div class="widget" data-widget="leads">
+        <div class="w-head"><h3>Leads &amp; Engagement</h3><span class="dot"></span></div>
+        <p class="src">Forms &middot; calls &middot; emails &middot; bookings</p>
+        <div class="w-num"><span class="val" data-field="leads">&mdash;</span><span class="delta"></span></div>
+        <div class="w-label">New leads &middot; last 28d</div>
+        <svg class="spark" viewBox="0 0 100 24" preserveAspectRatio="none" aria-hidden="true"><polyline points="0,19 12,17 24,18 36,13 48,14 60,10 72,11 84,7 100,5"/></svg>
+        <a class="connect" href="business-intelligence.html">Connect your forms &amp; booking</a>
+      </div>
+      <div class="widget" data-widget="operations">
+        <div class="w-head"><h3>Operations</h3><span class="dot"></span></div>
+        <p class="src">Custom reports &middot; spreadsheets &middot; KPIs</p>
+        <div class="w-num"><span class="val" data-field="open">&mdash;</span><span class="delta"></span></div>
+        <div class="w-label">Open items &middot; last 28d</div>
+        <svg class="spark" viewBox="0 0 100 24" preserveAspectRatio="none" aria-hidden="true"><polyline points="0,19 12,17 24,18 36,13 48,14 60,10 72,11 84,7 100,5"/></svg>
+        <a class="connect" href="business-intelligence.html">Connect your operations data</a>
+      </div>
     </div>
     <h2>Your project</h2>
     <p><span class="status" id="status">Loading…</span> &nbsp; <span id="service"></span> &nbsp; <span id="site"></span></p>
@@ -130,6 +204,42 @@
     document.getElementById("comments").innerHTML = cms.length?cms.map(x=>`<div class="comment">${esc(x.text)}<div class="when">${new Date(x.at).toLocaleString()}</div></div>`).join(""):'<p class="muted">No comments yet.</p>';
   }
 
+  var ccRange = 28;
+  async function loadMetrics(){
+    try{
+      var r = await post("/getMetrics", {token: token, range: ccRange});
+      var m = (r.data && r.data.metrics) || null;
+      if(!m) return;
+      var up = document.getElementById("cc-updated");
+      if(up) up.textContent = m.updatedAt ? ("Updated " + new Date(m.updatedAt).toLocaleString()) : "Connected";
+      var cd = document.getElementById("cc-dot"); if(cd) cd.className = "dot live";
+      var cards = m.cards || {};
+      Object.keys(cards).forEach(function(key){
+        var card = document.querySelector('[data-widget="' + key + '"]');
+        if(!card) return;
+        card.classList.add("live");
+        var d = card.querySelector(".dot"); if(d) d.className = "dot live";
+        var val = card.querySelector(".val");
+        if(val && cards[key].value !== undefined){ var _v = cards[key].value; val.textContent = (cards[key].money ? "$" : "") + (typeof _v === "number" ? _v.toLocaleString() : _v); }
+        var dl = card.querySelector(".delta");
+        if(dl && cards[key].delta !== undefined && cards[key].delta !== null){
+          var n = Number(cards[key].delta);
+          dl.textContent = (n >= 0 ? "\u25B2 " : "\u25BC ") + Math.abs(n).toFixed(1) + "%";
+          dl.className = "delta " + (n >= 0 ? "up" : "down");
+        }
+        var con = card.querySelector(".connect"); if(con) con.textContent = "Manage connection";
+      });
+    }catch(e){ /* no metrics yet — keep the designed empty state */ }
+  }
+  Array.prototype.forEach.call(document.querySelectorAll("#cc-ranges .cc-chip"), function(chip){
+    chip.addEventListener("click", function(){
+      Array.prototype.forEach.call(document.querySelectorAll("#cc-ranges .cc-chip"), function(x){ x.classList.remove("active"); });
+      chip.classList.add("active");
+      ccRange = Number(chip.getAttribute("data-range")) || 28;
+      loadMetrics();
+    });
+  });
+
   async function post(path, body){
     const r = await fetch(BASE+path,{method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify(body)});
     return {status:r.status,data: await r.json().catch(()=>({}))};
@@ -193,6 +303,7 @@
   });
 
   loadProject();
+  loadMetrics();
 })();
 </script>
 <footer class="legal-footer" style="position:relative;z-index:1;padding:32px 24px;text-align:center;font-family:-apple-system,'Segoe UI',Roboto,Arial,sans-serif;font-size:13px;background:#0b1710;color:#cfd8cf;line-height:1.6;">

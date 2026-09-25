@@ -78,3 +78,6 @@ intricate-dryad-*.json
 
 # google service account keys
 intricate-dryad-*.json
+
+# local patch backups
+.backup-ad-upload-*/

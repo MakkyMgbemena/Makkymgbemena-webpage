@@ -481,7 +481,6 @@ exports.refreshMetrics = onSchedule(
       cards,
       sources: ["ga4", "searchconsole"],
     }, {merge: true});
-    await logActivity("system", "Refreshed Command Centre metrics", PILOT_CLIENT);
   }
 );
 
@@ -542,8 +541,10 @@ exports.listPayments = onRequest(
 exports.listActivity = onRequest({cors: true, invoker: "public"}, async (req, res) => {
   try {
     await requireOwner(req);
-    const snap = await admin.firestore().collection("activity").orderBy("at", "desc").limit(40).get();
-    res.json({activity: snap.docs.map(d => d.data())});
+    const snap = await admin.firestore().collection("activity").orderBy("at", "desc").limit(200).get();
+    // Scheduled refreshes are a heartbeat, not activity - keep them out of the feed.
+    const activity = snap.docs.map(d => d.data()).filter(a => a.by !== "system").slice(0, 40);
+    res.json({activity});
   } catch (e) {
     logger.error("listActivity error", e);
     res.status(401).json({error: "Not authorized."});
@@ -800,6 +801,38 @@ exports.deleteAd = onRequest({cors: true, invoker: "public"}, async (req, res) =
     res.json({ok: true});
   } catch (e) {
     logger.error("deleteAd error", e);
+    res.status(401).json({error: "Not authorized."});
+  }
+});
+
+
+// ===== Local Ad Screen: manual upload by a specialist/owner =====
+exports.createAd = onRequest({cors: true, invoker: "public"}, async (req, res) => {
+  try {
+    const s = await requireSpecialist(req);
+    const {business, city, email, imageUrl, videoUrl} = req.body || {};
+    if (!business || !String(business).trim()) {
+      return res.status(400).json({error: "business is required."});
+    }
+    if (!imageUrl && !videoUrl) {
+      return res.status(400).json({error: "A media URL is required."});
+    }
+    const day = new Date().toISOString().slice(0, 10);
+    const ref = await admin.firestore().collection("ads").add({
+      business: String(business).trim(),
+      city: String(city || "").trim(),
+      email: String(email || "").trim(),
+      imageUrl: imageUrl || "",
+      videoUrl: videoUrl || "",
+      status: "approved",
+      source: "manual",
+      day,
+      createdAt: admin.firestore.FieldValue.serverTimestamp(),
+    });
+    await logActivity(s.email, "Added an ad manually: " + String(business).trim(), ref.id);
+    res.json({ok: true, id: ref.id});
+  } catch (e) {
+    logger.error("createAd error", e);
     res.status(401).json({error: "Not authorized."});
   }
 });
