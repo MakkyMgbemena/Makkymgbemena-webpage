@@ -92,16 +92,6 @@ npm run preview    # serve the built output
 Deploy
 ./deploy.sh is the release path: commits the change, pushes to main (which triggers the GitHub Action that builds and deploys Hosting), then deploys Storage rules and Cloud Functions with the Firebase CLI. Hosting on its own:
 
-bash
-Copy
-npm run build
-firebase deploy --only hosting --project makkymgbemena-webpage
-Configuration
-functions/.env (git-ignored) holds the Stripe secret key; .env.example shows the required shape. Service-account keys and any other secrets are git-ignored and remain server-side. Nothing sensitive is exposed to the browser.
-
-A note on this repository's history
-This repository previously held a personal data-analyst portfolio with a different README. That site has been replaced by the Travel Bunny business site described above, and the portfolio pages are gone.
-
 Ownership
 © 2026 Makuochukwu Annastecia Mgbemena — Travel Bunny. All rights reserved. Brand, copy, design and source in this repository are not licensed for reuse.
 
