@@ -75,6 +75,9 @@ body.owner .rail-item.owner-only{display:flex !important}
 .back-link{background:transparent;color:var(--muted);padding:0;margin:0 0 14px;font-size:14px;font-weight:600}
 .back-link:hover{background:transparent;color:var(--ink)}
 .client-email{font-size:20px;font-weight:800;margin:0 0 6px;word-break:break-all}
+.link-row{display:grid;grid-template-columns:1fr 1.3fr auto;gap:8px;align-items:center;margin:8px 0}
+.link-row input{margin:0}
+.link-row button{margin:0;padding:10px 13px;font-size:13.5px}
 
 /* ---------- modal ---------- */
 .modal{position:fixed;inset:0;background:rgba(0,0,0,.65);display:grid;place-items:center;z-index:50;padding:20px}
@@ -273,6 +276,13 @@ body.owner .rail-item.owner-only{display:flex !important}
       <button id="c-save-website">Save website</button>
       <div class="msg" id="c-status-msg"></div>
 
+      <h2>Client links</h2>
+      <p class="muted">Extra deliverables for this client — shared folder, QuickBooks, monthly report. Anything with a URL.</p>
+      <div id="c-links"></div>
+      <button class="ghost" id="c-add-link" type="button">Add link</button>
+      <button id="c-save-links">Save links</button>
+      <div class="msg" id="c-links-msg"></div>
+
       <h2>Updates</h2><div id="c-updates"><p class="muted">None yet.</p></div>
       <textarea id="c-update-text" placeholder="Add an update for this client…"></textarea>
       <button id="c-add-update">Send update</button>
@@ -346,6 +356,7 @@ body.owner .rail-item.owner-only{display:flex !important}
   }
 
   var activeSvc = "";
+  var clientLinks = [];
   function renderClients(list){
     var shown = activeSvc ? list.filter(function(c){ return String(c.service||"") === activeSvc; }) : list;
     document.getElementById("clients").innerHTML = shown.length ? shown.map(function(c){
@@ -361,6 +372,7 @@ body.owner .rail-item.owner-only{display:flex !important}
     document.getElementById("c-email").textContent=c.email;
     document.getElementById("c-status").value=c.status||"";
     document.getElementById("c-website").value=c.websiteUrl||"";
+    clientLinks=(c.links||[]).slice(); renderLinksEditor();
     var ups=(c.updates||[]);
     document.getElementById("c-updates").innerHTML=ups.length?ups.map(function(u){return '<div class="update">'+esc(u.text)+'<div class="when">'+new Date(u.at).toLocaleString()+'</div></div>';}).join(""):'<p class="muted">None yet.</p>';
     var items=[];
@@ -534,7 +546,7 @@ body.owner .rail-item.owner-only{display:flex !important}
     var email=document.getElementById("c-email").textContent;
     var status=document.getElementById("c-status").value.trim();
     var m=document.getElementById("c-status-msg");
-    try{ await api("/setClientStatus",{email:email,status:status}); show(m,"Status saved.",false); }
+    try{ await api("/updateClientStatus",{email:email,status:status}); show(m,"Status saved.",false); }
     catch(e){ show(m,e.message,true); }
   });
 
@@ -542,7 +554,7 @@ body.owner .rail-item.owner-only{display:flex !important}
     var email=document.getElementById("c-email").textContent;
     var url=document.getElementById("c-website").value.trim();
     var m=document.getElementById("c-status-msg");
-    try{ await api("/setClientWebsite",{email:email,url:url}); show(m,"Website saved.",false); }
+    try{ await api("/updateClientWebsite",{email:email,websiteUrl:url}); show(m,"Website saved.",false); }
     catch(e){ show(m,e.message,true); }
   });
 
@@ -627,6 +639,40 @@ body.owner .rail-item.owner-only{display:flex !important}
       await loadAds();
     }catch(e){ show(msg,e.message,true); }
     finally{ btn.disabled=false; }
+  });
+
+  function renderLinksEditor(){
+    var host=document.getElementById("c-links");
+    if(!host) return;
+    host.innerHTML = clientLinks.length ? clientLinks.map(function(l,i){
+      return '<div class="link-row"><input class="lk-label" data-i="'+i+'" placeholder="Label (e.g. Shared folder)" value="'+esc(l.label||"")+'">'
+        + '<input class="lk-url" data-i="'+i+'" placeholder="https://..." value="'+esc(l.url||"")+'">'
+        + '<button class="ghost" type="button" data-rmlink="'+i+'">Remove</button></div>';
+    }).join("") : '<p class="muted">No extra links yet.</p>';
+    Array.prototype.forEach.call(host.querySelectorAll(".lk-label,.lk-url"),function(inp){
+      inp.addEventListener("input",function(){
+        var i=Number(inp.getAttribute("data-i"));
+        if(!clientLinks[i]) return;
+        if(inp.classList.contains("lk-label")) clientLinks[i].label=inp.value; else clientLinks[i].url=inp.value;
+      });
+    });
+    Array.prototype.forEach.call(host.querySelectorAll("[data-rmlink]"),function(b){
+      b.addEventListener("click",function(){ clientLinks.splice(Number(b.getAttribute("data-rmlink")),1); renderLinksEditor(); });
+    });
+  }
+  document.getElementById("c-add-link").addEventListener("click",function(){ clientLinks.push({label:"",url:""}); renderLinksEditor(); });
+  document.getElementById("c-save-links").addEventListener("click",async function(){
+    var m=document.getElementById("c-links-msg");
+    var email=document.getElementById("c-email").textContent;
+    var clean=clientLinks.filter(function(l){return (l.url||"").trim();});
+    try{
+      var r=await api("/updateClientLinks",{email:email,links:clean});
+      clientLinks=(r.links||clean).slice();
+      var c=clientsCache.filter(function(x){return x.email===email;})[0];
+      if(c) c.links=clientLinks.slice();
+      renderLinksEditor();
+      show(m,"Links saved.",false);
+    }catch(e){ show(m,e.message,true); }
   });
 
   document.getElementById("logout").addEventListener("click",function(){token="";localStorage.removeItem("tb_token");location.href="/specialist-dashboard.html";});

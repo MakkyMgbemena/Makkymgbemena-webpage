@@ -119,7 +119,7 @@ exports.getProject = onRequest({cors: true, invoker: "public"}, async (req, res)
     const doc = await userDoc(email).get();
     if (!doc.exists) return res.status(404).json({error: "No project found."});
     const u = doc.data();
-    res.json({user: {email: u.email, firstName: u.firstName, lastName: u.lastName, service: u.service, status: u.status, updates: u.updates || [], comments: u.comments || [], websiteUrl: u.websiteUrl || "", links: u.links || []}});
+    res.json({user: {email: u.email, firstName: u.firstName, lastName: u.lastName, service: u.service, status: u.status, updates: u.updates || [], comments: u.comments || [], websiteUrl: u.websiteUrl || ""}});
   } catch (err) {
     logger.error("getProject error", err);
     res.status(401).json({error: "Please log in again."});
@@ -612,25 +612,6 @@ exports.updateClientWebsite = onRequest({cors: true, invoker: "public"}, async (
     res.json({ok: true});
   } catch (e) {
     logger.error("updateClientWebsite error", e);
-    res.status(401).json({error: "Not authorized."});
-  }
-});
-
-
-exports.updateClientLinks = onRequest({cors: true, invoker: "public"}, async (req, res) => {
-  try {
-    const s = await requireSpecialist(req);
-    const {email, links} = req.body || {};
-    if (!email) return res.status(400).json({error: "email is required."});
-    const clean = (Array.isArray(links) ? links : [])
-      .map(l => ({label: String((l && l.label) || "").trim(), url: String((l && l.url) || "").trim()}))
-      .filter(l => l.url && /^https?:\/\//i.test(l.url))
-      .slice(0, 12);
-    await userDoc(email).update({links: clean});
-    await logActivity(s.email, "Updated the client links", email);
-    res.json({ok: true, links: clean});
-  } catch (e) {
-    logger.error("updateClientLinks error", e);
     res.status(401).json({error: "Not authorized."});
   }
 });
