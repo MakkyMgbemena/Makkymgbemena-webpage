@@ -81,3 +81,6 @@ intricate-dryad-*.json
 
 # local patch backups
 .backup-ad-upload-*/
+
+# local script backups
+.backup-*/
