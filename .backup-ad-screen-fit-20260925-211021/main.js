@@ -144,15 +144,12 @@ if (videoProjector) {
     if (!placeholder.querySelector('[data-video-title]')) placeholder.innerHTML = placeholderHtml;
 
     if (slide.image) {
-      placeholder.style.backgroundImage = 'url("' + slide.image + '")';
-      placeholder.style.backgroundSize = 'contain';
-      placeholder.style.backgroundRepeat = 'no-repeat';
+      placeholder.style.backgroundImage = 'url(' + slide.image + ')';
+      placeholder.style.backgroundSize = 'cover';
       placeholder.style.backgroundPosition = 'center';
-      placeholder.style.backgroundColor = '#0a0d0b';
-      video.pause(); video.removeAttribute('src'); video.hidden = true; placeholder.hidden = false;
+      video.hidden = true; placeholder.hidden = false;
     } else if (slide.src) {
       placeholder.style.backgroundImage = '';
-      placeholder.style.backgroundColor = '#0a0d0b';
       video.src = slide.src; video.hidden = false; placeholder.hidden = true; video.muted = true; video.playsInline = true; video.autoplay = true; video.loop = true; video.preload = 'auto'; video.load(); video.play().catch(function(){});
     } else {
       placeholder.style.backgroundImage = '';
