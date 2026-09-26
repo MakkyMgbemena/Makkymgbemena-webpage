@@ -802,7 +802,21 @@ exports.reviewAd = onRequest({cors: true, invoker: "public"}, async (req, res) =
 exports.getActiveAds = onRequest({cors: true, invoker: "public"}, async (req, res) => {
   try {
     const snap = await admin.firestore().collection("ads").orderBy("createdAt", "asc").get();
-    const ads = snap.docs.map(d => ({id: d.id, ...d.data()})).filter(a => a.status === "approved");
+    // Public endpoint: only the fields the ad screen renders. Never email,
+    // stripeCustomer or stripeSubId.
+    const ads = snap.docs
+      .filter(d => d.data().status === "approved")
+      .map(d => {
+        const a = d.data();
+        return {
+          id: d.id,
+          status: "approved",
+          business: a.business || "",
+          city: a.city || "",
+          imageUrl: a.imageUrl || "",
+          videoUrl: a.videoUrl || "",
+        };
+      });
     res.json({ads});
   } catch (e) {
     logger.error("getActiveAds error", e);

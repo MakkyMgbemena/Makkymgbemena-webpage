@@ -1,9 +1,18 @@
 rules_version = '2';
 service firebase.storage {
   match /b/{bucket}/o {
+
+    // Local Ad Screen media.
+    // Anyone may read (the public screen shows them). Anyone may create a new
+    // file, but only images/videos under 25 MB. Nobody except an admin using the
+    // console or a service account may overwrite or delete, so an approved ad's
+    // file cannot be wiped or swapped by a stranger.
     match /ads/{file} {
       allow read: if true;
-      allow write: if true;
+      allow create: if request.resource.size < 25 * 1024 * 1024
+        && request.resource.contentType.matches('image/.*|video/.*');
+      allow update, delete: if false;
     }
+
   }
 }
