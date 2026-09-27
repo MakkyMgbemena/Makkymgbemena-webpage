@@ -78,7 +78,7 @@ Revenue and cost reporting
 Trend analysis
 Plain-language financial reporting
 Decision-support tools
-Business Processes and Automation
+Bookkeeping and Financial Organization
 Workflow mapping
 Forms and approval processes
 Connected business tools
@@ -190,7 +190,7 @@ Page	Purpose
 index.html	Home page, services, featured work, tools, FAQs, and booking
 about.html	Owner background, experience, and working approach
 portfolio.html	Selected work and industries served
-business-processes-and-automation.html	Automation services, signup, and checkout
+bookkeeping.html	Bookkeeping services, signup, and checkout
 business-intelligence.html	Reporting and dashboard services
 blog-post.html	Website-platform guidance
 client-dashboard.html	Client reporting, payments, and invoices

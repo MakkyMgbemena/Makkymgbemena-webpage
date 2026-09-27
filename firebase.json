@@ -10,6 +10,13 @@
       "firestore.indexes.json",
       "*.bak"
     ],
+    "redirects": [
+      {
+        "source": "/business-processes-and-automation.html",
+        "destination": "/bookkeeping.html",
+        "type": 301
+      }
+    ],
     "headers": [
       {
         "source": "**/*.html",

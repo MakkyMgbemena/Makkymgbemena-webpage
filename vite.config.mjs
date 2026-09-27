@@ -12,7 +12,7 @@ export default defineConfig({
         main: resolve(__dirname, 'index.html'),
         blogPost: resolve(__dirname, 'blog-post.html'),
         portfolio: resolve(__dirname, 'portfolio.html'),
-        automationPage: resolve(__dirname, 'business-processes-and-automation.html'),
+        automationPage: resolve(__dirname, 'bookkeeping.html'),
         businessIntelligence: resolve(__dirname, 'business-intelligence.html'),
         dashboard: resolve(__dirname, 'client-dashboard.html'),
         specialist: resolve(__dirname, 'specialist-dashboard.html'),
