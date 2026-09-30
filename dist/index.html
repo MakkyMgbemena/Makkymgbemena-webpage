@@ -61,10 +61,10 @@
   <meta name="twitter:title" content="Travel Bunny Business Setup, Bookkeeping &amp; Reporting in Toronto">
   <meta name="twitter:description" content="Travel Bunny (travelBunny) helps small businesses in Toronto with bookkeeping, financial organization, reporting, business setup, dashboards, websites, and automation. Book a free consultation.">
   <meta name="twitter:image" content="https://travelbunny.services/logo.png">
-  <script type="module" crossorigin src="/assets/main-B2c9aLIw.js"></script>
+  <script type="module" crossorigin src="/assets/main-_C2Rx968.js"></script>
   <link rel="modulepreload" crossorigin href="/assets/modulepreload-polyfill-P2Xu9kJm.js">
   <link rel="modulepreload" crossorigin href="/assets/main--ANUBWB1.js">
-  <link rel="stylesheet" crossorigin href="/assets/style-sVVM4Rs8.css">
+  <link rel="stylesheet" crossorigin href="/assets/style-gYPwRVGR.css">
 </head>
 <body>
   <header class="site-header">
@@ -265,11 +265,11 @@
 </section>
 
 <section class="tools-section" id="tools" aria-labelledby="tools-heading">
+  <video class="tools-section__video" autoplay muted loop playsinline preload="auto" aria-hidden="true">
+    <source src="/bunny-working.mp4" type="video/mp4">
+  </video>
+  <div class="tools-section__veil" aria-hidden="true"></div>
   <h2 id="tools-heading">Tools I work with</h2>
-  <img class="mascot mascot-talking" src="/assets/bunny-talking-CiB_DRs2.png" alt="" aria-hidden="true">
-  <img class="mascot mascot-desk" src="/assets/bunny-desk-BYbpyCsY.png" alt="" aria-hidden="true">
-  <img class="mascot mascot-peek" src="/assets/bunny-peek-DPOI-vMK.png" alt="" aria-hidden="true">
-  <img class="mascot mascot-wander" src="/assets/bunny-wander-CUrPzaRO.png" alt="" aria-hidden="true">
   <div class="tool-list" aria-label="Tools and platforms">
           <div class="tool-item">
             <svg class="tool-logo" viewBox="0 0 48 48" aria-hidden="true">
@@ -508,32 +508,6 @@
       el.style.transform = 'rotateY(' + (i * angle) + 'deg) translateZ(' + radius + 'px)';
     });
   })();
-  </script>
-  <script src="https://cdn.jsdelivr.net/npm/gsap@3.12.5/dist/gsap.min.js"></script>
-  <script>
-  window.addEventListener('load', function(){
-    var sec = document.querySelector('.tools-section');
-    var w = sec ? sec.offsetWidth : 800;
-
-    // talking pair: bob + sway
-    gsap.to('.mascot-talking', { y: -12, rotation: -2, duration: 0.9, yoyo: true, repeat: -1, ease: 'sine.inOut' });
-
-    // desk pair: quick typing bob
-    gsap.to('.mascot-desk', { y: -6, duration: 0.4, yoyo: true, repeat: -1, ease: 'power2.inOut' });
-
-    // peeker: slow sway + lean further on hover
-    var peek = document.querySelector('.mascot-peek');
-    gsap.to('.mascot-peek', { rotation: -4, duration: 1.8, yoyo: true, repeat: -1, ease: 'sine.inOut' });
-    if (peek) {
-      peek.addEventListener('mouseenter', function(){ gsap.to(peek, { x: -20, y: 14, rotation: -6, duration: 0.4 }); });
-      peek.addEventListener('mouseleave', function(){ gsap.to(peek, { x: 0, y: 0, rotation: -4, duration: 0.5 }); });
-    }
-
-    // wanderer: walks across the section with a step bob + rock
-    gsap.fromTo('.mascot-wander', { x: -220 }, { x: w + 60, duration: 13, ease: 'none', repeat: -1 });
-    gsap.to('.mascot-wander', { rotation: 5, duration: 0.35, yoyo: true, repeat: -1, ease: 'sine.inOut' });
-    gsap.to('.mascot-wander', { y: -8, duration: 0.35, yoyo: true, repeat: -1, ease: 'sine.inOut' });
-  });
   </script>
   <div class="ad-modal" id="ad-reserve-modal" hidden>
     <div class="ad-modal-box">
