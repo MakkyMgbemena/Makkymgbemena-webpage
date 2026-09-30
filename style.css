@@ -2011,3 +2011,15 @@ html, body { overflow-x: hidden; width: 100%; position: relative; }
     display: none;
   }
 }
+
+
+/* ---------- About portrait (homepage) ---------- */
+/* Matches the size/shape the "Photo coming soon" placeholder used. */
+.about-portrait img {
+  display: block;
+  width: min(100%, 300px);
+  aspect-ratio: 3 / 4;
+  object-fit: cover;
+  object-position: center 22%;
+  border-radius: 12px;
+}
