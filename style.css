@@ -2023,3 +2023,131 @@ html, body { overflow-x: hidden; width: 100%; position: relative; }
   object-position: center 22%;
   border-radius: 12px;
 }
+
+
+/* ===== TB-OVERVIEW-CARDS ===== */
+
+/* ---------- Overview: three-card service carousel ----------
+   Only the carousel is styled here. The heading, its inline <span>, and
+   .overview-inner keep the site's original rules — do not redeclare them. */
+
+.svc { position: relative; margin-top: clamp(56px, 6vw, 96px); }
+
+.svc__track {
+  display: flex;
+  gap: 2rem;
+  overflow-x: auto;
+  scroll-snap-type: x mandatory;
+  scroll-behavior: smooth;
+  padding-bottom: 6px;
+  scrollbar-width: none;
+}
+
+.svc__track::-webkit-scrollbar { display: none; }
+
+.svc__card {
+  flex: 0 0 calc((100% - 4rem) / 3);
+  scroll-snap-align: start;
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+  background: #fff;
+  box-shadow: 0 18px 44px rgba(11, 16, 13, .10);
+}
+
+.svc__media {
+  aspect-ratio: 4 / 3;
+  display: grid;
+  place-items: center;
+  overflow: hidden;
+  background: #eef0ee;
+  color: #98a29b;
+  font-size: 12px;
+  font-weight: 600;
+  letter-spacing: .14em;
+  text-transform: uppercase;
+}
+
+.svc__media img { display: block; width: 100%; height: 100%; object-fit: cover; transition: transform .5s ease; }
+.svc__card:hover .svc__media img { transform: scale(1.05); }
+
+.svc__body { display: flex; flex-direction: column; flex: 1; padding: clamp(22px, 2.4vw, 34px); }
+
+.svc__title {
+  margin: 0 0 14px;
+  font-family: Georgia, 'Times New Roman', Times, serif;
+  font-size: clamp(26px, 2.4vw, 38px);
+  font-weight: 400;
+  line-height: 1.12;
+  letter-spacing: -.02em;
+  color: #161a17;
+}
+
+.svc__text { margin: 0 0 28px; color: #5c625e; font-size: 15px; line-height: 1.6; }
+.svc__sublabel { margin: 0 0 18px; color: #161a17; font-size: 15px; font-weight: 600; line-height: 1.5; }
+
+.svc__cta {
+  margin-top: auto;
+  align-self: flex-start;
+  padding: 11px 24px;
+  border: 1px solid #161a17;
+  border-radius: 9999px;
+  color: #161a17;
+  font-size: 12px;
+  font-weight: 700;
+  letter-spacing: .1em;
+  text-transform: uppercase;
+  text-decoration: none;
+  transition: background .2s ease, color .2s ease;
+}
+
+.svc__cta:hover { background: #161a17; color: #fff; }
+
+.svc__arrow {
+  position: absolute;
+  top: 42%;
+  transform: translateY(-50%);
+  z-index: 2;
+  display: grid;
+  place-items: center;
+  width: 44px;
+  height: 44px;
+  border: 0;
+  background: #fff;
+  box-shadow: 0 6px 18px rgba(0, 0, 0, .18);
+  color: #161a17;
+  font-size: 18px;
+  line-height: 1;
+  cursor: pointer;
+}
+
+.svc__arrow--prev { left: 0; }
+.svc__arrow--next { right: 0; }
+.svc__arrow[disabled] { opacity: .3; cursor: default; }
+
+/* everything fits — no scrolling, so hide the arrows */
+.svc--static .svc__arrow { display: none; }
+
+@media (max-width: 900px) {
+  .svc__card { flex-basis: calc((100% - 2rem) / 2); }
+}
+
+@media (max-width: 640px) {
+  .svc__card { flex-basis: 82%; }
+}
+
+
+/* ===== TB-OVERVIEW-LEAD ===== */
+
+/* Supporting line under the overview heading — its own paragraph. */
+.overview-section h2 span {
+  display: block;
+  max-width: 60rem;
+  margin-top: 1.5rem;
+  color: #5c625e;
+  font-family: inherit;
+  font-size: clamp(20px, 1.6vw, 26px);
+  font-weight: 400;
+  line-height: 1.5;
+  letter-spacing: normal;
+}

@@ -204,31 +204,78 @@
           <span>Stop juggling messy spreadsheets, tax deadlines, and an outdated website. I handle your daily bookkeeping, keep you tax-ready, and set up a clean website that helps your business grow.</span>
         </h2>
 
-        <div class="principles" aria-label="How Travel Bunny works">
-          <article class="principle">
-            <span class="principle-line" aria-hidden="true"></span>
-            <h3>Start with the real problem</h3>
-            <p>Identify what is slowing the business down, whether it is unclear systems, weak online visibility, messy data, manual work, or an unfinished customer experience.</p>
-          </article>
-
-          <article class="principle">
-            <span class="principle-line" aria-hidden="true"></span>
-            <h3>Build around your actual workflow</h3>
-            <p>Create websites, automations, forms, dashboards, and business tools around how the business already operates instead of forcing unnecessary complexity.</p>
-          </article>
-
-          <article class="principle">
-            <span class="principle-line" aria-hidden="true"></span>
-            <h3>Make information useful</h3>
-            <p>Turn everyday business activity into clearer reporting, better tracking, stronger visibility, and practical decisions the owner can act on.</p>
-          </article>
-
-          <article class="principle">
-            <span class="principle-line" aria-hidden="true"></span>
-            <h3>Leave you with a setup you can run</h3>
-            <p>Provide documentation, ownership, handoff support, and practical next steps so the website, systems, reports, and assets stay usable after launch.</p>
-          </article>
+        <div class="svc" data-carousel>
+          <div class="svc__track" data-track>
+            <article class="svc__card">
+              <div class="svc__media"><img src="assets/bookkeeping-tax.jpg" alt="Invoices, receipts and a calculator laid out across a desk" loading="lazy" decoding="async"></div>
+              <div class="svc__body">
+                <h3 class="svc__title">Bookkeeping &amp; Tax Preparation</h3>
+                <p class="svc__sublabel">Clean books, filed on time, and zero tax-season scramble.</p>
+                <p class="svc__text">Messy bank records, loose receipts, and uncategorized expenses turn tax season into a scramble. Unorganized books lead to missed deductions, late filing penalties, CRA interest, and expensive emergency year-end accounting cleanups.</p>
+                <p class="svc__text">We organize your daily transactions using a custom Chart of Accounts, double-entry debit/credit logic, and monthly bank reconciliations, catching errors early so your books stay audit-ready and tax-ready all year.</p>
+                <a class="svc__cta" href="bookkeeping.html">Learn more</a>
+              </div>
+            </article>
+            <article class="svc__card">
+              <div class="svc__media"><img src="assets/business-intelligence.jpg" alt="Financial figures in a spreadsheet open on a desktop monitor" loading="lazy" decoding="async"></div>
+              <div class="svc__body">
+                <h3 class="svc__title">Outsourced Bookkeeping &amp; Reporting</h3>
+                <p class="svc__sublabel">Hand off the financial stress so you can focus on growing your business and being present at home.</p>
+                <p class="svc__text">You spend your evenings staring at spreadsheets after a full day of work. Without the budget for full-time employees, managing the numbers yourself steals away your time, energy, and weekends with your loved ones.</p>
+                <p class="svc__text">Designed for tired business owners who want to offload bookkeeping, stay tax-ready, and receive simple monthly updates. We deliver clear Profit &amp; Loss statements, cash updates, and ongoing deduction tracking so you always know your real numbers without taking on employee overhead.</p>
+                <a class="svc__cta" href="business-intelligence.html">Learn more</a>
+              </div>
+            </article>
+            <article class="svc__card">
+              <div class="svc__media"><img src="assets/websites-visibility.jpg" alt="A website design shown across a desktop monitor, tablet and phone" loading="lazy" decoding="async"></div>
+              <div class="svc__body">
+                <h3 class="svc__title">Website Design &amp; Visibility Setup</h3>
+                <p class="svc__sublabel">A website that brings in customers and gets found in local search.</p>
+                <p class="svc__text">A website that is disconnected from your tools creates endless manual work. Without Stripe for payments, QuickBooks for invoicing, and proper Google analytics and search console setup, your business is flying blind and missing online traffic.</p>
+                <p class="svc__text">Built for business owners who need a complete, working digital foundation, not just an empty template. We connect your custom website to Stripe, QuickBooks, automated intake forms, Meta tags, Google Business Profile, Google Search Console, and the other essential tools your business uses so your online setup works seamlessly from day one.</p>
+                <a class="svc__cta" href="blog-post.html">Learn more</a>
+              </div>
+            </article>
+                      <article class="svc__card">
+              <div class="svc__media"><img src="assets/operational-setup.jpg" alt="Application code open in an editor on a laptop" loading="lazy" decoding="async"></div>
+              <div class="svc__body">
+                <h3 class="svc__title">Operational Setup and Web Redesign</h3>
+                <p class="svc__sublabel">Real web development by a human professional, without the AI token bleed.</p>
+                <p class="svc__text">Tired of AI website builders and prompt tools breaking your layouts, trapping you in bug loops, and burning through tokens without getting the job done? An unfinished or generic AI site confuses clients and fails to connect to your real business tools.</p>
+                <p class="svc__text">Built for business owners who want it done right the first time. We replace unpredictable AI code and cookie-cutter templates with custom, human-centered web redesigns, transparent fixed pricing, and reliable backend connections.</p>
+                <a class="svc__cta" href="portfolio.html">Learn more</a>
+              </div>
+            </article>
+          </div>
+          <button class="svc__arrow svc__arrow--prev" type="button" data-prev aria-label="Previous services">&#8592;</button>
+          <button class="svc__arrow svc__arrow--next" type="button" data-next aria-label="Next services">&#8594;</button>
         </div>
+        <script>
+        (function () {
+          var root = document.querySelector('[data-carousel]');
+          if (!root) return;
+          var track = root.querySelector('[data-track]');
+          var prev = root.querySelector('[data-prev]');
+          var next = root.querySelector('[data-next]');
+          function step() {
+            var card = track.querySelector('.svc__card');
+            return card ? card.getBoundingClientRect().width + 32 : track.clientWidth;
+          }
+          function sync() {
+            var max = track.scrollWidth - track.clientWidth - 2;
+            root.classList.toggle('svc--static', max <= 0);
+            prev.disabled = track.scrollLeft <= 2;
+            next.disabled = track.scrollLeft >= max;
+          }
+          prev.addEventListener('click', function () { track.scrollBy({ left: -step(), behavior: 'smooth' }); });
+          next.addEventListener('click', function () { track.scrollBy({ left: step(), behavior: 'smooth' }); });
+          track.addEventListener('scroll', sync);
+          window.addEventListener('resize', sync);
+          sync();
+        })();
+        </script>
+
+
       </div>
     </section>
 
