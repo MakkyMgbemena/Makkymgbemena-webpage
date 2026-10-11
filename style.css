@@ -2151,3 +2151,27 @@ html, body { overflow-x: hidden; width: 100%; position: relative; }
   line-height: 1.5;
   letter-spacing: normal;
 }
+
+/* ===== TB-LOCKED-BI ===== */
+/* Business Intelligence & Reporting is unfinished: locked, unclickable, noindex.
+   Remove this block and the .nav-locked / .feature-item--locked markup when it ships. */
+.lock-icon {
+  width: 14px; height: 14px; flex: 0 0 auto;
+  fill: none; stroke: currentColor; stroke-width: 2;
+  stroke-linecap: round; stroke-linejoin: round;
+}
+.lock-badge {
+  padding: 3px 8px; border: 1px solid currentColor; border-radius: 9999px;
+  font-size: 10px; font-weight: 700; letter-spacing: .1em; text-transform: uppercase;
+}
+.nav-locked {
+  display: flex; align-items: center; gap: 8px;
+  padding: 13px 24px; line-height: 1.3;
+  color: #9aa39d; cursor: default;
+}
+.nav-locked .lock-badge { margin-left: 2px; }
+.feature-item--locked { cursor: default; }
+.feature-item--locked h2 { opacity: .6; }
+.feature-item--locked .feature-locked {
+  display: flex; align-items: center; gap: 8px; color: #b9c4bc;
+}
