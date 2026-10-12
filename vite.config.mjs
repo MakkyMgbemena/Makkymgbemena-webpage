@@ -10,7 +10,8 @@ export default defineConfig({
     rollupOptions: {
       input: {
         main: resolve(__dirname, 'index.html'),
-        blogPost: resolve(__dirname, 'blog-post.html'),
+        blogPost: resolve(__dirname, 'how-to-choose-a-website-platform.html'),
+        eveningSpreadsheet: resolve(__dirname, 'the-evening-spreadsheet-struggle.html'),
         portfolio: resolve(__dirname, 'portfolio.html'),
         automationPage: resolve(__dirname, 'bookkeeping.html'),
         businessIntelligence: resolve(__dirname, 'business-intelligence.html'),

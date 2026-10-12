@@ -13,7 +13,12 @@
     "redirects": [
       {
         "source": "/business-processes-and-automation.html",
-        "destination": "/bookkeeping.html",
+        "destination": "/bookkeeping",
+        "type": 301
+      },
+      {
+        "source": "/blog-post.html",
+        "destination": "/how-to-choose-a-website-platform",
         "type": 301
       }
     ],
@@ -45,7 +50,8 @@
           }
         ]
       }
-    ]
+    ],
+    "cleanUrls": true
   },
   "functions": [
     {
