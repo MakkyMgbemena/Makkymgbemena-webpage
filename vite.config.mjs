@@ -11,6 +11,8 @@ export default defineConfig({
       input: {
         main: resolve(__dirname, 'index.html'),
         blogPost: resolve(__dirname, 'how-to-choose-a-website-platform.html'),
+        ecommerceSocialSales: resolve(__dirname, 'ecommerce-and-social-sales-bookkeeping.html'),
+        outsourcedBookkeeping: resolve(__dirname, 'outsourced-bookkeeping-and-reporting.html'),
         eveningSpreadsheet: resolve(__dirname, 'the-evening-spreadsheet-struggle.html'),
         portfolio: resolve(__dirname, 'portfolio.html'),
         automationPage: resolve(__dirname, 'bookkeeping.html'),
