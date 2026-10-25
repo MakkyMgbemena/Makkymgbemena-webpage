@@ -44,9 +44,128 @@ const PRICE_LOOKUP_KEYS = {
 
 const userDoc = (email) => admin.firestore().collection("users").doc(String(email).toLowerCase());
 
+// ===== Capacity: two-phase seat reservations =====
+// reserve -> confirm on payment -> release on expiry or failure. Every counter change
+// happens inside a transaction, so two simultaneous buyers cannot both pass the check.
+const SERVICE_CAPACITY_WEEKLY = 5;   // new service bookings per Toronto ISO week
+const AD_DAILY_CAP = 10;             // ad submissions per Toronto calendar day
+const STRIPE_SESSION_MINUTES = 30;   // Stripe rejects anything under 30
+const RESERVATION_GRACE_MIN = 5;     // sweep this long after Stripe's own expiry
+
+// Toronto wall clock. toISOString() is UTC and rolled the old day key over at 8pm EDT.
+function torontoParts(d = new Date()) {
+  const p = new Intl.DateTimeFormat("en-CA", {
+    timeZone: "America/Toronto", year: "numeric", month: "2-digit", day: "2-digit",
+  }).formatToParts(d);
+  const get = (t) => p.find((x) => x.type === t).value;
+  return {y: Number(get("year")), m: Number(get("month")), d: Number(get("day"))};
+}
+
+const torontoDay = (d = new Date()) => {
+  const {y, m, d: dd} = torontoParts(d);
+  return `${y}-${String(m).padStart(2, "0")}-${String(dd).padStart(2, "0")}`;
+};
+
+// ISO 8601 week on the Toronto calendar date. 2027-01-01 falls in 2026-W53.
+function torontoWeek(d = new Date()) {
+  const {y, m, d: dd} = torontoParts(d);
+  const date = new Date(Date.UTC(y, m - 1, dd));
+  const shift = (date.getUTCDay() + 6) % 7;
+  date.setUTCDate(date.getUTCDate() - shift + 3);          // Thursday of this week
+  const firstThursday = new Date(Date.UTC(date.getUTCFullYear(), 0, 4));
+  const fShift = (firstThursday.getUTCDay() + 6) % 7;
+  firstThursday.setUTCDate(firstThursday.getUTCDate() - fShift + 3);
+  const week = 1 + Math.round((date - firstThursday) / (7 * 86400000));
+  return `${date.getUTCFullYear()}-W${String(week).padStart(2, "0")}`;
+}
+
+const capacityDoc = (kind, key) =>
+  kind === "ad"
+    ? admin.firestore().collection("adMeta").doc(key || torontoDay())
+    : admin.firestore().collection("capacity").doc("service-" + (key || torontoWeek()));
+
+async function releaseReservation(db, reservationId, reason) {
+  if (!reservationId) return false;
+  const ref = db.collection("reservations").doc(reservationId);
+  return db.runTransaction(async (tx) => {
+    const snap = await tx.get(ref);
+    if (!snap.exists) return false;
+    const r = snap.data();
+    if (r.status !== "pending") return false;   // confirmed, or already released
+    tx.update(ref, {
+      status: "released",
+      releaseReason: reason || "expired",
+      releasedAt: admin.firestore.FieldValue.serverTimestamp(),
+    });
+    tx.set(capacityDoc(r.kind, r.key),
+      {reserved: admin.firestore.FieldValue.increment(-1)}, {merge: true});
+    return true;
+  });
+}
+
+// Reclaims holds whose webhook never arrived. Runs before every new checkout, so the
+// pool heals itself without a scheduled job.
+async function releaseExpired(db) {
+  const now = admin.firestore.Timestamp.now();
+  const snap = await db.collection("reservations")
+    .where("status", "==", "pending")
+    .where("expiresAt", "<=", now)
+    .limit(50).get();
+  let n = 0;
+  for (const doc of snap.docs) {
+    if (await releaseReservation(db, doc.id, "ttl")) n++;
+  }
+  return n;
+}
+
+async function reserveSeat(db, {kind, key, email, cap}) {
+  const reservationId = require("crypto").randomUUID();
+  const ref = db.collection("reservations").doc(reservationId);
+  const capRef = capacityDoc(kind, key);
+  const expiresAt = admin.firestore.Timestamp.fromMillis(
+    Date.now() + (STRIPE_SESSION_MINUTES + RESERVATION_GRACE_MIN) * 60000);
+  await db.runTransaction(async (tx) => {
+    const snap = await tx.get(capRef);
+    const d = snap.exists ? snap.data() : {};
+    const used = (d.confirmed || 0) + (d.reserved || 0)
+               + (kind === "ad" ? (d.intake || 0) : 0);
+    if (used >= cap) {
+      const err = new Error("capacity reached");
+      err.status = 409;
+      throw err;
+    }
+    tx.set(capRef, {reserved: admin.firestore.FieldValue.increment(1)}, {merge: true});
+    tx.set(ref, {
+      kind, key: key || null, email: email || "",
+      status: "pending", expiresAt,
+      createdAt: admin.firestore.FieldValue.serverTimestamp(),
+    });
+  });
+  return {reservationId, expiresAt};
+}
+
+async function confirmSeat(db, reservationId) {
+  if (!reservationId) return false;
+  const ref = db.collection("reservations").doc(reservationId);
+  return db.runTransaction(async (tx) => {
+    const snap = await tx.get(ref);
+    if (!snap.exists) return false;
+    const r = snap.data();
+    if (r.status !== "pending") return false;   // webhook retry
+    tx.update(ref, {status: "confirmed",
+      confirmedAt: admin.firestore.FieldValue.serverTimestamp()});
+    tx.set(capacityDoc(r.kind, r.key), {
+      reserved: admin.firestore.FieldValue.increment(-1),
+      confirmed: admin.firestore.FieldValue.increment(1),
+    }, {merge: true});
+    return true;
+  });
+}
+
 exports.createCheckoutSession = onRequest(
   {secrets: [stripeSecretKey], cors: true, invoker: "public"},
   async (req, res) => {
+    let reservationId = null;
     try {
       const stripe = require("stripe")(stripeSecretKey.value());
       const {firstName, lastName, email, password, service, tier} = req.body || {};
@@ -58,24 +177,48 @@ exports.createCheckoutSession = onRequest(
         return res.status(400).json({error: "Unknown service selected."});
       }
 
+      const emailLc = String(email || "").toLowerCase();
+
       // Existing Auth account? -> go log in (Route 1)
       let authUser = null;
-      try { authUser = await admin.auth().getUserByEmail(String(email||"").toLowerCase()); }
+      try { authUser = await admin.auth().getUserByEmail(emailLc); }
       catch (e) {}
 
       if (authUser) {
-        return res.json({exists: true, redirect: "/client-dashboard.html?email=" + encodeURIComponent(String(email).toLowerCase())});
+        return res.json({exists: true, redirect: "/client-dashboard.html?email=" + encodeURIComponent(emailLc)});
+      }
+
+      const db = admin.firestore();
+      const week = torontoWeek();
+
+      await releaseExpired(db);   // reclaim abandoned holds before testing capacity
+
+      // Phase 1: hold a seat for this week. 409 means full, before anything is created.
+      try {
+        const held = await reserveSeat(db, {
+          kind: "service", key: week, email: emailLc, cap: SERVICE_CAPACITY_WEEKLY,
+        });
+        reservationId = held.reservationId;
+      } catch (e) {
+        if (e.status === 409) {
+          return res.status(409).json({
+            error: "This week's onboarding is full. Book a consultation and we will contact you when the next intake opens.",
+            capacity: "full",
+            week,
+          });
+        }
+        throw e;
       }
 
       // New account -> create Firebase Auth login + project, then Stripe (Route 2)
       if (email && password) {
         try {
-          const user = await admin.auth().createUser({email: String(email).toLowerCase(), password});
+          const user = await admin.auth().createUser({email: emailLc, password});
           await userDoc(email).set({
             uid: user.uid,
             firstName: firstName || "",
             lastName: lastName || "",
-            email: String(email).toLowerCase(),
+            email: emailLc,
             service: service || "",
             status: "Project started",
             updates: [{at: new Date().toISOString(), text: "Your project has been started."}],
@@ -89,17 +232,30 @@ exports.createCheckoutSession = onRequest(
 
       const prices = await stripe.prices.list({lookup_keys: [lookupKey]});
       if (!prices.data.length) {
+        await releaseReservation(db, reservationId, "no_price");
         return res.status(404).json({error: `Price not found for "${lookupKey}".`});
       }
       const session = await stripe.checkout.sessions.create({
         mode: prices.data[0].recurring ? "subscription" : "payment",
         line_items: [{price: prices.data[0].id, quantity: 1}],
         customer_email: email || undefined,
+        expires_at: Math.floor(Date.now() / 1000) + STRIPE_SESSION_MINUTES * 60,
+        metadata: {
+          kind: "service",
+          reservationId,
+          week,
+          email: emailLc,
+          service: String(service || ""),
+        },
         success_url: "https://travelbunny.services/booking-success.html?session_id={CHECKOUT_SESSION_ID}",
         cancel_url: "https://travelbunny.services/booking-cancelled.html",
       });
       res.json({url: session.url});
     } catch (err) {
+      if (reservationId) {
+        try { await releaseReservation(admin.firestore(), reservationId, "checkout_error"); }
+        catch (e) { logger.error("Could not release reservation", {error: e.message}); }
+      }
       logger.error("Checkout session error", err);
       res.status(500).json({error: "Something went wrong creating your checkout session."});
     }
@@ -675,39 +831,63 @@ exports.replyClientComment = onRequest({cors: true, invoker: "public"}, async (r
   }
 });
 
-// ===== Local Ad Screen: subscription checkout + daily intake cap =====
+// ===== Local Ad Screen: subscription checkout + transactional daily cap =====
 const AD_LOOKUP = "ad-screen-starter-monthly-cad";
-const AD_DAILY_CAP = 10;
 
 exports.adCheckout = onRequest(
   {secrets: [stripeSecretKey], cors: true, invoker: "public"},
   async (req, res) => {
+    let reservationId = null;
     try {
       const stripe = require("stripe")(stripeSecretKey.value());
       const {email, business, city, imageUrl, videoUrl} = req.body || {};
       if (!email) return res.status(400).json({error: "Email is required."});
 
       const db = admin.firestore();
-      const day = new Date().toISOString().slice(0, 10); // YYYY-MM-DD
-      const counter = await db.collection("adMeta").doc(day).get();
-      const used = counter.exists ? (counter.data().intake || 0) : 0;
-      if (used >= AD_DAILY_CAP) {
-        return res.status(409).json({error: "Today's ad intake is full. Please try again tomorrow."});
+      const day = torontoDay();
+      await releaseExpired(db);
+
+      try {
+        const held = await reserveSeat(db, {
+          kind: "ad", key: day, email: String(email).toLowerCase(), cap: AD_DAILY_CAP,
+        });
+        reservationId = held.reservationId;
+      } catch (e) {
+        if (e.status === 409) {
+          return res.status(409).json({error: "Today's ad intake is full. Please try again tomorrow."});
+        }
+        throw e;
       }
 
       const prices = await stripe.prices.list({lookup_keys: [AD_LOOKUP]});
-      if (!prices.data.length) return res.status(404).json({error: `Ad price not found for "${AD_LOOKUP}".`});
+      if (!prices.data.length) {
+        await releaseReservation(db, reservationId, "no_price");
+        return res.status(404).json({error: `Ad price not found for "${AD_LOOKUP}".`});
+      }
 
       const session = await stripe.checkout.sessions.create({
         mode: "subscription",
         line_items: [{price: prices.data[0].id, quantity: 1}],
         customer_email: email,
-        metadata: {business: business || "", city: city || "", imageUrl: imageUrl || "", videoUrl: videoUrl || ""},
+        expires_at: Math.floor(Date.now() / 1000) + STRIPE_SESSION_MINUTES * 60,
+        metadata: {
+          kind: "ad",
+          reservationId,
+          day,
+          business: business || "",
+          city: city || "",
+          imageUrl: imageUrl || "",
+          videoUrl: videoUrl || "",
+        },
         success_url: "https://travelbunny.services/ad-success.html",
         cancel_url: "https://travelbunny.services/ad-cancelled.html",
       });
       res.json({url: session.url});
     } catch (err) {
+      if (reservationId) {
+        try { await releaseReservation(admin.firestore(), reservationId, "checkout_error"); }
+        catch (e) { logger.error("Could not release reservation", {error: e.message}); }
+      }
       logger.error("adCheckout error", err);
       res.status(500).json({error: "Something went wrong starting your ad checkout."});
     }
@@ -736,23 +916,49 @@ exports.adWebhook = onRequest(
     if (event.type === "checkout.session.completed") {
       const s = event.data.object;
       const meta = s.metadata || {};
-      const day = new Date().toISOString().slice(0, 10);
-      await db.collection("ads").add({
-        business: meta.business || "",
-        imageUrl: meta.imageUrl || "",
-        videoUrl: meta.videoUrl || "",
-        city: meta.city || "",
-        email: s.customer_email || "",
-        stripeCustomer: s.customer,
-        stripeSubId: s.subscription,
-        status: "pending",
-        day: day,
-        createdAt: admin.firestore.FieldValue.serverTimestamp(),
-      });
-      await db.collection("adMeta").doc(day).set(
-        {intake: admin.firestore.FieldValue.increment(1)},
-        {merge: true}
-      );
+      const kind = String(meta.kind || "").toLowerCase();
+
+      if (kind === "service") {
+        // The seat was held at checkout; promote it to confirmed.
+        await confirmSeat(db, meta.reservationId);
+      } else if (kind === "ad") {
+        await db.collection("ads").add({
+          business: meta.business || "",
+          imageUrl: meta.imageUrl || "",
+          videoUrl: meta.videoUrl || "",
+          city: meta.city || "",
+          email: s.customer_email || "",
+          stripeCustomer: s.customer,
+          stripeSubId: s.subscription,
+          status: "pending",
+          day: meta.day || torontoDay(),
+          createdAt: admin.firestore.FieldValue.serverTimestamp(),
+        });
+        await confirmSeat(db, meta.reservationId);
+      } else if (meta.business || meta.imageUrl || meta.videoUrl) {
+        // Sessions created before metadata.kind existed. Treated as an ad only when the
+        // metadata looks like one, so a service purchase never becomes an ad record.
+        const day = torontoDay();
+        await db.collection("ads").add({
+          business: meta.business || "",
+          imageUrl: meta.imageUrl || "",
+          videoUrl: meta.videoUrl || "",
+          city: meta.city || "",
+          email: s.customer_email || "",
+          stripeCustomer: s.customer,
+          stripeSubId: s.subscription,
+          status: "pending",
+          day,
+          createdAt: admin.firestore.FieldValue.serverTimestamp(),
+        });
+        await db.collection("adMeta").doc(day).set(
+          {intake: admin.firestore.FieldValue.increment(1)}, {merge: true});
+      }
+    } else if (event.type === "checkout.session.expired"
+            || event.type === "checkout.session.async_payment_failed") {
+      const s = event.data.object;
+      const meta = s.metadata || {};
+      await releaseReservation(db, meta.reservationId, event.type);
     } else if (event.type === "invoice.paid") {
       const inv = event.data.object;
       const snap = await adsBySub(inv.subscription).get();
@@ -850,7 +1056,7 @@ exports.createAd = onRequest({cors: true, invoker: "public"}, async (req, res) =
     if (!imageUrl && !videoUrl) {
       return res.status(400).json({error: "A media URL is required."});
     }
-    const day = new Date().toISOString().slice(0, 10);
+    const day = torontoDay();
     const ref = await admin.firestore().collection("ads").add({
       business: String(business).trim(),
       city: String(city || "").trim(),
@@ -866,6 +1072,66 @@ exports.createAd = onRequest({cors: true, invoker: "public"}, async (req, res) =
     res.json({ok: true, id: ref.id});
   } catch (e) {
     logger.error("createAd error", e);
+    res.status(401).json({error: "Not authorized."});
+  }
+});
+
+// ===== Capacity: inspect and release seats =====
+exports.getCapacity = onRequest({cors: true, invoker: "public"}, async (req, res) => {
+  try {
+    await requireSpecialist(req);
+    const db = admin.firestore();
+    const week = torontoWeek();
+    const day = torontoDay();
+    const [svc, ads] = await Promise.all([
+      db.collection("capacity").doc("service-" + week).get(),
+      db.collection("adMeta").doc(day).get(),
+    ]);
+    const s = svc.exists ? svc.data() : {};
+    const a = ads.exists ? ads.data() : {};
+    const adUsed = (a.confirmed || 0) + (a.intake || 0);
+    res.json({
+      service: {
+        week,
+        cap: SERVICE_CAPACITY_WEEKLY,
+        confirmed: s.confirmed || 0,
+        reserved: s.reserved || 0,
+        available: Math.max(0, SERVICE_CAPACITY_WEEKLY - (s.confirmed || 0) - (s.reserved || 0)),
+      },
+      ads: {
+        day,
+        cap: AD_DAILY_CAP,
+        confirmed: adUsed,
+        reserved: a.reserved || 0,
+        available: Math.max(0, AD_DAILY_CAP - adUsed - (a.reserved || 0)),
+      },
+    });
+  } catch (e) {
+    logger.error("getCapacity error", e);
+    res.status(401).json({error: "Not authorized."});
+  }
+});
+
+// Owner-only: free a seat in the current week. Clamped at zero.
+exports.releaseCapacity = onRequest({cors: true, invoker: "public"}, async (req, res) => {
+  try {
+    const s = await requireSpecialist(req);
+    if (!s.isOwner) return res.status(403).json({error: "Owner only."});
+    const {count = 1} = req.body || {};
+    const db = admin.firestore();
+    const week = torontoWeek();
+    const ref = db.collection("capacity").doc("service-" + week);
+    const available = await db.runTransaction(async (tx) => {
+      const snap = await tx.get(ref);
+      const cur = snap.exists ? (snap.data().confirmed || 0) : 0;
+      const next = Math.max(0, cur - Math.abs(Number(count) || 1));
+      tx.set(ref, {confirmed: next}, {merge: true});
+      return SERVICE_CAPACITY_WEEKLY - next;
+    });
+    await logActivity(s.email, "Released a service seat", week);
+    res.json({ok: true, week, available});
+  } catch (e) {
+    logger.error("releaseCapacity error", e);
     res.status(401).json({error: "Not authorized."});
   }
 });

@@ -84,3 +84,6 @@ intricate-dryad-*.json
 
 # local script backups
 .backup-*/
+
+# Vite build output, rebuilt by CI and by every npm run build
+dist/

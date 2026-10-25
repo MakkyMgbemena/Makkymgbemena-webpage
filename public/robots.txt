@@ -1,7 +1,7 @@
 User-agent: *
 Allow: /
-Disallow: /client-dashboard.html
-Disallow: /specialist-dashboard.html
-Disallow: /business-intelligence.html
+Disallow: /client-dashboard
+Disallow: /specialist-dashboard
+Disallow: /business-intelligence
 
 Sitemap: https://travelbunny.services/sitemap.xml
